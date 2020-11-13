@@ -1,11 +1,12 @@
-package com.michasoft.thelasttime
+package com.michasoft.thelasttime.view.home
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.michasoft.thelasttime.R
 
 class HomeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_home)
     }
 }

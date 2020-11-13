@@ -34,12 +34,14 @@ dependencies {
     implementation libraries.appcompat
     implementation libraries.constraintlayout
     implementation libraries.material
+    implementation libraries.jodatime
 
     implementation androidx_lifecycle.lifecycle_viewmodel_ktx
     implementation androidx_lifecycle.lifecycle_livedata_ktx
     implementation androidx_lifecycle.lifecycle_extensions
 
     implementation room.room_runtime
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     kapt room.room_compiler
     implementation room.room_ktx
     implementation room.room_rxjava2
