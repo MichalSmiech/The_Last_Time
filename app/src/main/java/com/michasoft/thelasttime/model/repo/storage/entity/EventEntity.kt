@@ -2,7 +2,8 @@ package com.michasoft.thelasttime.model.repo.storage.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.michasoft.thelasttime.model.Event
+import org.joda.time.DateTime
+import java.util.*
 
 /**
  * Created by mśmiech on 11.11.2020.
@@ -10,23 +11,11 @@ import com.michasoft.thelasttime.model.Event
 
 @Entity(tableName = EventEntity.TABLE_NAME)
 class EventEntity(
-    val name: String,
+    val timestamp: DateTime,
+    val eventTypeId: Long,
     @PrimaryKey(autoGenerate = true)
     var id: Long = 0L
 ) {
-    constructor(event: Event) : this(
-        event.name
-    ) {
-        event.id?.let {
-            this.id = it
-        }
-    }
-
-    fun toModel() = Event(
-        name
-    ).apply {
-        id = this@EventEntity.id
-    }
 
     companion object {
         const val TABLE_NAME = "Events"

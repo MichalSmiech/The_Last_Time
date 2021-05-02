@@ -4,9 +4,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-        <variable
-            name="viewmodel"
-            type="com.michasoft.thelasttime.view.eventsList.EventsListViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -18,7 +15,6 @@
             android:id="@+id/fragment_events_list_recycler_view"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            app:events="@{viewmodel.events}"
             tools:listitem="@layout/listitem_event"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintStart_toStartOf="parent"
