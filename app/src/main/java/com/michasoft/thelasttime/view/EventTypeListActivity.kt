@@ -20,8 +20,8 @@ class EventTypeListActivity : AppCompatActivity() {
         val binding: ActivityEventTypeListBinding = DataBindingUtil.setContentView(this, R.layout.activity_event_type_list)
 
         val list = ArrayList<EventType>()
-        list.add(EventType("Plants", DateTime.now()))
-        list.add(EventType("Vacuum", DateTime.now().minusDays(3)))
+        list.add(EventType(1L, "Plants", DateTime.now()))
+        list.add(EventType(2L, "Vacuum", DateTime.now().minusDays(3)))
         viewModel.eventTypes.value = list
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
