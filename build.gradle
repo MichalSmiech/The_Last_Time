@@ -19,8 +19,9 @@ buildscript {
                 fragment_ktx      : 'androidx.fragment:fragment-ktx:1.1.0-alpha09',
                 recyclerview      : 'androidx.recyclerview:recyclerview:1.1.0-alpha05',
                 jodatime          : 'joda-time:joda-time:2.10.8',
-                dagger            : "com.google.dagger:dagger:$dagger_version",
                 dagger_compiler   : "com.google.dagger:dagger-compiler:$dagger_version",
+                dagger_android   : "com.google.dagger:dagger-android:$dagger_version",
+                dagger_android_processor   : "com.google.dagger:dagger-android-processor:$dagger_version",
         ]
 
         androidx_lifecycle = [

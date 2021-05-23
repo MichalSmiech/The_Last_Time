@@ -36,8 +36,9 @@ dependencies {
     implementation libraries.material
     implementation libraries.jodatime
     implementation libraries.fragment_ktx
-    implementation libraries.dagger
+    implementation libraries.dagger_android
     kapt libraries.dagger_compiler
+    kapt libraries.dagger_android_processor
 
     implementation androidx_lifecycle.lifecycle_viewmodel_ktx
     implementation androidx_lifecycle.lifecycle_livedata_ktx
