@@ -34,6 +34,11 @@ class EventTypeListAdapter(eventTypes: List<EventType>) :
     override fun onBindViewHolder(holder: EventTypeViewHolder, position: Int) {
         val eventType = eventTypes[position]
         holder.binding.name = eventType.name
-        holder.binding.lastEventTimestamp = eventType.lastEventTimestamp.toString()
+        holder.binding.lastEventTimestamp = eventType.lastEventTimestamp?.toString() ?: ""
+    }
+
+    fun setData(data: List<EventType>) {
+        eventTypes = ArrayList(data)
+        notifyDataSetChanged()
     }
 }

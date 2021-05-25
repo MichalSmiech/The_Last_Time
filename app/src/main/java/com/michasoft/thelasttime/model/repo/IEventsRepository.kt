@@ -7,5 +7,7 @@ import com.michasoft.thelasttime.model.EventType
  */
 interface IEventsRepository {
     fun getEventTypes(): ArrayList<EventType>
+    fun getEventType(eventTypeId: Long): EventType
+    fun save(EventType: EventType)
 
 }

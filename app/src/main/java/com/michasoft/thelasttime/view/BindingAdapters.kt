@@ -14,6 +14,6 @@ fun RecyclerView.setEventTypes(eventTypes: List<EventType>) {
     if (this.adapter == null) {
         this.adapter = EventTypeListAdapter(eventTypes)
     } else {
-        //TODO
+        (this.adapter as EventTypeListAdapter).setData(eventTypes)
     }
 }

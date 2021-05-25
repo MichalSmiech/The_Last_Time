@@ -1,10 +1,12 @@
 package com.michasoft.thelasttime.view
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.observe
 import com.michasoft.thelasttime.R
 import com.michasoft.thelasttime.databinding.ActivityEventTypeListBinding
 import com.michasoft.thelasttime.model.EventType
@@ -28,5 +30,22 @@ class EventTypeListActivity : AppCompatActivity() {
         val binding: ActivityEventTypeListBinding = DataBindingUtil.setContentView(this, R.layout.activity_event_type_list)
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
+    }
+
+    override fun onStart() {
+        super.onStart()
+        viewModel.flowEventBus.observe(this) {
+            when(it) {
+                is EventTypeListViewModel.CreateNewEventType -> {
+                    val intent = Intent(this, EditEventTypeActivity::class.java)
+                    startActivity(intent)
+                }
+            }
+        }
+    }
+
+    override fun onRestart() {
+        super.onRestart()
+        viewModel.refreshData()
     }
 }
