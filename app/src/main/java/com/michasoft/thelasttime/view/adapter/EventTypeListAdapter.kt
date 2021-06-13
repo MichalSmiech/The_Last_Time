@@ -8,11 +8,15 @@ import com.michasoft.thelasttime.R
 import com.michasoft.thelasttime.databinding.ListitemEventTypeBinding
 import com.michasoft.thelasttime.model.EventType
 import com.michasoft.thelasttime.view.viewHolder.EventTypeViewHolder
+import com.michasoft.thelasttime.viewModel.EventTypeListViewModel
 
 /**
  * Created by mśmiech on 02.05.2021.
  */
-class EventTypeListAdapter(eventTypes: List<EventType>) :
+class EventTypeListAdapter(
+    eventTypes: List<EventType>,
+    var viewModel: EventTypeListViewModel
+) :
     RecyclerView.Adapter<EventTypeViewHolder>() {
     private var eventTypes = ArrayList<EventType>(eventTypes)
 
@@ -24,7 +28,7 @@ class EventTypeListAdapter(eventTypes: List<EventType>) :
             false
         )
 
-        return EventTypeViewHolder(binding)
+        return EventTypeViewHolder(binding, viewModel)
     }
 
     override fun getItemCount(): Int {
@@ -33,8 +37,7 @@ class EventTypeListAdapter(eventTypes: List<EventType>) :
 
     override fun onBindViewHolder(holder: EventTypeViewHolder, position: Int) {
         val eventType = eventTypes[position]
-        holder.binding.name = eventType.name
-        holder.binding.lastEventTimestamp = eventType.lastEventTimestamp?.toString() ?: ""
+        holder.eventType = eventType
     }
 
     fun setData(data: List<EventType>) {

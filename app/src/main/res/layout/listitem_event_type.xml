@@ -23,7 +23,7 @@
             android:layout_height="wrap_content"
             android:text="@{name}"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            app:layout_constraintEnd_toStartOf="@+id/button2"
+            app:layout_constraintEnd_toStartOf="@+id/add_action_button"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="EventType.name" />
@@ -40,7 +40,7 @@
             tools:text="lastEventTimestamp" />
 
         <ImageButton
-            android:id="@+id/button"
+            android:id="@+id/quick_add_action_button"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:src="@drawable/outline_bolt"
@@ -51,7 +51,7 @@
             android:contentDescription="Quick" />
 
         <ImageButton
-            android:id="@+id/button2"
+            android:id="@+id/add_action_button"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_marginEnd="8dp"
@@ -59,7 +59,7 @@
             android:backgroundTint="@android:color/transparent"
             android:contentDescription="New"
             android:src="@drawable/outline_add"
-            app:layout_constraintEnd_toStartOf="@+id/button"
+            app:layout_constraintEnd_toStartOf="@+id/quick_add_action_button"
             app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

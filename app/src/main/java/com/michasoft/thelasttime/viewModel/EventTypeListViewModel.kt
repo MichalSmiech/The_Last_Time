@@ -7,6 +7,7 @@ import com.michasoft.thelasttime.model.repo.IEventsRepository
 import com.michasoft.thelasttime.util.FlowEvent
 import com.michasoft.thelasttime.util.SingleLiveEvent
 import org.intellij.lang.annotations.Flow
+import org.joda.time.DateTime
 import javax.inject.Inject
 
 /**
@@ -24,6 +25,18 @@ class EventTypeListViewModel @Inject constructor(
 
     fun refreshData() {
         eventTypes.value = eventsRepository.getEventTypes()
+    }
+
+    fun quickAddEvent(eventType: EventType) {
+        eventTypes.value?.find { it.id == eventType.id }?.let {
+            it.lastEventTimestamp = DateTime.now()
+        }?.also {
+            eventTypes.postValue(eventTypes.value)
+        }
+    }
+
+    fun addEvent(eventType: EventType) {
+        //TODO
     }
 
     class CreateNewEventType : FlowEvent()
