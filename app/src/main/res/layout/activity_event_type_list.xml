@@ -20,6 +20,7 @@
             android:layout_marginTop="16dp"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
+            tools:listitem="@layout/listitem_event_type"
             app:eventTypes="@{viewModel.eventTypes}"
             app:viewModel="@{viewModel}"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"

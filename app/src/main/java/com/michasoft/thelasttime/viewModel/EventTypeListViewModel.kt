@@ -15,8 +15,7 @@ import javax.inject.Inject
  */
 class EventTypeListViewModel @Inject constructor(
     private val eventsRepository: IEventsRepository
-): ViewModel() {
-    var flowEventBus = SingleLiveEvent<FlowEvent>()
+): CommonViewModel() {
     var eventTypes = MutableLiveData<List<EventType>>(eventsRepository.getEventTypes())
 
     fun createNewEventType() {

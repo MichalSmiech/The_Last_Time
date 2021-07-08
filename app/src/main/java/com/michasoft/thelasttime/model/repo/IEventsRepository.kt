@@ -1,5 +1,6 @@
 package com.michasoft.thelasttime.model.repo
 
+import com.michasoft.thelasttime.model.Event
 import com.michasoft.thelasttime.model.EventType
 
 /**
@@ -8,6 +9,7 @@ import com.michasoft.thelasttime.model.EventType
 interface IEventsRepository {
     fun getEventTypes(): ArrayList<EventType>
     fun getEventType(eventTypeId: Long): EventType
+    fun getEvents(eventTypeId: Long): List<Event>
     fun save(EventType: EventType)
 
 }
