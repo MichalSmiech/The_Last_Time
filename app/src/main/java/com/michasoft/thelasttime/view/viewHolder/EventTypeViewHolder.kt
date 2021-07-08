@@ -31,5 +31,10 @@ class EventTypeViewHolder(
                 viewModel.addEvent(it)
             }
         }
+        binding.listitemEventTypeLayout.setOnClickListener {
+            eventType?.let {
+                viewModel.showEventType(it)
+            }
+        }
     }
 }

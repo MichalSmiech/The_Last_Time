@@ -35,9 +35,14 @@ class EventTypeListViewModel @Inject constructor(
         }
     }
 
+    fun showEventType(eventType: EventType) {
+        flowEventBus.value = ShowEventType(eventType.id)
+    }
+
     fun addEvent(eventType: EventType) {
         //TODO
     }
 
     class CreateNewEventType : FlowEvent()
+    class ShowEventType(val eventTypeId: Long) : FlowEvent()
 }

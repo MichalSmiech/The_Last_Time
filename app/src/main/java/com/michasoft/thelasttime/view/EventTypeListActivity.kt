@@ -12,6 +12,7 @@ import com.michasoft.thelasttime.databinding.ActivityEventTypeListBinding
 import com.michasoft.thelasttime.model.EventType
 import com.michasoft.thelasttime.model.repo.IEventsRepository
 import com.michasoft.thelasttime.viewModel.EventTypeListViewModel
+import com.michasoft.thelasttime.viewModel.EventTypeViewModel
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
@@ -39,6 +40,9 @@ class EventTypeListActivity : AppCompatActivity() {
                 is EventTypeListViewModel.CreateNewEventType -> {
                     val intent = Intent(this, EditEventTypeActivity::class.java)
                     startActivity(intent)
+                }
+                is EventTypeListViewModel.ShowEventType -> {
+                    EventTypeActivity.start(this, it.eventTypeId)
                 }
             }
         }

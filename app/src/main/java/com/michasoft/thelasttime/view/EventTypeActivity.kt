@@ -9,24 +9,22 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
 import com.michasoft.thelasttime.R
 import com.michasoft.thelasttime.databinding.ActivityEditEventTypeBinding
-import com.michasoft.thelasttime.databinding.ActivityEventTypeListBinding
-import com.michasoft.thelasttime.model.EventType
+import com.michasoft.thelasttime.databinding.ActivityEventTypeBinding
 import com.michasoft.thelasttime.viewModel.CommonViewModel
 import com.michasoft.thelasttime.viewModel.EditEventTypeViewModel
-import com.michasoft.thelasttime.viewModel.EventTypeListViewModel
+import com.michasoft.thelasttime.viewModel.EventTypeViewModel
 import dagger.android.AndroidInjection
-import org.joda.time.DateTime
 import javax.inject.Inject
 
-class EditEventTypeActivity : AppCompatActivity() {
+class EventTypeActivity : AppCompatActivity() {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
-    private val viewModel: EditEventTypeViewModel by viewModels{ viewModelFactory }
+    private val viewModel: EventTypeViewModel by viewModels{ viewModelFactory }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
-        val binding: ActivityEditEventTypeBinding = DataBindingUtil.setContentView(this, R.layout.activity_edit_event_type)
+        val binding: ActivityEventTypeBinding = DataBindingUtil.setContentView(this, R.layout.activity_event_type)
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
     }
@@ -46,5 +44,11 @@ class EditEventTypeActivity : AppCompatActivity() {
 
     companion object {
         const val ARG_EVENT_TYPE_ID = "ARG_EVENT_TYPE_ID"
+
+        fun start(activity: AppCompatActivity, eventTypeId: Long) {
+            val intent = Intent(activity, EventTypeActivity::class.java)
+            intent.putExtra(ARG_EVENT_TYPE_ID, eventTypeId)
+            activity.startActivity(intent)
+        }
     }
 }
