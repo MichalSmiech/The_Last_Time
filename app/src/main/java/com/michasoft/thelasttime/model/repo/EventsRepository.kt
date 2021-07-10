@@ -19,15 +19,15 @@ class EventsRepository: IEventsRepository {
         eventTypeMap[2L] = EventType(2L, "Vacuum", DateTime.now().minusDays(3))
     }
 
-    override fun getEventTypes(): ArrayList<EventType> {
+    override suspend fun getEventTypes(): ArrayList<EventType> {
         return ArrayList(eventTypeMap.values.toList())
     }
 
-    override fun getEventType(eventTypeId: Long): EventType {
+    override suspend fun getEventType(eventTypeId: Long): EventType {
         return eventTypeMap[eventTypeId]?.copy() ?: createNewEventType()
     }
 
-    override fun getEvents(eventTypeId: Long): List<Event> {
+    override suspend fun getEvents(eventTypeId: Long): List<Event> {
         if(eventsMap.containsKey(eventTypeId)) {
             return eventsMap[eventTypeId]!!
         }
