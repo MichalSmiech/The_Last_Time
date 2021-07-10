@@ -11,5 +11,6 @@ interface IEventsRepository {
     suspend fun getEventType(eventTypeId: Long): EventType
     suspend fun getEvents(eventTypeId: Long): List<Event>
     fun save(EventType: EventType)
+    suspend fun getEvent(eventId: Long): Event
 
 }

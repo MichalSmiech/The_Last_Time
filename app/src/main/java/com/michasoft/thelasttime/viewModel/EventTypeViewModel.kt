@@ -30,4 +30,10 @@ class EventTypeViewModel @Inject constructor(
             events.value = eventsRepository.getEvents(eventTypeId)
         }
     }
+
+    fun showEvent(event: Event) {
+        flowEventBus.value = ShowEvent(event.id)
+    }
+
+    class ShowEvent(val eventId: Long): FlowEvent()
 }

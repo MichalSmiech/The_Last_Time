@@ -10,7 +10,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".view.EventTypeActivity"></activity>
+        <activity android:name=".view.EventActivity"></activity>
+        <activity android:name=".view.EventTypeActivity" />
         <activity android:name=".view.EditEventTypeActivity" />
         <activity android:name=".MainActivity" />
         <activity android:name=".view.EventTypeListActivity">

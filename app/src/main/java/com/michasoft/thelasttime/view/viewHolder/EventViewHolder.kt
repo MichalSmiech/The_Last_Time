@@ -21,4 +21,9 @@ class EventViewHolder(
                 binding.timestamp = it.timestamp.toString()
             }
         }
+    init {
+        binding.listitemEventLayout.setOnClickListener {
+            viewModel.showEvent(event!!)
+        }
+    }
 }

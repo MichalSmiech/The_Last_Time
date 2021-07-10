@@ -23,6 +23,10 @@ class EventsRepository: IEventsRepository {
         return ArrayList(eventTypeMap.values.toList())
     }
 
+    override suspend fun getEvent(eventId: Long): Event {
+        return Event(eventId, DateTime.now(), 1L)
+    }
+
     override suspend fun getEventType(eventTypeId: Long): EventType {
         return eventTypeMap[eventTypeId]?.copy() ?: createNewEventType()
     }
@@ -33,7 +37,7 @@ class EventsRepository: IEventsRepository {
         }
         val result = arrayListOf<Event>()
         for (i in 0..Random.nextInt(5, 20)) {
-            result.add(Event(Random.nextLong(), DateTime.now().minusDays(Random.nextInt(2, 100))))
+            result.add(Event(Random.nextLong(), DateTime.now().minusDays(Random.nextInt(2, 100)), eventTypeId))
         }
         result.sortBy { event -> event.timestamp.millis }
         eventsMap[eventTypeId] = result
