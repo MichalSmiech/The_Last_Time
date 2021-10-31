@@ -4,9 +4,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.michasoft.thelasttime.model.Event
 import com.michasoft.thelasttime.model.EventType
-import com.michasoft.thelasttime.model.repo.IEventsRepository
+import com.michasoft.thelasttime.model.repo.IEventRepository
 import com.michasoft.thelasttime.util.FlowEvent
-import com.michasoft.thelasttime.util.SingleLiveEvent
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -14,7 +13,7 @@ import javax.inject.Inject
  * Created by mśmiech on 08.07.2021.
  */
 class EventTypeViewModel @Inject constructor(
-    private val eventsRepository: IEventsRepository
+    private val eventRepository: IEventRepository
 ) : CommonViewModel() {
     private var eventTypeId: Long? = null
     private var originalEventType: EventType? = null
@@ -24,10 +23,10 @@ class EventTypeViewModel @Inject constructor(
     fun start(eventTypeId: Long) {
         viewModelScope.launch {
             this@EventTypeViewModel.eventTypeId = eventTypeId
-            val eventType = eventsRepository.getEventType(eventTypeId)
+            val eventType = eventRepository.getEventType(eventTypeId)
             originalEventType = eventType
             name.value = eventType.name
-            events.value = eventsRepository.getEvents(eventTypeId)
+            events.value = eventRepository.getEvents(eventTypeId)
         }
     }
 

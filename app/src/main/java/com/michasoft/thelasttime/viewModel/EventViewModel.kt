@@ -5,14 +5,14 @@ import androidx.lifecycle.Transformations
 import androidx.lifecycle.viewModelScope
 import com.michasoft.thelasttime.model.Event
 import com.michasoft.thelasttime.model.EventType
-import com.michasoft.thelasttime.model.repo.IEventsRepository
+import com.michasoft.thelasttime.model.repo.IEventRepository
 import com.michasoft.thelasttime.util.FlowEvent
 import kotlinx.coroutines.launch
 import org.joda.time.DateTime
 import javax.inject.Inject
 
 class EventViewModel @Inject constructor(
-    private val eventsRepository: IEventsRepository
+    private val eventRepository: IEventRepository
 ) : CommonViewModel() {
     private var eventId: Long? = null
     private var originalEvent: Event? = null
@@ -26,10 +26,10 @@ class EventViewModel @Inject constructor(
     fun setEventId(eventId: Long) {
         viewModelScope.launch {
             this@EventViewModel.eventId = eventId
-            val event = eventsRepository.getEvent(eventId)
+            val event = eventRepository.getEvent(eventId)
             originalEvent = event
             timestamp.value = event.timestamp
-            eventType = eventsRepository.getEventType(event.eventTypeId)
+            eventType = eventRepository.getEventType(event.eventTypeId)
             eventTypeName.value = eventType!!.name
         }
     }

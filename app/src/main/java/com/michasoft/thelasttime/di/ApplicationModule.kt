@@ -1,11 +1,9 @@
 package com.michasoft.thelasttime.di
 
-import com.michasoft.thelasttime.model.EventType
-import com.michasoft.thelasttime.model.repo.EventsRepository
-import com.michasoft.thelasttime.model.repo.IEventsRepository
+import com.michasoft.thelasttime.model.repo.MockEventRepository
+import com.michasoft.thelasttime.model.repo.IEventRepository
 import dagger.Module
 import dagger.Provides
-import org.joda.time.DateTime
 import javax.inject.Singleton
 
 /**
@@ -16,7 +14,7 @@ import javax.inject.Singleton
 object ApplicationModule  {
     @Singleton
     @Provides
-    fun provideEventsRepository(): IEventsRepository {
-        return EventsRepository()
+    fun provideEventsRepository(): IEventRepository {
+        return MockEventRepository()
     }
 }

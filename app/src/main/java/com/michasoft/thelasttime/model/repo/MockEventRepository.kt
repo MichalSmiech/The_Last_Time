@@ -10,7 +10,7 @@ import kotlin.random.Random
 /**
  * Created by mśmiech on 11.11.2020.
  */
-class EventsRepository: IEventsRepository {
+class MockEventRepository: IEventRepository {
     private val eventTypeMap = mutableMapOf<Long, EventType>()
     private val eventsMap = mutableMapOf<Long, List<Event>>()
 

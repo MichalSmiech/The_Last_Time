@@ -9,15 +9,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
 import com.michasoft.thelasttime.R
 import com.michasoft.thelasttime.databinding.ActivityEventTypeListBinding
-import com.michasoft.thelasttime.model.EventType
-import com.michasoft.thelasttime.model.repo.IEventsRepository
 import com.michasoft.thelasttime.viewModel.EventTypeListViewModel
-import com.michasoft.thelasttime.viewModel.EventTypeViewModel
 import dagger.android.AndroidInjection
-import dagger.android.AndroidInjector
-import dagger.android.DispatchingAndroidInjector
-import dagger.android.HasAndroidInjector
-import org.joda.time.DateTime
 import javax.inject.Inject
 
 class EventTypeListActivity : AppCompatActivity() {
