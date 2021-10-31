@@ -25,6 +25,10 @@ class RoomEventSource(private val eventDao: EventDao): IEventSource {
         return eventEntity.toModel()
     }
 
+    override suspend fun deleteEvent(event: Event) {
+        TODO("Not yet implemented")
+    }
+
     override suspend fun getEventInstanceScheme(eventId: Long): EventInstanceScheme {
         val eventInstanceFieldSchemaEntities =
             eventDao.getEventInstanceFieldSchemas(eventId).sortedBy { it.order }
@@ -65,6 +69,28 @@ class RoomEventSource(private val eventDao: EventDao): IEventSource {
             eventInstanceEntity.timestamp,
             eventInstanceFields
         )
+    }
+
+    override suspend fun deleteEventInstance(instance: EventInstance) {
+        val eventInstanceFieldSchemaEntities =
+            eventDao.getEventInstanceFieldSchemas(instance.eventId)
+        eventInstanceFieldSchemaEntities.distinctBy { it.type }.forEach { fieldSchema ->
+            when (fieldSchema.type) {
+                Type.TextField -> {
+                    eventDao.deleteEventInstanceTextFieldsWithInstanceId(instance.id)
+                }
+                Type.IntField -> {
+                    eventDao.deleteEventInstanceIntFieldsWithInstanceId(instance.id)
+                }
+                Type.DoubleField -> {
+                    eventDao.deleteEventInstanceDoubleFieldsWithInstanceId(instance.id)
+                }
+                else -> {
+                    throw NotImplementedError()
+                }
+            }
+        }
+        eventDao.deleteEventInstance(instance.id)
     }
 
     override suspend fun insertEvent(event: Event): Long {
