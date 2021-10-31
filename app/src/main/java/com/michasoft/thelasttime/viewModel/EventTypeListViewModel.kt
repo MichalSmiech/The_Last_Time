@@ -2,7 +2,7 @@ package com.michasoft.thelasttime.viewModel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.michasoft.thelasttime.model.EventType
+import com.michasoft.thelasttime.model.Event
 import com.michasoft.thelasttime.model.repo.IEventRepository
 import com.michasoft.thelasttime.util.FlowEvent
 import kotlinx.coroutines.launch
@@ -15,7 +15,7 @@ import javax.inject.Inject
 class EventTypeListViewModel @Inject constructor(
     private val eventRepository: IEventRepository
 ): CommonViewModel() {
-    var eventTypes = MutableLiveData<List<EventType>>(emptyList())
+    var eventTypes = MutableLiveData<List<Event>>(emptyList())
 
     fun createNewEventType() {
         flowEventBus.value = CreateNewEventType()
@@ -28,19 +28,19 @@ class EventTypeListViewModel @Inject constructor(
         }
     }
 
-    fun quickAddEvent(eventType: EventType) {
-        eventTypes.value?.find { it.id == eventType.id }?.let {
+    fun quickAddEvent(event: Event) {
+        eventTypes.value?.find { it.id == event.id }?.let {
             it.lastEventTimestamp = DateTime.now()
         }?.also {
             eventTypes.postValue(eventTypes.value)
         }
     }
 
-    fun showEventType(eventType: EventType) {
-        flowEventBus.value = ShowEventType(eventType.id)
+    fun showEventType(event: Event) {
+        flowEventBus.value = ShowEventType(event.id)
     }
 
-    fun addEvent(eventType: EventType) {
+    fun addEvent(event: Event) {
         //TODO
     }
 

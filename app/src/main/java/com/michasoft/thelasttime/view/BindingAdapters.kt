@@ -2,11 +2,10 @@ package com.michasoft.thelasttime.view
 
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.michasoft.thelasttime.model.EventInstance
 import com.michasoft.thelasttime.model.Event
-import com.michasoft.thelasttime.model.EventType
 import com.michasoft.thelasttime.view.adapter.EventListAdapter
 import com.michasoft.thelasttime.view.adapter.EventTypeListAdapter
-import com.michasoft.thelasttime.viewModel.EditEventTypeViewModel
 import com.michasoft.thelasttime.viewModel.EventTypeListViewModel
 import com.michasoft.thelasttime.viewModel.EventTypeViewModel
 
@@ -15,21 +14,21 @@ import com.michasoft.thelasttime.viewModel.EventTypeViewModel
  */
 
 @BindingAdapter(value = ["eventTypes", "viewModel"], requireAll = true)
-fun RecyclerView.setEventTypes(eventTypes: List<EventType>, viewModel: EventTypeListViewModel) {
+fun RecyclerView.setEventTypes(events: List<Event>, viewModel: EventTypeListViewModel) {
     if (this.adapter == null) {
-        this.adapter = EventTypeListAdapter(eventTypes, viewModel)
+        this.adapter = EventTypeListAdapter(events, viewModel)
     } else {
-        (this.adapter as EventTypeListAdapter).setData(eventTypes)
+        (this.adapter as EventTypeListAdapter).setData(events)
         (this.adapter as EventTypeListAdapter).viewModel = viewModel
     }
 }
 
 @BindingAdapter(value = ["eventTypes", "viewModel"], requireAll = true)
-fun RecyclerView.setEvents(events: List<Event>, viewModel: EventTypeViewModel) {
+fun RecyclerView.setEvents(eventInstances: List<EventInstance>, viewModel: EventTypeViewModel) {
     if (this.adapter == null) {
-        this.adapter = EventListAdapter(events, viewModel)
+        this.adapter = EventListAdapter(eventInstances, viewModel)
     } else {
-        (this.adapter as EventListAdapter).setData(events)
+        (this.adapter as EventListAdapter).setData(eventInstances)
         (this.adapter as EventListAdapter).viewModel = viewModel
     }
 }

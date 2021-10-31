@@ -6,10 +6,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.michasoft.thelasttime.R
 import com.michasoft.thelasttime.databinding.ListitemEventBinding
-import com.michasoft.thelasttime.databinding.ListitemEventTypeBinding
-import com.michasoft.thelasttime.model.Event
-import com.michasoft.thelasttime.model.EventType
-import com.michasoft.thelasttime.view.viewHolder.EventTypeViewHolder
+import com.michasoft.thelasttime.model.EventInstance
 import com.michasoft.thelasttime.view.viewHolder.EventViewHolder
 import com.michasoft.thelasttime.viewModel.EventTypeViewModel
 
@@ -17,10 +14,10 @@ import com.michasoft.thelasttime.viewModel.EventTypeViewModel
  * Created by mśmiech on 08.07.2021.
  */
 class EventListAdapter(
-    events: List<Event>,
+    eventInstances: List<EventInstance>,
     var viewModel: EventTypeViewModel
 ) : RecyclerView.Adapter<EventViewHolder>() {
-    private var events = ArrayList<Event>(events)
+    private var events = ArrayList<EventInstance>(eventInstances)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EventViewHolder {
         val binding: ListitemEventBinding = DataBindingUtil.inflate(
@@ -35,14 +32,14 @@ class EventListAdapter(
 
     override fun onBindViewHolder(holder: EventViewHolder, position: Int) {
         val event = events[position]
-        holder.event = event
+        holder.eventInstance = event
     }
 
     override fun getItemCount(): Int {
         return events.size
     }
 
-    fun setData(data: List<Event>) {
+    fun setData(data: List<EventInstance>) {
         events = ArrayList(data)
         notifyDataSetChanged()
     }

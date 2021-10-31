@@ -1,6 +1,5 @@
 package com.michasoft.thelasttime.view
 
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.viewModels
@@ -9,13 +8,9 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
 import com.michasoft.thelasttime.R
 import com.michasoft.thelasttime.databinding.ActivityEditEventTypeBinding
-import com.michasoft.thelasttime.databinding.ActivityEventTypeListBinding
-import com.michasoft.thelasttime.model.EventType
 import com.michasoft.thelasttime.viewModel.CommonViewModel
 import com.michasoft.thelasttime.viewModel.EditEventTypeViewModel
-import com.michasoft.thelasttime.viewModel.EventTypeListViewModel
 import dagger.android.AndroidInjection
-import org.joda.time.DateTime
 import javax.inject.Inject
 
 class EditEventTypeActivity : AppCompatActivity() {
