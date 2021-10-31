@@ -54,6 +54,7 @@ dependencies {
     implementation androidx_lifecycle.lifecycle_viewmodel_ktx
     implementation androidx_lifecycle.lifecycle_livedata_ktx
     implementation androidx_lifecycle.lifecycle_extensions
+    implementation androidx_lifecycle.lifecycle_runtime_ktx
 
     implementation room.room_runtime
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
