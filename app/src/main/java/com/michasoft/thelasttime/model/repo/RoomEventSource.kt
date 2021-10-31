@@ -4,6 +4,7 @@ import com.michasoft.thelasttime.model.EventInstance
 import com.michasoft.thelasttime.model.Event
 import com.michasoft.thelasttime.model.EventInstanceField
 import com.michasoft.thelasttime.model.EventInstanceField.Type
+import com.michasoft.thelasttime.model.EventInstanceScheme
 import com.michasoft.thelasttime.model.eventInstanceField.DoubleField
 import com.michasoft.thelasttime.model.eventInstanceField.IntField
 import com.michasoft.thelasttime.model.eventInstanceField.TextField
@@ -22,6 +23,13 @@ class RoomEventSource(private val eventDao: EventDao): IEventSource {
     override suspend fun getEvent(eventId: Long): Event? {
         val eventEntity = eventDao.getEvent(eventId) ?: return null
         return eventEntity.toModel()
+    }
+
+    override suspend fun getEventInstanceScheme(eventId: Long): EventInstanceScheme {
+        val eventInstanceFieldSchemaEntities =
+            eventDao.getEventInstanceFieldSchemas(eventId).sortedBy { it.order }
+        val eventInstanceFieldSchemas = eventInstanceFieldSchemaEntities.map { it.toModel() }
+        return EventInstanceScheme(eventInstanceFieldSchemas)
     }
 
     override suspend fun getEventInstance(instanceId: Long): EventInstance? {
@@ -89,13 +97,5 @@ class RoomEventSource(private val eventDao: EventDao): IEventSource {
         }
         instance.id = instanceId
         return instanceId
-    }
-
-    override suspend fun saveEventInstance(instance: EventInstance) {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun saveEvent(event: Event) {
-        TODO("Not yet implemented")
     }
 }

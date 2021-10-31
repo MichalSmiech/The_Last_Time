@@ -5,6 +5,7 @@ import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
 import com.michasoft.thelasttime.model.EventInstanceField
 import com.michasoft.thelasttime.model.EventInstanceFieldSchema
+import com.michasoft.thelasttime.model.EventInstanceScheme
 
 /**
  * Created by mśmiech on 31.10.2021.
@@ -19,6 +20,8 @@ class EventInstanceFieldSchemaEntity(
     var id: Long = 0L
 ) {
     constructor(eventId: Long, schema: EventInstanceFieldSchema): this(eventId, schema.order, schema.type, schema.displayTitle)
+
+    fun toModel() = EventInstanceFieldSchema(id, order, type, displayTitle)
 
     companion object {
         const val TABLE_NAME = "EventInstanceFieldSchemas"
