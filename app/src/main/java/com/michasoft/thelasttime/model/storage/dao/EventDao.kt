@@ -16,7 +16,7 @@ import com.michasoft.thelasttime.model.storage.entity.eventInstanceField.EventIn
 @Dao
 interface EventDao {
     @Insert
-    suspend fun insertEvent(event: EventEntity)
+    suspend fun insertEvent(event: EventEntity): Long
 
     @Update
     suspend fun updateEvent(event: EventEntity)
@@ -32,6 +32,9 @@ interface EventDao {
 
     @Query("SELECT * FROM ${EventInstanceFieldSchemaEntity.TABLE_NAME} WHERE eventId=:eventId")
     suspend fun getEventInstanceFieldSchemas(eventId: Long): List<EventInstanceFieldSchemaEntity>
+
+    @Insert
+    suspend fun insertEventInstanceFieldSchema(schema: EventInstanceFieldSchemaEntity): Long
 
     @Query("SELECT * FROM ${EventInstanceTextFieldEntity.TABLE_NAME} WHERE instanceId=:instanceId AND fieldSchemaId=:fieldSchemaId")
     suspend fun getEventInstanceTextField(instanceId: Long, fieldSchemaId: Long): EventInstanceTextFieldEntity

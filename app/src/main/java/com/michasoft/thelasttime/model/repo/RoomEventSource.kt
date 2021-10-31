@@ -8,7 +8,9 @@ import com.michasoft.thelasttime.model.eventInstanceField.DoubleField
 import com.michasoft.thelasttime.model.eventInstanceField.IntField
 import com.michasoft.thelasttime.model.eventInstanceField.TextField
 import com.michasoft.thelasttime.model.storage.dao.EventDao
+import com.michasoft.thelasttime.model.storage.entity.EventEntity
 import com.michasoft.thelasttime.model.storage.entity.EventInstanceEntity
+import com.michasoft.thelasttime.model.storage.entity.EventInstanceFieldSchemaEntity
 import com.michasoft.thelasttime.model.storage.entity.eventInstanceField.EventInstanceDoubleFieldEntity
 import com.michasoft.thelasttime.model.storage.entity.eventInstanceField.EventInstanceIntFieldEntity
 import com.michasoft.thelasttime.model.storage.entity.eventInstanceField.EventInstanceTextFieldEntity
@@ -58,7 +60,13 @@ class RoomEventSource(private val eventDao: EventDao): IEventSource {
     }
 
     override suspend fun insertEvent(event: Event): Long {
-        TODO("Not yet implemented")
+        assert(event.eventInstanceScheme != null)
+        val eventId = eventDao.insertEvent(EventEntity(event))
+        event.eventInstanceScheme!!.fieldSchemas.forEach { fieldSchema ->
+            fieldSchema.id = eventDao.insertEventInstanceFieldSchema(EventInstanceFieldSchemaEntity(eventId, fieldSchema))
+        }
+        event.id = eventId
+        return eventId
     }
 
     override suspend fun insertEventInstance(instance: EventInstance): Long {
@@ -79,6 +87,7 @@ class RoomEventSource(private val eventDao: EventDao): IEventSource {
                 }
             }
         }
+        instance.id = instanceId
         return instanceId
     }
 

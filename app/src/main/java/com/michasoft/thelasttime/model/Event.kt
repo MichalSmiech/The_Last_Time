@@ -10,5 +10,5 @@ data class Event(
     var displayName: String
 ) {
     var lastEventTimestamp: DateTime? = null
-    var eventInstanceScheme: EventInstanceFieldSchema? = null
+    var eventInstanceScheme: EventInstanceScheme? = null
 }

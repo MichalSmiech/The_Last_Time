@@ -9,10 +9,11 @@ import com.michasoft.thelasttime.model.Event
  */
 @Entity(tableName = EventEntity.TABLE_NAME)
 class EventEntity(
+    val displayName: String,
     @PrimaryKey(autoGenerate = true)
-    val id: Long = 0L,
-    val displayName: String
+    var id: Long = 0L
 ) {
+    constructor(event: Event): this(event.displayName)
     fun toModel() = Event(id, displayName)
 
     companion object {
