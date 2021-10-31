@@ -1,6 +1,7 @@
 package com.michasoft.thelasttime.util
 
 import androidx.room.TypeConverter
+import com.michasoft.thelasttime.model.EventInstanceField
 import org.joda.time.DateTime
 import java.util.*
 
@@ -14,4 +15,10 @@ class RoomConverters {
 
     @TypeConverter
     fun dateTimeToTimestamp(dateTime: DateTime): Long = dateTime.millis
+
+    @TypeConverter
+    fun fromEventInstanceFieldType(value: EventInstanceField.Type?) = value?.toString()
+
+    @TypeConverter
+    fun toEventInstanceFieldType(value: String?) = value?.let(EventInstanceField.Type::valueOf)
 }

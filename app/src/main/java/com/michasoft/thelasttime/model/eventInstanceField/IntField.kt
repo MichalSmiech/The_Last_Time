@@ -5,4 +5,7 @@ import com.michasoft.thelasttime.model.EventInstanceField
 /**
  * Created by mśmiech on 31.10.2021.
  */
-data class IntField(val value: Int?): EventInstanceField()
+class IntField(
+    fieldSchemaId: Long,
+    val value: Int?
+) : EventInstanceField(fieldSchemaId, Type.IntField)

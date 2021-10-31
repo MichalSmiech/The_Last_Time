@@ -9,6 +9,8 @@ import com.michasoft.thelasttime.model.Event
 interface IEventSource {
     suspend fun getEvent(eventId: Long): Event?
     suspend fun getEventInstance(instanceId: Long): EventInstance?
+    suspend fun insertEvent(event: Event): Long
+    suspend fun insertEventInstance(instance: EventInstance): Long
     suspend fun saveEventInstance(instance: EventInstance)
     suspend fun saveEvent(event: Event)
 }

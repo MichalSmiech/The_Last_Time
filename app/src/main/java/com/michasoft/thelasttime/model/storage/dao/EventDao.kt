@@ -27,15 +27,27 @@ interface EventDao {
     @Query("SELECT * FROM ${EventInstanceEntity.TABLE_NAME} WHERE id=:id")
     suspend fun getEventInstance(id: Long): EventInstanceEntity?
 
+    @Insert
+    suspend fun insertEventInstance(instance: EventInstanceEntity): Long
+
     @Query("SELECT * FROM ${EventInstanceFieldSchemaEntity.TABLE_NAME} WHERE eventId=:eventId")
     suspend fun getEventInstanceFieldSchemas(eventId: Long): List<EventInstanceFieldSchemaEntity>
 
     @Query("SELECT * FROM ${EventInstanceTextFieldEntity.TABLE_NAME} WHERE instanceId=:instanceId AND fieldSchemaId=:fieldSchemaId")
     suspend fun getEventInstanceTextField(instanceId: Long, fieldSchemaId: Long): EventInstanceTextFieldEntity
 
+    @Insert
+    suspend fun insertEventInstanceTextField(field: EventInstanceTextFieldEntity)
+
     @Query("SELECT * FROM ${EventInstanceIntFieldEntity.TABLE_NAME} WHERE instanceId=:instanceId AND fieldSchemaId=:fieldSchemaId")
     suspend fun getEventInstanceIntField(instanceId: Long, fieldSchemaId: Long): EventInstanceIntFieldEntity
 
+    @Insert
+    suspend fun insertEventInstanceIntField(field: EventInstanceIntFieldEntity)
+
     @Query("SELECT * FROM ${EventInstanceDoubleFieldEntity.TABLE_NAME} WHERE instanceId=:instanceId AND fieldSchemaId=:fieldSchemaId")
     suspend fun getEventInstanceDoubleField(instanceId: Long, fieldSchemaId: Long): EventInstanceDoubleFieldEntity
+
+    @Insert
+    suspend fun insertEventInstanceDoubleField(field: EventInstanceDoubleFieldEntity)
 }

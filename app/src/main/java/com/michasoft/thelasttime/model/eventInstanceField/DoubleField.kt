@@ -5,4 +5,7 @@ import com.michasoft.thelasttime.model.EventInstanceField
 /**
  * Created by mśmiech on 31.10.2021.
  */
-data class DoubleField(val value: Double?): EventInstanceField()
+class DoubleField(
+    fieldSchemaId: Long,
+    val value: Double?
+) : EventInstanceField(fieldSchemaId, Type.DoubleField)
