@@ -59,6 +59,12 @@ dependencies {
     implementation room.room_ktx
     implementation room.room_rxjava2
 
+    implementation firebase.firebase_analytics
+    implementation firebase.firebase_crashlytics
+    implementation firebase.firebase_ui_auth
+    implementation firebase.firebase_auth
+    implementation firebase.firebase_firestore
+
     //testing
     testImplementation testing.junit
     androidTestImplementation testing.android_junit

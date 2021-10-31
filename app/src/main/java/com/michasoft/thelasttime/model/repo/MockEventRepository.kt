@@ -15,8 +15,8 @@ class MockEventRepository: IEventRepository {
     private val eventsMap = mutableMapOf<Long, List<EventInstance>>()
 
     init {
-        eventTypeMap[1L] = Event(1L, "Plants", DateTime.now())
-        eventTypeMap[2L] = Event(2L, "Vacuum", DateTime.now().minusDays(3))
+//        eventTypeMap[1L] = Event(1L, "Plants", DateTime.now())
+//        eventTypeMap[2L] = Event(2L, "Vacuum", DateTime.now().minusDays(3))
     }
 
     override suspend fun getEventTypes(): ArrayList<Event> {
@@ -24,7 +24,7 @@ class MockEventRepository: IEventRepository {
     }
 
     override suspend fun getEvent(eventId: Long): EventInstance {
-        return EventInstance(eventId, DateTime.now(), 1L)
+        return EventInstance(1, eventId, DateTime.now(), ArrayList())
     }
 
     override suspend fun getEventType(eventTypeId: Long): Event {
@@ -36,16 +36,16 @@ class MockEventRepository: IEventRepository {
             return eventsMap[eventTypeId]!!
         }
         val result = arrayListOf<EventInstance>()
-        for (i in 0..Random.nextInt(5, 20)) {
-            result.add(EventInstance(Random.nextLong(), DateTime.now().minusDays(Random.nextInt(2, 100)), eventTypeId))
-        }
+//        for (i in 0..Random.nextInt(5, 20)) {
+//            result.add(EventInstance(Random.nextLong(), DateTime.now().minusDays(Random.nextInt(2, 100)), eventTypeId))
+//        }
         result.sortBy { event -> event.timestamp.millis }
         eventsMap[eventTypeId] = result
         return result
     }
 
     private fun createNewEventType(): Event {
-        return Event(0L, "", null)
+        return Event(0L, "")
     }
 
     override fun save(event: Event) {
