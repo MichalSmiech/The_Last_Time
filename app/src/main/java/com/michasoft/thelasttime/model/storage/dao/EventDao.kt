@@ -18,14 +18,17 @@ interface EventDao {
     @Insert
     suspend fun insertEvent(event: EventEntity): Long
 
-    @Update
-    suspend fun updateEvent(event: EventEntity)
-
     @Query("SELECT * FROM ${EventEntity.TABLE_NAME} WHERE id=:id")
     suspend fun getEvent(id: Long): EventEntity?
 
+    @Query("DELETE FROM ${EventEntity.TABLE_NAME} WHERE id=:id")
+    suspend fun deleteEvent(id: Long)
+
     @Query("SELECT * FROM ${EventInstanceEntity.TABLE_NAME} WHERE id=:id")
     suspend fun getEventInstance(id: Long): EventInstanceEntity?
+
+    @Query("SELECT id FROM ${EventInstanceEntity.TABLE_NAME} WHERE eventId=:eventId")
+    suspend fun getAllEventInstanceIdsWithEventId(eventId: Long): List<Long>
 
     @Insert
     suspend fun insertEventInstance(instance: EventInstanceEntity): Long
@@ -38,6 +41,9 @@ interface EventDao {
 
     @Insert
     suspend fun insertEventInstanceFieldSchema(schema: EventInstanceFieldSchemaEntity): Long
+
+    @Query("DELETE FROM ${EventInstanceFieldSchemaEntity.TABLE_NAME} WHERE eventId=:eventId")
+    suspend fun deleteEventInstanceFieldSchemasWithEventId(eventId: Long)
 
     @Query("SELECT * FROM ${EventInstanceTextFieldEntity.TABLE_NAME} WHERE instanceId=:instanceId AND fieldSchemaId=:fieldSchemaId")
     suspend fun getEventInstanceTextField(instanceId: Long, fieldSchemaId: Long): EventInstanceTextFieldEntity

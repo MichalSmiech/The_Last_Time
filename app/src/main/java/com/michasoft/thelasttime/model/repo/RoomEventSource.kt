@@ -25,8 +25,13 @@ class RoomEventSource(private val eventDao: EventDao): IEventSource {
         return eventEntity.toModel()
     }
 
-    override suspend fun deleteEvent(event: Event) {
-        TODO("Not yet implemented")
+    override suspend fun deleteEvent(eventId: Long) {
+        val instanceIds = eventDao.getAllEventInstanceIdsWithEventId(eventId)
+        instanceIds.forEach { instanceId ->
+            deleteEventInstance(eventId, instanceId)
+        }
+        eventDao.deleteEventInstanceFieldSchemasWithEventId(eventId)
+        eventDao.deleteEvent(eventId)
     }
 
     override suspend fun getEventInstanceScheme(eventId: Long): EventInstanceScheme {
@@ -72,25 +77,29 @@ class RoomEventSource(private val eventDao: EventDao): IEventSource {
     }
 
     override suspend fun deleteEventInstance(instance: EventInstance) {
+        deleteEventInstance(instance.eventId, instance.id)
+    }
+
+    private suspend fun deleteEventInstance(eventId: Long, instanceId: Long) {
         val eventInstanceFieldSchemaEntities =
-            eventDao.getEventInstanceFieldSchemas(instance.eventId)
+            eventDao.getEventInstanceFieldSchemas(eventId)
         eventInstanceFieldSchemaEntities.distinctBy { it.type }.forEach { fieldSchema ->
             when (fieldSchema.type) {
                 Type.TextField -> {
-                    eventDao.deleteEventInstanceTextFieldsWithInstanceId(instance.id)
+                    eventDao.deleteEventInstanceTextFieldsWithInstanceId(instanceId)
                 }
                 Type.IntField -> {
-                    eventDao.deleteEventInstanceIntFieldsWithInstanceId(instance.id)
+                    eventDao.deleteEventInstanceIntFieldsWithInstanceId(instanceId)
                 }
                 Type.DoubleField -> {
-                    eventDao.deleteEventInstanceDoubleFieldsWithInstanceId(instance.id)
+                    eventDao.deleteEventInstanceDoubleFieldsWithInstanceId(instanceId)
                 }
                 else -> {
                     throw NotImplementedError()
                 }
             }
         }
-        eventDao.deleteEventInstance(instance.id)
+        eventDao.deleteEventInstance(instanceId)
     }
 
     override suspend fun insertEvent(event: Event): Long {

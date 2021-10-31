@@ -10,7 +10,7 @@ import com.michasoft.thelasttime.model.EventInstanceScheme
 interface IEventSource {
     suspend fun insertEvent(event: Event): Long
     suspend fun getEvent(eventId: Long): Event?
-    suspend fun deleteEvent(event: Event)
+    suspend fun deleteEvent(eventId: Long)
 
     suspend fun getEventInstanceScheme(eventId: Long): EventInstanceScheme
 
