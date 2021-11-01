@@ -5,13 +5,20 @@ import com.michasoft.thelasttime.model.Event
 import org.joda.time.DateTime
 import java.lang.IllegalStateException
 import java.util.Collections.max
-import kotlin.random.Random
 
 /**
  * Created by mśmiech on 11.11.2020.
  */
 class MockEventRepository: IEventRepository {
     private val eventTypeMap = mutableMapOf<Long, Event>()
+    override suspend fun insertEvent(event: Event) {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun insertEventInstance(instance: EventInstance) {
+        TODO("Not yet implemented")
+    }
+
     private val eventsMap = mutableMapOf<Long, List<EventInstance>>()
 
     init {
@@ -19,28 +26,28 @@ class MockEventRepository: IEventRepository {
 //        eventTypeMap[2L] = Event(2L, "Vacuum", DateTime.now().minusDays(3))
     }
 
-    override suspend fun getEventTypes(): ArrayList<Event> {
+    override suspend fun getEvents(): ArrayList<Event> {
         return ArrayList(eventTypeMap.values.toList())
     }
 
-    override suspend fun getEvent(eventId: Long): EventInstance {
-        return EventInstance(1, eventId, DateTime.now(), ArrayList())
+    override suspend fun getEventInstance(eventId: Long, instanceId: Long): EventInstance {
+        return EventInstance(1, instanceId, DateTime.now(), ArrayList())
     }
 
-    override suspend fun getEventType(eventTypeId: Long): Event {
-        return eventTypeMap[eventTypeId]?.copy() ?: createNewEventType()
+    override suspend fun getEvent(eventId: Long): Event {
+        return eventTypeMap[eventId]?.copy() ?: createNewEventType()
     }
 
-    override suspend fun getEvents(eventTypeId: Long): List<EventInstance> {
-        if(eventsMap.containsKey(eventTypeId)) {
-            return eventsMap[eventTypeId]!!
+    override suspend fun getEventInstances(eventId: Long): List<EventInstance> {
+        if(eventsMap.containsKey(eventId)) {
+            return eventsMap[eventId]!!
         }
         val result = arrayListOf<EventInstance>()
 //        for (i in 0..Random.nextInt(5, 20)) {
 //            result.add(EventInstance(Random.nextLong(), DateTime.now().minusDays(Random.nextInt(2, 100)), eventTypeId))
 //        }
         result.sortBy { event -> event.timestamp.millis }
-        eventsMap[eventTypeId] = result
+        eventsMap[eventId] = result
         return result
     }
 

@@ -2,10 +2,8 @@ package com.michasoft.thelasttime.model.storage.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import androidx.room.TypeConverters
 import com.michasoft.thelasttime.model.EventInstanceField
 import com.michasoft.thelasttime.model.EventInstanceFieldSchema
-import com.michasoft.thelasttime.model.EventInstanceScheme
 
 /**
  * Created by mśmiech on 31.10.2021.

@@ -3,7 +3,7 @@ package com.michasoft.thelasttime.model.repo
 import com.google.firebase.firestore.CollectionReference
 import com.michasoft.thelasttime.model.Event
 import com.michasoft.thelasttime.model.EventInstance
-import com.michasoft.thelasttime.model.EventInstanceScheme
+import com.michasoft.thelasttime.model.EventInstanceSchema
 import com.michasoft.thelasttime.model.remote.dto.EventDto
 import com.michasoft.thelasttime.model.remote.dto.EventInstanceFieldSchemaDto
 import kotlinx.coroutines.tasks.await
@@ -11,16 +11,16 @@ import kotlinx.coroutines.tasks.await
 /**
  * Created by mśmiech on 01.11.2021.
  */
-class FirestoreEventSource(private val eventCollectionRef: CollectionReference) : IEventSource {
+class FirestoreEventSource(private val eventCollectionRef: CollectionReference) : IRemoteEventSource {
     override suspend fun insertEvent(event: Event): Long {
         assert(event.id != 0L)
-        assert(event.eventInstanceScheme != null)
+        assert(event.eventInstanceSchema != null)
         val dto = EventDto(event)
         val documentRef = eventCollectionRef.document(event.id.toString())
         documentRef.set(dto).await()
         val fieldSchemaCollection =
             documentRef.collection(EVENT_INSTANCE_FIELD_SCHEMAS_COLLECTION_NAME)
-        event.eventInstanceScheme!!.fieldSchemas.forEach { fieldSchema ->
+        event.eventInstanceSchema!!.fieldSchemas.forEach { fieldSchema ->
             val fieldSchemaDto = EventInstanceFieldSchemaDto(fieldSchema)
             fieldSchemaCollection.document(fieldSchema.id.toString()).set(fieldSchemaDto).await()
         }
@@ -37,7 +37,7 @@ class FirestoreEventSource(private val eventCollectionRef: CollectionReference) 
         eventCollectionRef.document(eventId.toString()).delete().await()
     }
 
-    override suspend fun getEventInstanceScheme(eventId: Long): EventInstanceScheme {
+    override suspend fun getEventInstanceSchema(eventId: Long): EventInstanceSchema {
         val fieldSchemaCollection = eventCollectionRef.document(eventId.toString())
             .collection(EVENT_INSTANCE_FIELD_SCHEMAS_COLLECTION_NAME)
         val querySnapshot = fieldSchemaCollection.get().await()
@@ -46,7 +46,7 @@ class FirestoreEventSource(private val eventCollectionRef: CollectionReference) 
         }
             .sortedBy { it.order }
             .toList()
-        return EventInstanceScheme(fieldSchemas)
+        return EventInstanceSchema(fieldSchemas)
     }
 
     override suspend fun insertEventInstance(instance: EventInstance): Long {
@@ -60,14 +60,9 @@ class FirestoreEventSource(private val eventCollectionRef: CollectionReference) 
         return instance.id
     }
 
-    override suspend fun getEventInstance(eventId: Long, instanceId: Long): EventInstance? {
-        val instanceScheme = getEventInstanceScheme(eventId)
-        return getEventInstance(eventId, instanceScheme, instanceId)
-    }
-
     override suspend fun getEventInstance(
         eventId: Long,
-        instanceScheme: EventInstanceScheme,
+        instanceSchema: EventInstanceSchema,
         instanceId: Long
     ): EventInstance? {
         val instanceSnapshot = eventCollectionRef.document(eventId.toString())
@@ -77,7 +72,7 @@ class FirestoreEventSource(private val eventCollectionRef: CollectionReference) 
             .await()
         val instanceMap = instanceSnapshot.data
         instanceMap ?: return null
-        return EventInstance(instanceSnapshot.id.toLong(), instanceMap, instanceScheme)
+        return EventInstance(instanceSnapshot.id.toLong(), instanceMap, instanceSchema)
     }
 
     override suspend fun deleteEventInstance(instance: EventInstance) {

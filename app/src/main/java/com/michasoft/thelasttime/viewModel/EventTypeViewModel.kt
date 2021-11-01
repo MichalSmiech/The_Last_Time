@@ -23,10 +23,10 @@ class EventTypeViewModel @Inject constructor(
     fun start(eventTypeId: Long) {
         viewModelScope.launch {
             this@EventTypeViewModel.eventTypeId = eventTypeId
-            val eventType = eventRepository.getEventType(eventTypeId)
+            val eventType = eventRepository.getEvent(eventTypeId)!!
             originalEvent = eventType
             name.value = eventType.displayName
-            events.value = eventRepository.getEvents(eventTypeId)
+            events.value = eventRepository.getEventInstances(eventTypeId)
         }
     }
 

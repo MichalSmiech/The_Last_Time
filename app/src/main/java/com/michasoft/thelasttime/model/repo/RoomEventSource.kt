@@ -4,7 +4,7 @@ import com.michasoft.thelasttime.model.EventInstance
 import com.michasoft.thelasttime.model.Event
 import com.michasoft.thelasttime.model.EventInstanceField
 import com.michasoft.thelasttime.model.EventInstanceField.Type
-import com.michasoft.thelasttime.model.EventInstanceScheme
+import com.michasoft.thelasttime.model.EventInstanceSchema
 import com.michasoft.thelasttime.model.eventInstanceField.DoubleField
 import com.michasoft.thelasttime.model.eventInstanceField.IntField
 import com.michasoft.thelasttime.model.eventInstanceField.TextField
@@ -19,7 +19,7 @@ import com.michasoft.thelasttime.model.storage.entity.eventInstanceField.EventIn
 /**
  * Created by mśmiech on 05.09.2021.
  */
-class RoomEventSource(private val eventDao: EventDao): IEventSource {
+class RoomEventSource(private val eventDao: EventDao): ILocalEventSource {
     override suspend fun getEvent(eventId: Long): Event? {
         val eventEntity = eventDao.getEvent(eventId) ?: return null
         return eventEntity.toModel()
@@ -34,19 +34,25 @@ class RoomEventSource(private val eventDao: EventDao): IEventSource {
         eventDao.deleteEvent(eventId)
     }
 
-    override suspend fun getEventInstanceScheme(eventId: Long): EventInstanceScheme {
+    override suspend fun getEventInstanceSchema(eventId: Long): EventInstanceSchema {
         val eventInstanceFieldSchemaEntities =
             eventDao.getEventInstanceFieldSchemas(eventId).sortedBy { it.order }
         val eventInstanceFieldSchemas = eventInstanceFieldSchemaEntities.map { it.toModel() }
-        return EventInstanceScheme(eventInstanceFieldSchemas)
+        return EventInstanceSchema(eventInstanceFieldSchemas)
     }
 
     override suspend fun getEventInstance(eventId: Long, instanceId: Long): EventInstance? {
+        val eventInstanceSchema = getEventInstanceSchema(eventId)
+        return getEventInstance(eventInstanceSchema, instanceId)
+    }
+
+    override suspend fun getEventInstance(
+        instanceSchema: EventInstanceSchema,
+        instanceId: Long
+    ): EventInstance? {
         val eventInstanceEntity = eventDao.getEventInstance(instanceId) ?: return null
-        val eventInstanceFieldSchemaEntities =
-            eventDao.getEventInstanceFieldSchemas(eventInstanceEntity.eventId).sortedBy { it.order }
-        val eventInstanceFields = ArrayList<EventInstanceField>()
-        eventInstanceFieldSchemaEntities.forEach { fieldSchema ->
+        val eventInstanceFields = ArrayList<EventInstanceField>(instanceSchema.fieldSchemas.size)
+        instanceSchema.fieldSchemas.forEach { fieldSchema ->
             when(fieldSchema.type) {
                 Type.TextField -> {
                     val eventInstanceTextFieldEntity =
@@ -76,14 +82,6 @@ class RoomEventSource(private val eventDao: EventDao): IEventSource {
         )
     }
 
-    override suspend fun getEventInstance(
-        eventId: Long,
-        instanceScheme: EventInstanceScheme,
-        instanceId: Long
-    ): EventInstance? {
-        return getEventInstance(eventId, instanceId)
-    }
-
     override suspend fun deleteEventInstance(instance: EventInstance) {
         deleteEventInstance(instance.eventId, instance.id)
     }
@@ -111,9 +109,9 @@ class RoomEventSource(private val eventDao: EventDao): IEventSource {
     }
 
     override suspend fun insertEvent(event: Event): Long {
-        assert(event.eventInstanceScheme != null)
+        assert(event.eventInstanceSchema != null)
         val eventId = eventDao.insertEvent(EventEntity(event))
-        event.eventInstanceScheme!!.fieldSchemas.forEach { fieldSchema ->
+        event.eventInstanceSchema!!.fieldSchemas.forEach { fieldSchema ->
             fieldSchema.id = eventDao.insertEventInstanceFieldSchema(EventInstanceFieldSchemaEntity(eventId, fieldSchema))
         }
         event.id = eventId

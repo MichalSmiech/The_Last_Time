@@ -23,7 +23,7 @@ class EventTypeListViewModel @Inject constructor(
 
     fun refreshData() {
         viewModelScope.launch {
-            eventTypes.value = eventRepository.getEventTypes()
+            eventTypes.value = eventRepository.getEvents()
 
         }
     }

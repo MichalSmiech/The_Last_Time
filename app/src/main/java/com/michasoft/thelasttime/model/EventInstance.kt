@@ -2,7 +2,6 @@ package com.michasoft.thelasttime.model
 
 import com.google.firebase.Timestamp
 import org.joda.time.DateTime
-import java.util.*
 import kotlin.collections.ArrayList
 
 /**
@@ -14,13 +13,13 @@ data class EventInstance(
     val timestamp: DateTime,
     val fields: ArrayList<EventInstanceField>
 ) {
-    constructor(id: Long, map: Map<String, Any?>, instanceScheme: EventInstanceScheme)
+    constructor(id: Long, map: Map<String, Any?>, instanceSchema: EventInstanceSchema)
             : this(
         id, map["eventId"] as Long,
         DateTime((map["timestamp"] as Timestamp).toDate()),
         ArrayList()
     ) {
-        instanceScheme.fieldSchemas.forEach { fieldSchema ->
+        instanceSchema.fieldSchemas.forEach { fieldSchema ->
             val field = fieldSchema.type.eventInstanceFieldFactory.create(fieldSchema, map)
             fields.add(field)
         }
