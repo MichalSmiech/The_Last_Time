@@ -81,7 +81,11 @@ class FirestoreEventSource(private val eventCollectionRef: CollectionReference) 
     }
 
     override suspend fun deleteEventInstance(instance: EventInstance) {
-        TODO("Not yet implemented")
+        val instanceCollection =
+            eventCollectionRef.document(instance.eventId.toString()).collection(
+                EVENT_INSTANCES_COLLECTION_NAME
+            )
+        instanceCollection.document(instance.id.toString()).delete().await()
     }
 
     companion object {
