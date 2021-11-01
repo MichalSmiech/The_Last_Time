@@ -15,6 +15,7 @@ interface IEventSource {
     suspend fun getEventInstanceScheme(eventId: Long): EventInstanceScheme
 
     suspend fun insertEventInstance(instance: EventInstance): Long
-    suspend fun getEventInstance(instanceId: Long): EventInstance?
+    suspend fun getEventInstance(eventId: Long, instanceId: Long): EventInstance?
+    suspend fun getEventInstance(eventId: Long, instanceScheme: EventInstanceScheme, instanceId: Long): EventInstance?
     suspend fun deleteEventInstance(instance: EventInstance)
 }

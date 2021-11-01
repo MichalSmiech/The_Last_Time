@@ -41,7 +41,7 @@ class RoomEventSource(private val eventDao: EventDao): IEventSource {
         return EventInstanceScheme(eventInstanceFieldSchemas)
     }
 
-    override suspend fun getEventInstance(instanceId: Long): EventInstance? {
+    override suspend fun getEventInstance(eventId: Long, instanceId: Long): EventInstance? {
         val eventInstanceEntity = eventDao.getEventInstance(instanceId) ?: return null
         val eventInstanceFieldSchemaEntities =
             eventDao.getEventInstanceFieldSchemas(eventInstanceEntity.eventId).sortedBy { it.order }
@@ -74,6 +74,14 @@ class RoomEventSource(private val eventDao: EventDao): IEventSource {
             eventInstanceEntity.timestamp,
             eventInstanceFields
         )
+    }
+
+    override suspend fun getEventInstance(
+        eventId: Long,
+        instanceScheme: EventInstanceScheme,
+        instanceId: Long
+    ): EventInstance? {
+        return getEventInstance(eventId, instanceId)
     }
 
     override suspend fun deleteEventInstance(instance: EventInstance) {
