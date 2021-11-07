@@ -13,8 +13,8 @@ import kotlinx.coroutines.tasks.await
  */
 class FirestoreEventSource(private val eventCollectionRef: CollectionReference) : IRemoteEventSource {
     override suspend fun insertEvent(event: Event): Long {
-        assert(event.id != 0L)
-        assert(event.eventInstanceSchema != null)
+        require(event.id != 0L)
+        requireNotNull(event.eventInstanceSchema)
         val dto = EventDto(event)
         val documentRef = eventCollectionRef.document(event.id.toString())
         documentRef.set(dto).await()
@@ -50,7 +50,7 @@ class FirestoreEventSource(private val eventCollectionRef: CollectionReference) 
     }
 
     override suspend fun insertEventInstance(instance: EventInstance): Long {
-        assert(instance.id != 0L)
+        require(instance.id != 0L)
         val instanceMap = instance.toMap()
         val instanceCollection =
             eventCollectionRef.document(instance.eventId.toString()).collection(

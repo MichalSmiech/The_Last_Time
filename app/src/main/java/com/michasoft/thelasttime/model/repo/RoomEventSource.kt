@@ -109,7 +109,7 @@ class RoomEventSource(private val eventDao: EventDao): ILocalEventSource {
     }
 
     override suspend fun insertEvent(event: Event): Long {
-        assert(event.eventInstanceSchema != null)
+        requireNotNull(event.eventInstanceSchema)
         val eventId = eventDao.insertEvent(EventEntity(event))
         event.eventInstanceSchema!!.fieldSchemas.forEach { fieldSchema ->
             fieldSchema.id = eventDao.insertEventInstanceFieldSchema(EventInstanceFieldSchemaEntity(eventId, fieldSchema))
