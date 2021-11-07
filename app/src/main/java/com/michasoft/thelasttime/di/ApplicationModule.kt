@@ -1,6 +1,7 @@
 package com.michasoft.thelasttime.di
 
 import android.content.Context
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
@@ -37,8 +38,8 @@ class ApplicationModule {
     @Singleton
     @Provides
     @Named("eventCollectionRef")
-    fun provideEventCollectionRef(firestore: FirebaseFirestore): CollectionReference {
-        return firestore.collection("users").document(Firebase.auth.currentUser!!.uid)
+    fun provideEventCollectionRef(firestore: FirebaseFirestore, firebaseAuth: FirebaseAuth): CollectionReference {
+        return firestore.collection("users").document(firebaseAuth.currentUser!!.uid)
             .collection("events")
     }
 
@@ -46,6 +47,12 @@ class ApplicationModule {
     @Provides
     fun provideRemoteEventSource(@Named("eventCollectionRef") eventCollectionRef: CollectionReference): IRemoteEventSource {
         return FirestoreEventSource(eventCollectionRef)
+    }
+
+    @Singleton
+    @Provides
+    fun provideFirebaseAuth(): FirebaseAuth {
+        return Firebase.auth
     }
 
     @Singleton
@@ -68,10 +75,4 @@ class ApplicationModule {
     ): IEventRepository {
         return EventRepository(localSource, remoteSource)
     }
-
-//    @Singleton
-//    @Provides
-//    fun provideEventsRepository(): IEventRepository {
-//        return MockEventRepository()
-//    }
 }

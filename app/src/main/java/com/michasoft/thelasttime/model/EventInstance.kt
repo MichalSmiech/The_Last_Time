@@ -13,9 +13,10 @@ data class EventInstance(
     val timestamp: DateTime,
     val fields: ArrayList<EventInstanceField>
 ) {
-    constructor(id: Long, map: Map<String, Any?>, instanceSchema: EventInstanceSchema)
+    constructor(eventId: Long, id: Long, map: Map<String, Any?>, instanceSchema: EventInstanceSchema)
             : this(
-        id, map["eventId"] as Long,
+        id,
+        eventId,
         DateTime((map["timestamp"] as Timestamp).toDate()),
         ArrayList()
     ) {
@@ -27,7 +28,6 @@ data class EventInstance(
 
     fun toMap(): Map<String, Any?> {
         val map = hashMapOf<String, Any?>()
-        map["eventId"] = eventId
         map["timestamp"] = Timestamp(timestamp.toDate())
         fields.forEach {
             map.putAll(it.toMap())

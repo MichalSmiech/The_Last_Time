@@ -3,6 +3,7 @@ package com.michasoft.thelasttime.model.repo
 import com.michasoft.thelasttime.model.Event
 import com.michasoft.thelasttime.model.EventInstance
 import com.michasoft.thelasttime.model.EventInstanceSchema
+import kotlinx.coroutines.flow.Flow
 
 /**
  * Created by mśmiech on 01.11.2021.
@@ -17,4 +18,7 @@ interface IRemoteEventSource {
     suspend fun insertEventInstance(instance: EventInstance): Long
     suspend fun getEventInstance(eventId: Long, instanceSchema: EventInstanceSchema, instanceId: Long): EventInstance?
     suspend fun deleteEventInstance(instance: EventInstance)
+
+    fun getAllEvents(): Flow<Event>
+    fun getAllEventInstances(eventId: Long, instanceSchema: EventInstanceSchema): Flow<EventInstance>
 }
