@@ -15,6 +15,8 @@ import com.michasoft.thelasttime.model.storage.entity.EventInstanceFieldSchemaEn
 import com.michasoft.thelasttime.model.storage.entity.eventInstanceField.EventInstanceDoubleFieldEntity
 import com.michasoft.thelasttime.model.storage.entity.eventInstanceField.EventInstanceIntFieldEntity
 import com.michasoft.thelasttime.model.storage.entity.eventInstanceField.EventInstanceTextFieldEntity
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 
 /**
  * Created by mśmiech on 05.09.2021.
@@ -125,6 +127,38 @@ class RoomEventSource(private val eventDao: EventDao): ILocalEventSource {
         eventDao.deleteAllEventInstanceTextFields()
         eventDao.deleteAllEventInstanceFieldSchemas()
         eventDao.deleteAllEvents()
+    }
+
+    override suspend fun clear() {
+        deleteAllEvents()
+    }
+
+    override suspend fun getAllEvents(): Flow<Event> = flow {
+        val offset = 0L
+        val limit = 100L
+        var hasNext = true
+        while(hasNext) {
+            val eventIds = eventDao.getEventIds(limit, offset)
+            eventIds.forEach { eventId ->
+                val event = getEvent(eventId)!!
+                emit(event)
+            }
+            hasNext = eventIds.isNotEmpty()
+        }
+    }
+
+    override suspend fun getAllEventInstances(eventId: Long, eventInstanceSchema: EventInstanceSchema): Flow<EventInstance> = flow {
+        val offset = 0L
+        val limit = 100L
+        var hasNext = true
+        while(hasNext) {
+            val instanceIds = eventDao.getEventInstanceIds(limit, offset)
+            instanceIds.forEach { instanceId ->
+                val instance = getEventInstance(eventInstanceSchema, instanceId)!!
+                emit(instance)
+            }
+            hasNext = instanceIds.isNotEmpty()
+        }
     }
 
     override suspend fun insertEventInstance(instance: EventInstance): Long {

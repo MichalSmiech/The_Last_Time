@@ -65,6 +65,21 @@ class FirestoreEventSource(private val firestore: FirebaseFirestore, private val
         return instance.id
     }
 
+    override suspend fun insertEventInstances(instances: List<EventInstance>) {
+        require(instances.size <= 500)
+        val batch = firestore.batch()
+        instances.forEach { instance ->
+            require(instance.id != 0L)
+            val instanceMap = instance.toMap()
+            val instanceCollection =
+                eventCollectionRef.document(instance.eventId.toString()).collection(
+                    EVENT_INSTANCES_COLLECTION_NAME
+                )
+            batch.set(instanceCollection.document(instance.id.toString()), instanceMap)
+        }
+        batch.commit().await()
+    }
+
     override suspend fun deleteAllEvents() {
         val baseQuery = eventCollectionRef.limit(500)
         var hasNext = true
@@ -94,8 +109,12 @@ class FirestoreEventSource(private val firestore: FirebaseFirestore, private val
         }
     }
 
+    override suspend fun clear() {
+        deleteAllEvents()
+    }
+
     override fun getAllEvents(): Flow<Event> = flow {
-        val baseQuery = eventCollectionRef.orderBy("displayName").limit(1000)
+        val baseQuery = eventCollectionRef.orderBy("displayName").limit(100)
         var hasNext = true
         var startAfter: DocumentSnapshot? = null
         while (hasNext) {
@@ -119,7 +138,7 @@ class FirestoreEventSource(private val firestore: FirebaseFirestore, private val
     override fun getAllEventInstances(eventId: Long, instanceSchema: EventInstanceSchema): Flow<EventInstance> = flow {
         val baseQuery = eventCollectionRef.document(eventId.toString()).collection(
             EVENT_INSTANCE_FIELD_SCHEMAS_COLLECTION_NAME
-        ).orderBy("timestamp").limit(1000)
+        ).orderBy("timestamp").limit(100)
         var hasNext = true
         var startAfter: DocumentSnapshot? = null
         while (hasNext) {

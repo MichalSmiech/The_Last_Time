@@ -53,6 +53,7 @@ dependencies {
     implementation libraries.kotlinx_coroutines_android
     implementation libraries.kotlinx_coroutines_core
     implementation libraries.kotlinx_coroutines_play_services
+    implementation libraries.datastore
 
     implementation androidx_lifecycle.lifecycle_viewmodel_ktx
     implementation androidx_lifecycle.lifecycle_livedata_ktx
