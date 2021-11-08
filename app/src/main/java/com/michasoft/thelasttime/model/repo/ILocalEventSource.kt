@@ -11,6 +11,7 @@ interface ILocalEventSource {
     suspend fun insertEvent(event: Event): Long
     suspend fun getEvent(eventId: Long): Event?
     suspend fun deleteEvent(eventId: Long)
+    suspend fun deleteAllEvents()
 
     suspend fun getEventInstanceSchema(eventId: Long): EventInstanceSchema
 

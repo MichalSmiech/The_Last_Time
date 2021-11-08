@@ -24,6 +24,9 @@ interface EventDao {
     @Query("DELETE FROM ${EventEntity.TABLE_NAME} WHERE id=:id")
     suspend fun deleteEvent(id: Long)
 
+    @Query("DELETE FROM ${EventEntity.TABLE_NAME}")
+    suspend fun deleteAllEvents()
+
     @Query("SELECT * FROM ${EventInstanceEntity.TABLE_NAME} WHERE id=:id")
     suspend fun getEventInstance(id: Long): EventInstanceEntity?
 
@@ -36,6 +39,9 @@ interface EventDao {
     @Query("DELETE FROM ${EventInstanceEntity.TABLE_NAME} WHERE id=:id")
     suspend fun deleteEventInstance(id: Long)
 
+    @Query("DELETE FROM ${EventInstanceEntity.TABLE_NAME}")
+    suspend fun deleteAllEventInstances()
+
     @Query("SELECT * FROM ${EventInstanceFieldSchemaEntity.TABLE_NAME} WHERE eventId=:eventId")
     suspend fun getEventInstanceFieldSchemas(eventId: Long): List<EventInstanceFieldSchemaEntity>
 
@@ -44,6 +50,9 @@ interface EventDao {
 
     @Query("DELETE FROM ${EventInstanceFieldSchemaEntity.TABLE_NAME} WHERE eventId=:eventId")
     suspend fun deleteEventInstanceFieldSchemasWithEventId(eventId: Long)
+
+    @Query("DELETE FROM ${EventInstanceFieldSchemaEntity.TABLE_NAME}")
+    suspend fun deleteAllEventInstanceFieldSchemas()
 
     @Query("SELECT * FROM ${EventInstanceTextFieldEntity.TABLE_NAME} WHERE instanceId=:instanceId AND fieldSchemaId=:fieldSchemaId")
     suspend fun getEventInstanceTextField(instanceId: Long, fieldSchemaId: Long): EventInstanceTextFieldEntity
@@ -55,6 +64,9 @@ interface EventDao {
     @Query("DELETE FROM ${EventInstanceTextFieldEntity.TABLE_NAME} WHERE instanceId=:instanceId")
     suspend fun deleteEventInstanceTextFieldsWithInstanceId(instanceId: Long)
 
+    @Query("DELETE FROM ${EventInstanceTextFieldEntity.TABLE_NAME}")
+    suspend fun deleteAllEventInstanceTextFields()
+
     @Query("SELECT * FROM ${EventInstanceIntFieldEntity.TABLE_NAME} WHERE instanceId=:instanceId AND fieldSchemaId=:fieldSchemaId")
     suspend fun getEventInstanceIntField(instanceId: Long, fieldSchemaId: Long): EventInstanceIntFieldEntity
 
@@ -64,6 +76,9 @@ interface EventDao {
     @Query("DELETE FROM ${EventInstanceIntFieldEntity.TABLE_NAME} WHERE instanceId=:instanceId")
     suspend fun deleteEventInstanceIntFieldsWithInstanceId(instanceId: Long)
 
+    @Query("DELETE FROM ${EventInstanceIntFieldEntity.TABLE_NAME}")
+    suspend fun deleteAllEventInstanceIntFields()
+
     @Query("SELECT * FROM ${EventInstanceDoubleFieldEntity.TABLE_NAME} WHERE instanceId=:instanceId AND fieldSchemaId=:fieldSchemaId")
     suspend fun getEventInstanceDoubleField(instanceId: Long, fieldSchemaId: Long): EventInstanceDoubleFieldEntity
 
@@ -72,4 +87,7 @@ interface EventDao {
 
     @Query("DELETE FROM ${EventInstanceDoubleFieldEntity.TABLE_NAME} WHERE instanceId=:instanceId")
     suspend fun deleteEventInstanceDoubleFieldsWithInstanceId(instanceId: Long)
+
+    @Query("DELETE FROM ${EventInstanceDoubleFieldEntity.TABLE_NAME}")
+    suspend fun deleteAllEventInstanceDoubleFields()
 }

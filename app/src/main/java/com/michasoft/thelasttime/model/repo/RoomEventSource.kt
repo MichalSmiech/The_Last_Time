@@ -118,6 +118,15 @@ class RoomEventSource(private val eventDao: EventDao): ILocalEventSource {
         return eventId
     }
 
+    override suspend fun deleteAllEvents() {
+        eventDao.deleteAllEventInstances()
+        eventDao.deleteAllEventInstanceDoubleFields()
+        eventDao.deleteAllEventInstanceIntFields()
+        eventDao.deleteAllEventInstanceTextFields()
+        eventDao.deleteAllEventInstanceFieldSchemas()
+        eventDao.deleteAllEvents()
+    }
+
     override suspend fun insertEventInstance(instance: EventInstance): Long {
         val instanceId = eventDao.insertEventInstance(EventInstanceEntity(instance))
         instance.fields.forEach { field ->
