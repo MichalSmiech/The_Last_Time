@@ -21,4 +21,6 @@ interface IRemoteEventSource {
 
     fun getAllEvents(): Flow<Event>
     fun getAllEventInstances(eventId: Long, instanceSchema: EventInstanceSchema): Flow<EventInstance>
+
+    suspend fun deleteAllEvents()
 }

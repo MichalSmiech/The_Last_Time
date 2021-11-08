@@ -45,8 +45,8 @@ class ApplicationModule {
 
     @Singleton
     @Provides
-    fun provideRemoteEventSource(@Named("eventCollectionRef") eventCollectionRef: CollectionReference): IRemoteEventSource {
-        return FirestoreEventSource(eventCollectionRef)
+    fun provideRemoteEventSource(firestore: FirebaseFirestore, @Named("eventCollectionRef") eventCollectionRef: CollectionReference): IRemoteEventSource {
+        return FirestoreEventSource(firestore, eventCollectionRef)
     }
 
     @Singleton

@@ -4,6 +4,9 @@ import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import com.michasoft.thelasttime.model.Event
 import com.michasoft.thelasttime.model.EventInstance
 import com.michasoft.thelasttime.model.EventInstanceSchema
@@ -17,7 +20,7 @@ import java.lang.Exception
 /**
  * Created by mśmiech on 01.11.2021.
  */
-class FirestoreEventSource(private val eventCollectionRef: CollectionReference) : IRemoteEventSource {
+class FirestoreEventSource(private val firestore: FirebaseFirestore, private val eventCollectionRef: CollectionReference) : IRemoteEventSource {
     override suspend fun insertEvent(event: Event): Long {
         require(event.id != 0L)
         requireNotNull(event.eventInstanceSchema)
@@ -64,6 +67,35 @@ class FirestoreEventSource(private val eventCollectionRef: CollectionReference) 
             )
         instanceCollection.document(instance.id.toString()).set(instanceMap).await()
         return instance.id
+    }
+
+    override suspend fun deleteAllEvents() {
+        val baseQuery = eventCollectionRef.limit(500)
+        var hasNext = true
+        var batch = firestore.batch()
+        var count = 0
+        while (hasNext) {
+            val querySnapshot =
+                baseQuery.get().await()
+            if (querySnapshot.documents.size > 0) {
+                querySnapshot.documents.forEach {
+                    batch.delete(it.reference)
+                    count += 1
+                    if (count == 500) {
+                        batch.commit().await()
+                        batch = firestore.batch()
+                        count = 0
+                    }
+                }
+            } else {
+                hasNext = false
+            }
+        }
+        if (count > 500) {
+            batch.commit().await()
+            batch = firestore.batch()
+            count = 0
+        }
     }
 
     override fun getAllEvents(): Flow<Event> = flow {
