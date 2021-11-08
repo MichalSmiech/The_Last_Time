@@ -1,21 +1,22 @@
-package com.michasoft.thelasttime.model.repo
+package com.michasoft.thelasttime.model.dataSource
 
-import com.michasoft.thelasttime.model.EventInstance
 import com.michasoft.thelasttime.model.Event
+import com.michasoft.thelasttime.model.EventInstance
 import com.michasoft.thelasttime.model.EventInstanceSchema
 
 /**
- * Created by mśmiech on 05.09.2021.
+ * Created by mśmiech on 01.11.2021.
  */
-interface IEventSource {
+interface ILocalEventSource {
     suspend fun insertEvent(event: Event): Long
     suspend fun getEvent(eventId: Long): Event?
     suspend fun deleteEvent(eventId: Long)
+    suspend fun deleteAllEvents()
 
     suspend fun getEventInstanceSchema(eventId: Long): EventInstanceSchema
 
     suspend fun insertEventInstance(instance: EventInstance): Long
     suspend fun getEventInstance(eventId: Long, instanceId: Long): EventInstance?
-    suspend fun getEventInstance(eventId: Long, instanceSchema: EventInstanceSchema, instanceId: Long): EventInstance?
+    suspend fun getEventInstance(instanceSchema: EventInstanceSchema, instanceId: Long): EventInstance?
     suspend fun deleteEventInstance(instance: EventInstance)
 }

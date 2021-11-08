@@ -8,14 +8,14 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreSettings
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import com.michasoft.thelasttime.MainActivity
+import com.michasoft.thelasttime.model.dataSource.FirestoreEventSource
+import com.michasoft.thelasttime.model.dataSource.ILocalEventSource
+import com.michasoft.thelasttime.model.dataSource.IRemoteEventSource
+import com.michasoft.thelasttime.model.dataSource.RoomEventSource
 import com.michasoft.thelasttime.model.repo.*
 import com.michasoft.thelasttime.model.storage.AppDatabase
-import com.michasoft.thelasttime.model.storage.dao.EventDao
-import com.michasoft.thelasttime.view.EventActivity
 import dagger.Module
 import dagger.Provides
-import dagger.android.ContributesAndroidInjector
 import javax.inject.Named
 import javax.inject.Singleton
 

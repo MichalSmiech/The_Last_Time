@@ -1,12 +1,8 @@
-package com.michasoft.thelasttime.model.repo
+package com.michasoft.thelasttime.model.dataSource
 
-import android.util.Log
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
 import com.michasoft.thelasttime.model.Event
 import com.michasoft.thelasttime.model.EventInstance
 import com.michasoft.thelasttime.model.EventInstanceSchema
@@ -15,12 +11,12 @@ import com.michasoft.thelasttime.model.remote.dto.EventInstanceFieldSchemaDto
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.tasks.await
-import java.lang.Exception
 
 /**
  * Created by mśmiech on 01.11.2021.
  */
-class FirestoreEventSource(private val firestore: FirebaseFirestore, private val eventCollectionRef: CollectionReference) : IRemoteEventSource {
+class FirestoreEventSource(private val firestore: FirebaseFirestore, private val eventCollectionRef: CollectionReference) :
+    IRemoteEventSource {
     override suspend fun insertEvent(event: Event): Long {
         require(event.id != 0L)
         requireNotNull(event.eventInstanceSchema)
@@ -121,7 +117,9 @@ class FirestoreEventSource(private val firestore: FirebaseFirestore, private val
     }
 
     override fun getAllEventInstances(eventId: Long, instanceSchema: EventInstanceSchema): Flow<EventInstance> = flow {
-        val baseQuery = eventCollectionRef.document(eventId.toString()).collection(EVENT_INSTANCE_FIELD_SCHEMAS_COLLECTION_NAME).orderBy("timestamp").limit(1000)
+        val baseQuery = eventCollectionRef.document(eventId.toString()).collection(
+            EVENT_INSTANCE_FIELD_SCHEMAS_COLLECTION_NAME
+        ).orderBy("timestamp").limit(1000)
         var hasNext = true
         var startAfter: DocumentSnapshot? = null
         while (hasNext) {

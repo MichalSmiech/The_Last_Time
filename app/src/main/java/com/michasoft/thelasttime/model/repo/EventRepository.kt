@@ -2,6 +2,8 @@ package com.michasoft.thelasttime.model.repo
 
 import com.michasoft.thelasttime.model.Event
 import com.michasoft.thelasttime.model.EventInstance
+import com.michasoft.thelasttime.model.dataSource.ILocalEventSource
+import com.michasoft.thelasttime.model.dataSource.IRemoteEventSource
 
 /**
  * Created by mśmiech on 01.11.2021.
