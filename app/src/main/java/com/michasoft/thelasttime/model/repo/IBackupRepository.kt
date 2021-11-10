@@ -5,7 +5,7 @@ package com.michasoft.thelasttime.model.repo
  */
 interface IBackupRepository {
     suspend fun clearLocalDatabase()
-    suspend fun clearRemoteDatabase()
+    suspend fun clearBackup()
 
     suspend fun copyRemoteToLocal()
     suspend fun copyLocalToRemote()

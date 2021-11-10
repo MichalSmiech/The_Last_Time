@@ -20,7 +20,7 @@ class BackupRepository(
         localSource.clear()
     }
 
-    override suspend fun clearRemoteDatabase() {
+    override suspend fun clearBackup() {
         remoteSource.clear()
     }
 

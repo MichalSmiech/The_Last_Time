@@ -11,6 +11,7 @@ import com.michasoft.thelasttime.model.remote.dto.EventInstanceFieldSchemaDto
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.tasks.await
+import timber.log.Timber
 
 /**
  * Created by mśmiech on 01.11.2021.
@@ -81,33 +82,61 @@ class FirestoreEventSource(private val firestore: FirebaseFirestore, private val
     }
 
     override suspend fun deleteAllEvents() {
+        Timber.d("Deleting all events...")
         val baseQuery = eventCollectionRef.limit(500)
         var hasNext = true
-        var batch = firestore.batch()
-        var count = 0
         while (hasNext) {
-            val querySnapshot =
-                baseQuery.get().await()
+            val querySnapshot = baseQuery.get().await()
             if (querySnapshot.documents.size > 0) {
                 querySnapshot.documents.forEach {
+                    deleteAllEventInstanceSchemas(it.id)
+                    deleteAllEventInstances(it.id)
+                }
+                val batch = firestore.batch()
+                querySnapshot.documents.forEach {
                     batch.delete(it.reference)
-                    count += 1
-                    if (count == 500) {
-                        batch.commit().await()
-                        batch = firestore.batch()
-                        count = 0
-                    }
+                }
+                batch.commit().await()
+            } else {
+                hasNext = false
+            }
+        }
+    }
+
+    private suspend fun deleteAllEventInstanceSchemas(eventId: String) {
+        Timber.d("Deleting all event instance schemas (eventId=$eventId)...")
+        val baseQuery = eventCollectionRef.document(eventId).collection(
+            EVENT_INSTANCE_FIELD_SCHEMAS_COLLECTION_NAME).limit(500)
+        var hasNext = true
+        while (hasNext) {
+            val querySnapshot = baseQuery.get().await()
+            if (querySnapshot.documents.size > 0) {
+                querySnapshot.documents.forEach {
+                    it.reference.delete().await()
                 }
             } else {
                 hasNext = false
             }
         }
-        if (count > 500) {
-            batch.commit().await()
-            batch = firestore.batch()
-            count = 0
+    }
+
+    private suspend fun deleteAllEventInstances(eventId: String) {
+        Timber.d("Deleting all event instances (eventId=$eventId)...")
+        val baseQuery = eventCollectionRef.document(eventId).collection(
+            EVENT_INSTANCES_COLLECTION_NAME).limit(500)
+        var hasNext = true
+        while (hasNext) {
+            val querySnapshot = baseQuery.get().await()
+            if (querySnapshot.documents.size > 0) {
+                querySnapshot.documents.forEach {
+                    it.reference.delete().await()
+                }
+            } else {
+                hasNext = false
+            }
         }
     }
+
 
     override suspend fun clear() {
         deleteAllEvents()

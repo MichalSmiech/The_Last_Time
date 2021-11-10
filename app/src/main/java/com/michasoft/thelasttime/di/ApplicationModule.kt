@@ -14,6 +14,7 @@ import com.michasoft.thelasttime.model.dataSource.IRemoteEventSource
 import com.michasoft.thelasttime.model.dataSource.RoomEventSource
 import com.michasoft.thelasttime.model.repo.*
 import com.michasoft.thelasttime.model.storage.AppDatabase
+import com.michasoft.thelasttime.util.BackupConfig
 import dagger.Module
 import dagger.Provides
 import javax.inject.Named
@@ -75,4 +76,17 @@ class ApplicationModule {
     ): IEventRepository {
         return EventRepository(localSource, remoteSource)
     }
+
+    @Singleton
+    @Provides
+    fun provideBackupRepository(
+        localSource: ILocalEventSource,
+        remoteSource: IRemoteEventSource
+    ): IBackupRepository {
+        return BackupRepository(localSource, remoteSource)
+    }
+
+    @Singleton
+    @Provides
+    fun provideBackupConfig(context: Context, auth: FirebaseAuth): BackupConfig = BackupConfig(context, auth)
 }
