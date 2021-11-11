@@ -3,7 +3,6 @@ package com.michasoft.thelasttime.util
 import android.content.Context
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.flow.first
@@ -17,21 +16,22 @@ class BackupConfig(context: Context, auth: FirebaseAuth) {
         name = auth.currentUser!!.uid.plus("_backupConfig")
     )
     private val backupConfigDataStore = context.backupConfigDataStore
-    private var backupActive: Boolean? = null
+    private var autoBackup: Boolean? = null
+    private var defaultAutoBackup = true
 
-    suspend fun isBackupActive(): Boolean {
-        if(backupActive == null) {
-            backupActive = backupConfigDataStore.data.map { preferences -> preferences[backupActiveKey] }.first() ?: false
+    suspend fun isAutoBackup(): Boolean {
+        if(autoBackup == null) {
+            autoBackup = backupConfigDataStore.data.map { preferences -> preferences[autoBackupKey] }.first() ?: defaultAutoBackup
         }
-        return backupActive!!
+        return autoBackup!!
     }
 
-    suspend fun setBackupConfig(active: Boolean) {
-        backupActive = active
-        backupConfigDataStore.edit { it[backupActiveKey] = active }
+    suspend fun setAutoBackup(autoBackup: Boolean) {
+        this.autoBackup = autoBackup
+        backupConfigDataStore.edit { it[autoBackupKey] = autoBackup }
     }
 
     companion object {
-        private val backupActiveKey = booleanPreferencesKey("backupActive")
+        private val autoBackupKey = booleanPreferencesKey("autoBackup")
     }
 }

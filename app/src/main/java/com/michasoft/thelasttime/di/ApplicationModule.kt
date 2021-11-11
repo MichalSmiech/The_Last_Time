@@ -72,9 +72,10 @@ class ApplicationModule {
     @Provides
     fun provideEventsRepository(
         localSource: ILocalEventSource,
-        remoteSource: IRemoteEventSource
+        remoteSource: IRemoteEventSource,
+        backupConfig: BackupConfig
     ): IEventRepository {
-        return EventRepository(localSource, remoteSource)
+        return EventRepository(localSource, remoteSource, backupConfig)
     }
 
     @Singleton
