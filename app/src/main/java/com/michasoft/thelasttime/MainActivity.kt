@@ -15,6 +15,7 @@ import dagger.android.AndroidInjection
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import org.joda.time.DateTime
 import javax.inject.Inject
 import kotlin.system.measureNanoTime
 import kotlin.system.measureTimeMillis
@@ -60,7 +61,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun addEvents(view: View) {
-        val event = Event(IdGenerator.autoId(), "Water plants")
+        val event = Event(IdGenerator.autoId(), "Water plants", DateTime.now())
         val fieldSchemas = mutableListOf<EventInstanceFieldSchema>()
         fieldSchemas.add(
             EventInstanceFieldSchema(

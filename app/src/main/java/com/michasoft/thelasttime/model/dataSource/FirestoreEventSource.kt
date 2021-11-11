@@ -138,7 +138,7 @@ class FirestoreEventSource(private val firestore: FirebaseFirestore, private val
     }
 
     override fun getAllEvents(): Flow<Event> = flow {
-        val baseQuery = eventCollectionRef.orderBy("displayName").limit(100)
+        val baseQuery = eventCollectionRef.orderBy("createTimestamp").limit(100)
         var hasNext = true
         var startAfter: DocumentSnapshot? = null
         while (hasNext) {
