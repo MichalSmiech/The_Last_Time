@@ -7,6 +7,6 @@ interface IBackupRepository {
     suspend fun clearLocalDatabase()
     suspend fun clearBackup()
 
-    suspend fun copyRemoteToLocal()
+    suspend fun restoreBackup()
     suspend fun copyLocalToRemote()
 }

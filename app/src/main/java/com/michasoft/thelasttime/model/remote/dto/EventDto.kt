@@ -8,9 +8,9 @@ import com.michasoft.thelasttime.model.Event
  * Created by mśmiech on 01.11.2021.
  */
 class EventDto(
-    var displayName: String
+    var displayName: String? = null
 ) {
     constructor(event: Event): this(event.displayName)
 
-    fun toModel(id: String) = Event(id, displayName)
+    fun toModel(id: String) = Event(id, displayName!!)
 }

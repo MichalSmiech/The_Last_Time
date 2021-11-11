@@ -24,7 +24,7 @@ class BackupRepository(
         remoteSource.clear()
     }
 
-    override suspend fun copyRemoteToLocal() {
+    override suspend fun restoreBackup() {
         remoteSource.getAllEvents()
             .buffer(100)
             .collect { event ->

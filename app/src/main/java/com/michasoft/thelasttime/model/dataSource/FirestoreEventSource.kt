@@ -143,7 +143,7 @@ class FirestoreEventSource(private val firestore: FirebaseFirestore, private val
         var startAfter: DocumentSnapshot? = null
         while (hasNext) {
             val querySnapshot =
-                baseQuery.apply { startAfter?.let { startAfter(it) } }.get().await()
+                baseQuery.let { query -> startAfter?.let { query.startAfter(it) } ?: query }.get().await()
             if (querySnapshot.documents.size > 0) {
                 querySnapshot.documents.forEach {
                     val eventDto = it.toObject(EventDto::class.java)
@@ -167,7 +167,7 @@ class FirestoreEventSource(private val firestore: FirebaseFirestore, private val
         var startAfter: DocumentSnapshot? = null
         while (hasNext) {
             val querySnapshot =
-                baseQuery.apply { startAfter?.let { startAfter(it) } }.get().await()
+                baseQuery.let { query -> startAfter?.let { query.startAfter(it) } ?: query }.get().await()
             if (querySnapshot.documents.size > 0) {
                 querySnapshot.documents.forEach {
                     val instanceMap = it.data

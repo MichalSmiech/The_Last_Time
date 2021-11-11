@@ -53,6 +53,12 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    fun restoreBackup(view: View) {
+        CoroutineScope(Dispatchers.IO).launch {
+            backupRepository.restoreBackup()
+        }
+    }
+
     fun addEvents(view: View) {
         val event = Event(IdGenerator.autoId(), "Water plants")
         val fieldSchemas = mutableListOf<EventInstanceFieldSchema>()
