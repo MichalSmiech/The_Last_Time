@@ -8,12 +8,12 @@ import kotlin.collections.ArrayList
  * Created by mśmiech on 08.07.2021.
  */
 data class EventInstance(
-    var id: Long,
-    val eventId: Long,
+    var id: String,
+    val eventId: String,
     val timestamp: DateTime,
     val fields: ArrayList<EventInstanceField>
 ) {
-    constructor(eventId: Long, id: Long, map: Map<String, Any?>, instanceSchema: EventInstanceSchema)
+    constructor(id: String, eventId: String, map: Map<String, Any?>, instanceSchema: EventInstanceSchema)
             : this(
         id,
         eventId,

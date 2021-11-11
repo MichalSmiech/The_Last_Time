@@ -12,5 +12,5 @@ class EventDto(
 ) {
     constructor(event: Event): this(event.displayName)
 
-    fun toModel(id: Long) = Event(id, displayName)
+    fun toModel(id: String) = Event(id, displayName)
 }

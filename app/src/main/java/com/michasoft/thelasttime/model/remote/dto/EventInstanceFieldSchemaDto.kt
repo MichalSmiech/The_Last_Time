@@ -17,5 +17,5 @@ class EventInstanceFieldSchemaDto(
         eventInstanceFieldSchema.displayTitle
     )
 
-    fun toModel(id: Long) = EventInstanceFieldSchema(id, order, type, displayTitle)
+    fun toModel(id: String) = EventInstanceFieldSchema(id, order, type, displayTitle)
 }

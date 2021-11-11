@@ -18,65 +18,60 @@ import timber.log.Timber
  */
 class FirestoreEventSource(private val firestore: FirebaseFirestore, private val eventCollectionRef: CollectionReference) :
     IRemoteEventSource {
-    override suspend fun insertEvent(event: Event): Long {
-        require(event.id != 0L)
+    override suspend fun insertEvent(event: Event) {
         requireNotNull(event.eventInstanceSchema)
         val dto = EventDto(event)
-        val documentRef = eventCollectionRef.document(event.id.toString())
+        val documentRef = eventCollectionRef.document(event.id)
         documentRef.set(dto).await()
         val fieldSchemaCollection =
             documentRef.collection(EVENT_INSTANCE_FIELD_SCHEMAS_COLLECTION_NAME)
         event.eventInstanceSchema!!.fieldSchemas.forEach { fieldSchema ->
             val fieldSchemaDto = EventInstanceFieldSchemaDto(fieldSchema)
-            fieldSchemaCollection.document(fieldSchema.id.toString()).set(fieldSchemaDto).await()
+            fieldSchemaCollection.document(fieldSchema.id).set(fieldSchemaDto).await()
         }
-        return event.id
     }
 
-    override suspend fun getEvent(eventId: Long): Event? {
-        val eventDocument = eventCollectionRef.document(eventId.toString()).get().await()
+    override suspend fun getEvent(eventId: String): Event? {
+        val eventDocument = eventCollectionRef.document(eventId).get().await()
         val dto = eventDocument.toObject(EventDto::class.java)
-        return dto?.toModel(eventDocument.id.toLong())
+        return dto?.toModel(eventDocument.id)
     }
 
-    override suspend fun deleteEvent(eventId: Long) {
-        eventCollectionRef.document(eventId.toString()).delete().await()
+    override suspend fun deleteEvent(eventId: String) {
+        eventCollectionRef.document(eventId).delete().await()
     }
 
-    override suspend fun getEventInstanceSchema(eventId: Long): EventInstanceSchema {
-        val fieldSchemaCollection = eventCollectionRef.document(eventId.toString())
+    override suspend fun getEventInstanceSchema(eventId: String): EventInstanceSchema {
+        val fieldSchemaCollection = eventCollectionRef.document(eventId)
             .collection(EVENT_INSTANCE_FIELD_SCHEMAS_COLLECTION_NAME)
         val querySnapshot = fieldSchemaCollection.get().await()
         val fieldSchemas = querySnapshot.documents.mapNotNull {
-            it.toObject(EventInstanceFieldSchemaDto::class.java)?.toModel(it.id.toLong())
+            it.toObject(EventInstanceFieldSchemaDto::class.java)?.toModel(it.id)
         }
             .sortedBy { it.order }
             .toList()
         return EventInstanceSchema(fieldSchemas)
     }
 
-    override suspend fun insertEventInstance(instance: EventInstance): Long {
-        require(instance.id != 0L)
+    override suspend fun insertEventInstance(instance: EventInstance) {
         val instanceMap = instance.toMap()
         val instanceCollection =
-            eventCollectionRef.document(instance.eventId.toString()).collection(
+            eventCollectionRef.document(instance.eventId).collection(
                 EVENT_INSTANCES_COLLECTION_NAME
             )
-        instanceCollection.document(instance.id.toString()).set(instanceMap).await()
-        return instance.id
+        instanceCollection.document(instance.id).set(instanceMap).await()
     }
 
     override suspend fun insertEventInstances(instances: List<EventInstance>) {
         require(instances.size <= 500)
         val batch = firestore.batch()
         instances.forEach { instance ->
-            require(instance.id != 0L)
             val instanceMap = instance.toMap()
             val instanceCollection =
-                eventCollectionRef.document(instance.eventId.toString()).collection(
+                eventCollectionRef.document(instance.eventId).collection(
                     EVENT_INSTANCES_COLLECTION_NAME
                 )
-            batch.set(instanceCollection.document(instance.id.toString()), instanceMap)
+            batch.set(instanceCollection.document(instance.id), instanceMap)
         }
         batch.commit().await()
     }
@@ -152,7 +147,7 @@ class FirestoreEventSource(private val firestore: FirebaseFirestore, private val
             if (querySnapshot.documents.size > 0) {
                 querySnapshot.documents.forEach {
                     val eventDto = it.toObject(EventDto::class.java)
-                    val event = eventDto?.toModel(it.id.toLong())
+                    val event = eventDto?.toModel(it.id)
                     if (event != null) {
                         emit(event)
                     }
@@ -164,8 +159,8 @@ class FirestoreEventSource(private val firestore: FirebaseFirestore, private val
         }
     }
 
-    override fun getAllEventInstances(eventId: Long, instanceSchema: EventInstanceSchema): Flow<EventInstance> = flow {
-        val baseQuery = eventCollectionRef.document(eventId.toString()).collection(
+    override fun getAllEventInstances(eventId: String, instanceSchema: EventInstanceSchema): Flow<EventInstance> = flow {
+        val baseQuery = eventCollectionRef.document(eventId).collection(
             EVENT_INSTANCE_FIELD_SCHEMAS_COLLECTION_NAME
         ).orderBy("timestamp").limit(100)
         var hasNext = true
@@ -179,7 +174,7 @@ class FirestoreEventSource(private val firestore: FirebaseFirestore, private val
                     if(instanceMap != null) {
                         val eventInstance = EventInstance(
                             eventId,
-                            it.id.toLong(),
+                            it.id,
                             instanceMap,
                             instanceSchema
                         )
@@ -194,26 +189,26 @@ class FirestoreEventSource(private val firestore: FirebaseFirestore, private val
     }
 
     override suspend fun getEventInstance(
-        eventId: Long,
+        eventId: String,
         instanceSchema: EventInstanceSchema,
-        instanceId: Long
+        instanceId: String
     ): EventInstance? {
-        val instanceSnapshot = eventCollectionRef.document(eventId.toString())
+        val instanceSnapshot = eventCollectionRef.document(eventId)
             .collection(EVENT_INSTANCES_COLLECTION_NAME)
-            .document(instanceId.toString())
+            .document(instanceId)
             .get()
             .await()
         val instanceMap = instanceSnapshot.data
         instanceMap ?: return null
-        return EventInstance(eventId, instanceSnapshot.id.toLong(), instanceMap, instanceSchema)
+        return EventInstance(instanceSnapshot.id, eventId, instanceMap, instanceSchema)
     }
 
     override suspend fun deleteEventInstance(instance: EventInstance) {
         val instanceCollection =
-            eventCollectionRef.document(instance.eventId.toString()).collection(
+            eventCollectionRef.document(instance.eventId).collection(
                 EVENT_INSTANCES_COLLECTION_NAME
             )
-        instanceCollection.document(instance.id.toString()).delete().await()
+        instanceCollection.document(instance.id).delete().await()
     }
 
     companion object {

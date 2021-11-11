@@ -14,7 +14,7 @@ class EventRepository(private val localSource: ILocalEventSource, private val re
         remoteSource.insertEvent(event)
     }
 
-    override suspend fun getEvent(eventId: Long): Event? {
+    override suspend fun getEvent(eventId: String): Event? {
         return localSource.getEvent(eventId)
     }
 
@@ -31,11 +31,11 @@ class EventRepository(private val localSource: ILocalEventSource, private val re
         remoteSource.insertEventInstance(instance)
     }
 
-    override suspend fun getEventInstance(eventId: Long, instanceId: Long): EventInstance? {
+    override suspend fun getEventInstance(eventId: String, instanceId: String): EventInstance? {
         return localSource.getEventInstance(eventId, instanceId)
     }
 
-    override suspend fun getEventInstances(eventId: Long): List<EventInstance> {
+    override suspend fun getEventInstances(eventId: String): List<EventInstance> {
         TODO("Not yet implemented")
     }
 }

@@ -11,12 +11,12 @@ import org.joda.time.DateTime
 
 @Entity(tableName = EventInstanceEntity.TABLE_NAME)
 class EventInstanceEntity(
-    val timestamp: DateTime,
-    val eventId: Long,
-    @PrimaryKey(autoGenerate = true)
-    var id: Long = 0L
+    @PrimaryKey
+    var id: String,
+    val eventId: String,
+    val timestamp: DateTime
 ) {
-    constructor(instance: EventInstance): this(instance.timestamp, instance.eventId)
+    constructor(instance: EventInstance): this(instance.id, instance.eventId, instance.timestamp)
 
     companion object {
         const val TABLE_NAME = "EventInstances"

@@ -45,5 +45,5 @@ class EventTypeListViewModel @Inject constructor(
     }
 
     class CreateNewEventType : FlowEvent()
-    class ShowEventType(val eventTypeId: Long) : FlowEvent()
+    class ShowEventType(val eventTypeId: String) : FlowEvent()
 }

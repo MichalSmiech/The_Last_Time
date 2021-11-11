@@ -7,7 +7,7 @@ import com.michasoft.thelasttime.model.EventInstanceFieldSchema
  * Created by mśmiech on 31.10.2021.
  */
 class IntField(
-    fieldSchemaId: Long,
+    fieldSchemaId: String,
     val value: Int?
 ) : EventInstanceField(fieldSchemaId, Type.IntField) {
 

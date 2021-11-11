@@ -7,7 +7,7 @@ import com.michasoft.thelasttime.model.EventInstanceFieldSchema
  * Created by mśmiech on 31.10.2021.
  */
 class DoubleField(
-    fieldSchemaId: Long,
+    fieldSchemaId: String,
     val value: Double?
 ) : EventInstanceField(fieldSchemaId, Type.DoubleField) {
 

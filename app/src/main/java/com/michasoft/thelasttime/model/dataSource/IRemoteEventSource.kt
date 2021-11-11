@@ -11,19 +11,19 @@ import kotlinx.coroutines.flow.Flow
 interface IRemoteEventSource {
     suspend fun clear()
 
-    suspend fun insertEvent(event: Event): Long
-    suspend fun getEvent(eventId: Long): Event?
-    suspend fun deleteEvent(eventId: Long)
+    suspend fun insertEvent(event: Event)
+    suspend fun getEvent(eventId: String): Event?
+    suspend fun deleteEvent(eventId: String)
 
-    suspend fun getEventInstanceSchema(eventId: Long): EventInstanceSchema
+    suspend fun getEventInstanceSchema(eventId: String): EventInstanceSchema
 
-    suspend fun insertEventInstance(instance: EventInstance): Long
+    suspend fun insertEventInstance(instance: EventInstance)
     suspend fun insertEventInstances(instances: List<EventInstance>)
-    suspend fun getEventInstance(eventId: Long, instanceSchema: EventInstanceSchema, instanceId: Long): EventInstance?
+    suspend fun getEventInstance(eventId: String, instanceSchema: EventInstanceSchema, instanceId: String): EventInstance?
     suspend fun deleteEventInstance(instance: EventInstance)
 
     fun getAllEvents(): Flow<Event>
-    fun getAllEventInstances(eventId: Long, instanceSchema: EventInstanceSchema): Flow<EventInstance>
+    fun getAllEventInstances(eventId: String, instanceSchema: EventInstanceSchema): Flow<EventInstance>
 
     suspend fun deleteAllEvents()
 }

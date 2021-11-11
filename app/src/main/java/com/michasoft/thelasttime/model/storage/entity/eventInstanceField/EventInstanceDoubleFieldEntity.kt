@@ -8,11 +8,11 @@ import com.michasoft.thelasttime.model.eventInstanceField.DoubleField
  */
 @Entity(tableName = EventInstanceDoubleFieldEntity.TABLE_NAME, primaryKeys = ["instanceId", "fieldSchemaId"])
 class EventInstanceDoubleFieldEntity(
-    val instanceId: Long,
-    val fieldSchemaId: Long,
+    val instanceId: String,
+    val fieldSchemaId: String,
     val value: Double?
 ) {
-    constructor(eventId: Long, field: DoubleField): this(eventId, field.fieldSchemaId, field.value)
+    constructor(eventId: String, field: DoubleField): this(eventId, field.fieldSchemaId, field.value)
 
     fun toModel() = DoubleField(fieldSchemaId, value)
 

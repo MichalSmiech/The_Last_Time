@@ -15,12 +15,12 @@ import javax.inject.Inject
 class EventTypeViewModel @Inject constructor(
     private val eventRepository: IEventRepository
 ) : CommonViewModel() {
-    private var eventTypeId: Long? = null
+    private var eventTypeId: String? = null
     private var originalEvent: Event? = null
     val name = MutableLiveData<String>("")
     var events = MutableLiveData<List<EventInstance>>(emptyList())
 
-    fun start(eventTypeId: Long) {
+    fun start(eventTypeId: String) {
         viewModelScope.launch {
             this@EventTypeViewModel.eventTypeId = eventTypeId
             val eventType = eventRepository.getEvent(eventTypeId)!!
@@ -34,5 +34,5 @@ class EventTypeViewModel @Inject constructor(
         flowEventBus.value = ShowEvent(eventInstance.id)
     }
 
-    class ShowEvent(val eventId: Long): FlowEvent()
+    class ShowEvent(val eventId: String): FlowEvent()
 }

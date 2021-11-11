@@ -8,12 +8,12 @@ import com.michasoft.thelasttime.model.Event
  */
 interface IEventRepository {
     suspend fun insertEvent(event: Event)
-    suspend fun getEvent(eventId: Long): Event?
+    suspend fun getEvent(eventId: String): Event?
     suspend fun getEvents(): ArrayList<Event>
     fun save(Event: Event)
 
     suspend fun insertEventInstance(instance: EventInstance)
-    suspend fun getEventInstance(eventId: Long, instanceId: Long): EventInstance?
-    suspend fun getEventInstances(eventId: Long): List<EventInstance>
+    suspend fun getEventInstance(eventId: String, instanceId: String): EventInstance?
+    suspend fun getEventInstances(eventId: String): List<EventInstance>
 
 }

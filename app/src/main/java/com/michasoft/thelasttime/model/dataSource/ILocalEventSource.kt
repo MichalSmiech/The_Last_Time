@@ -11,17 +11,17 @@ import kotlinx.coroutines.flow.Flow
 interface ILocalEventSource {
     suspend fun clear()
 
-    suspend fun insertEvent(event: Event): Long
-    suspend fun getEvent(eventId: Long): Event?
+    suspend fun insertEvent(event: Event)
+    suspend fun getEvent(eventId: String): Event?
     suspend fun getAllEvents(): Flow<Event>
-    suspend fun deleteEvent(eventId: Long)
+    suspend fun deleteEvent(eventId: String)
     suspend fun deleteAllEvents()
 
-    suspend fun getEventInstanceSchema(eventId: Long): EventInstanceSchema
+    suspend fun getEventInstanceSchema(eventId: String): EventInstanceSchema
 
-    suspend fun insertEventInstance(instance: EventInstance): Long
-    suspend fun getEventInstance(eventId: Long, instanceId: Long): EventInstance?
-    suspend fun getAllEventInstances(eventId: Long, eventInstanceSchema: EventInstanceSchema): Flow<EventInstance>
-    suspend fun getEventInstance(instanceSchema: EventInstanceSchema, instanceId: Long): EventInstance?
+    suspend fun insertEventInstance(instance: EventInstance)
+    suspend fun getEventInstance(eventId: String, instanceId: String): EventInstance?
+    suspend fun getAllEventInstances(eventId: String, eventInstanceSchema: EventInstanceSchema): Flow<EventInstance>
+    suspend fun getEventInstance(instanceSchema: EventInstanceSchema, instanceId: String): EventInstance?
     suspend fun deleteEventInstance(instance: EventInstance)
 }

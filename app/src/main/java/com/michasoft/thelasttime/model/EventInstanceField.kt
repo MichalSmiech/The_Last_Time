@@ -6,7 +6,7 @@ import com.michasoft.thelasttime.model.eventInstanceField.TextField
  * Created by mśmiech on 31.10.2021.
  */
 abstract class EventInstanceField(
-    val fieldSchemaId: Long,
+    val fieldSchemaId: String,
     val type: Type
 ) {
     abstract fun toMap(): Map<String, Any?>
@@ -22,7 +22,7 @@ abstract class EventInstanceField(
     }
 
     companion object {
-        fun getMapKey(fieldSchemaId: Long, type: Type) = "$fieldSchemaId;${type.name}"
+        fun getMapKey(fieldSchemaId: String, type: Type) = "$fieldSchemaId;${type.name}"
         fun getMapKey(instanceField: EventInstanceField) =
             getMapKey(instanceField.fieldSchemaId, instanceField.type)
         fun getMapKey(instanceSchema: EventInstanceFieldSchema) =

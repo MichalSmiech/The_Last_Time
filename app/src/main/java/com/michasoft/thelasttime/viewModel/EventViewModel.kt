@@ -14,7 +14,7 @@ import javax.inject.Inject
 class EventViewModel @Inject constructor(
     private val eventRepository: IEventRepository
 ) : CommonViewModel() {
-    private var eventId: Long? = null
+    private var eventId: String? = null
     private var originalEventInstance: EventInstance? = null
     private var event: Event? = null
     val timestamp = MutableLiveData<DateTime>()
@@ -23,10 +23,10 @@ class EventViewModel @Inject constructor(
     }
     val eventTypeName = MutableLiveData("")
 
-    fun setEventId(eventId: Long) {
+    fun setEventId(eventId: String) {
         viewModelScope.launch {
             this@EventViewModel.eventId = eventId
-            val event = eventRepository.getEventInstance(1, eventId)!!
+            val event = eventRepository.getEventInstance("1", eventId)!!
             originalEventInstance = event
             timestamp.value = event.timestamp
             this@EventViewModel.event = eventRepository.getEvent(event.eventId)

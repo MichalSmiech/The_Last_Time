@@ -22,12 +22,12 @@ import kotlinx.coroutines.flow.flow
  * Created by mśmiech on 05.09.2021.
  */
 class RoomEventSource(private val eventDao: EventDao): ILocalEventSource {
-    override suspend fun getEvent(eventId: Long): Event? {
+    override suspend fun getEvent(eventId: String): Event? {
         val eventEntity = eventDao.getEvent(eventId) ?: return null
         return eventEntity.toModel()
     }
 
-    override suspend fun deleteEvent(eventId: Long) {
+    override suspend fun deleteEvent(eventId: String) {
         val instanceIds = eventDao.getAllEventInstanceIdsWithEventId(eventId)
         instanceIds.forEach { instanceId ->
             deleteEventInstance(eventId, instanceId)
@@ -36,21 +36,21 @@ class RoomEventSource(private val eventDao: EventDao): ILocalEventSource {
         eventDao.deleteEvent(eventId)
     }
 
-    override suspend fun getEventInstanceSchema(eventId: Long): EventInstanceSchema {
+    override suspend fun getEventInstanceSchema(eventId: String): EventInstanceSchema {
         val eventInstanceFieldSchemaEntities =
             eventDao.getEventInstanceFieldSchemas(eventId).sortedBy { it.order }
         val eventInstanceFieldSchemas = eventInstanceFieldSchemaEntities.map { it.toModel() }
         return EventInstanceSchema(eventInstanceFieldSchemas)
     }
 
-    override suspend fun getEventInstance(eventId: Long, instanceId: Long): EventInstance? {
+    override suspend fun getEventInstance(eventId: String, instanceId: String): EventInstance? {
         val eventInstanceSchema = getEventInstanceSchema(eventId)
         return getEventInstance(eventInstanceSchema, instanceId)
     }
 
     override suspend fun getEventInstance(
         instanceSchema: EventInstanceSchema,
-        instanceId: Long
+        instanceId: String
     ): EventInstance? {
         val eventInstanceEntity = eventDao.getEventInstance(instanceId) ?: return null
         val eventInstanceFields = ArrayList<EventInstanceField>(instanceSchema.fieldSchemas.size)
@@ -88,7 +88,7 @@ class RoomEventSource(private val eventDao: EventDao): ILocalEventSource {
         deleteEventInstance(instance.eventId, instance.id)
     }
 
-    private suspend fun deleteEventInstance(eventId: Long, instanceId: Long) {
+    private suspend fun deleteEventInstance(eventId: String, instanceId: String) {
         val eventInstanceFieldSchemaEntities =
             eventDao.getEventInstanceFieldSchemas(eventId)
         eventInstanceFieldSchemaEntities.distinctBy { it.type }.forEach { fieldSchema ->
@@ -110,14 +110,12 @@ class RoomEventSource(private val eventDao: EventDao): ILocalEventSource {
         eventDao.deleteEventInstance(instanceId)
     }
 
-    override suspend fun insertEvent(event: Event): Long {
+    override suspend fun insertEvent(event: Event) {
         requireNotNull(event.eventInstanceSchema)
-        val eventId = eventDao.insertEvent(EventEntity(event))
+        eventDao.insertEvent(EventEntity(event))
         event.eventInstanceSchema!!.fieldSchemas.forEach { fieldSchema ->
-            fieldSchema.id = eventDao.insertEventInstanceFieldSchema(EventInstanceFieldSchemaEntity(eventId, fieldSchema))
+            eventDao.insertEventInstanceFieldSchema(EventInstanceFieldSchemaEntity(event.id, fieldSchema))
         }
-        event.id = eventId
-        return eventId
     }
 
     override suspend fun deleteAllEvents() {
@@ -147,7 +145,7 @@ class RoomEventSource(private val eventDao: EventDao): ILocalEventSource {
         }
     }
 
-    override suspend fun getAllEventInstances(eventId: Long, eventInstanceSchema: EventInstanceSchema): Flow<EventInstance> = flow {
+    override suspend fun getAllEventInstances(eventId: String, eventInstanceSchema: EventInstanceSchema): Flow<EventInstance> = flow {
         val offset = 0L
         val limit = 100L
         var hasNext = true
@@ -161,25 +159,23 @@ class RoomEventSource(private val eventDao: EventDao): ILocalEventSource {
         }
     }
 
-    override suspend fun insertEventInstance(instance: EventInstance): Long {
-        val instanceId = eventDao.insertEventInstance(EventInstanceEntity(instance))
+    override suspend fun insertEventInstance(instance: EventInstance) {
+        eventDao.insertEventInstance(EventInstanceEntity(instance))
         instance.fields.forEach { field ->
             when(field.type) {
                 Type.TextField -> {
-                    eventDao.insertEventInstanceTextField(EventInstanceTextFieldEntity(instanceId, field as TextField))
+                    eventDao.insertEventInstanceTextField(EventInstanceTextFieldEntity(instance.id, field as TextField))
                 }
                 Type.IntField -> {
-                    eventDao.insertEventInstanceIntField(EventInstanceIntFieldEntity(instanceId, field as IntField))
+                    eventDao.insertEventInstanceIntField(EventInstanceIntFieldEntity(instance.id, field as IntField))
                 }
                 Type.DoubleField -> {
-                    eventDao.insertEventInstanceDoubleField(EventInstanceDoubleFieldEntity(instanceId, field as DoubleField))
+                    eventDao.insertEventInstanceDoubleField(EventInstanceDoubleFieldEntity(instance.id, field as DoubleField))
                 }
                 else -> {
                     throw NotImplementedError()
                 }
             }
         }
-        instance.id = instanceId
-        return instanceId
     }
 }

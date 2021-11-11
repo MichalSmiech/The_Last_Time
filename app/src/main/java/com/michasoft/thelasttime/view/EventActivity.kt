@@ -30,7 +30,7 @@ class EventActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        val eventId = intent.getLongExtra(ARG_EVENT_ID, -1L)
+        val eventId = ""//intent.getLongExtra(ARG_EVENT_ID, -1L)
         viewModel.setEventId(eventId)
         viewModel.flowEventBus.observe(this) {
             when(it) {
@@ -44,7 +44,7 @@ class EventActivity : AppCompatActivity() {
     companion object {
         const val ARG_EVENT_ID = "ARG_EVENT_ID"
 
-        fun start(activity: AppCompatActivity, eventId: Long) {
+        fun start(activity: AppCompatActivity, eventId: String) {
             val intent = Intent(activity, EventActivity::class.java)
             intent.putExtra(ARG_EVENT_ID, eventId)
             activity.startActivity(intent)

@@ -28,7 +28,7 @@ class EditEventTypeActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        val eventTypeId = intent.getLongExtra(ARG_EVENT_TYPE_ID, -1L)
+        val eventTypeId = "";//intent.getLongExtra(ARG_EVENT_TYPE_ID, -1L)
         viewModel.start(eventTypeId)
         viewModel.flowEventBus.observe(this) {
             when(it) {

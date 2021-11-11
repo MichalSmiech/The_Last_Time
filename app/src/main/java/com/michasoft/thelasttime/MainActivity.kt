@@ -9,6 +9,7 @@ import com.michasoft.thelasttime.model.EventInstanceFieldSchema
 import com.michasoft.thelasttime.model.EventInstanceSchema
 import com.michasoft.thelasttime.model.repo.IBackupRepository
 import com.michasoft.thelasttime.model.repo.IEventRepository
+import com.michasoft.thelasttime.util.IdGenerator
 import dagger.android.AndroidInjection
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -38,19 +39,19 @@ class MainActivity : AppCompatActivity() {
 //            addEvent()
 //            val event = eventRepository.getEvent(1L)
 //            Log.d("asd", "onStart: " + event)
-//            val time = measureTimeMillis {
-//                backupRepository.clearBackup()
-//            }
-//            Log.d("asd", "clearBackup: " + time)
+            val time = measureTimeMillis {
+                backupRepository.clearBackup()
+            }
+            Log.d("asd", "clearBackup: " + time)
         }
     }
 
     fun addEvent() {
-        val event = Event(0L, "Water plants")
+        val event = Event(IdGenerator.autoId(), "Water plants")
         val fieldSchemas = mutableListOf<EventInstanceFieldSchema>()
         fieldSchemas.add(
             EventInstanceFieldSchema(
-                0L,
+                IdGenerator.autoId(),
                 0,
                 EventInstanceField.Type.TextField,
                 "pierwsze pole"
@@ -58,7 +59,7 @@ class MainActivity : AppCompatActivity() {
         )
         fieldSchemas.add(
             EventInstanceFieldSchema(
-                0L,
+                IdGenerator.autoId(),
                 1,
                 EventInstanceField.Type.IntField,
                 "drugie pole"
@@ -66,7 +67,7 @@ class MainActivity : AppCompatActivity() {
         )
         fieldSchemas.add(
             EventInstanceFieldSchema(
-                0L,
+                IdGenerator.autoId(),
                 2,
                 EventInstanceField.Type.DoubleField,
                 "trzecie pole"

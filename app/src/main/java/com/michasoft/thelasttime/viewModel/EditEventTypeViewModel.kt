@@ -14,7 +14,7 @@ import javax.inject.Inject
 class EditEventTypeViewModel @Inject constructor(
     private val eventRepository: IEventRepository
 ): CommonViewModel() {
-    private var eventTypeId: Long? = null
+    private var eventTypeId: String? = null
     private var originalEvent: Event? = null
     val name = MutableLiveData<String>("")
 
@@ -24,10 +24,10 @@ class EditEventTypeViewModel @Inject constructor(
         flowEventBus.value = Finish()
     }
 
-    fun start(eventTypeId: Long) {
+    fun start(eventTypeId: String) {
         viewModelScope.launch {
             this@EditEventTypeViewModel.eventTypeId = eventTypeId
-            val eventType = eventRepository.getEvent(eventTypeId)!!
+            val eventType = eventRepository.getEvent(eventTypeId!!)!!
             originalEvent = eventType
             name.value = eventType.displayName
         }
