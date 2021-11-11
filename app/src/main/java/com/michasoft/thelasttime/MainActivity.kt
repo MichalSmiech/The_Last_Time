@@ -3,6 +3,7 @@ package com.michasoft.thelasttime
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import com.michasoft.thelasttime.model.Event
 import com.michasoft.thelasttime.model.EventInstanceField
 import com.michasoft.thelasttime.model.EventInstanceFieldSchema
@@ -39,14 +40,20 @@ class MainActivity : AppCompatActivity() {
 //            addEvent()
 //            val event = eventRepository.getEvent(1L)
 //            Log.d("asd", "onStart: " + event)
-            val time = measureTimeMillis {
-                backupRepository.clearBackup()
-            }
-            Log.d("asd", "clearBackup: " + time)
+//            val time = measureTimeMillis {
+//                backupRepository.clearBackup()
+//            }
+//            Log.d("asd", "clearBackup: " + time)
         }
     }
 
-    fun addEvent() {
+    fun clearLocal(view: View) {
+        CoroutineScope(Dispatchers.IO).launch {
+            backupRepository.clearLocalDatabase()
+        }
+    }
+
+    fun addEvents(view: View) {
         val event = Event(IdGenerator.autoId(), "Water plants")
         val fieldSchemas = mutableListOf<EventInstanceFieldSchema>()
         fieldSchemas.add(
