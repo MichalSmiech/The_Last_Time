@@ -2,26 +2,39 @@ package com.michasoft.thelasttime.view.viewHolder
 
 import androidx.recyclerview.widget.RecyclerView
 import com.michasoft.thelasttime.databinding.ListitemEventBinding
-import com.michasoft.thelasttime.model.EventInstance
-import com.michasoft.thelasttime.viewModel.EventTypeViewModel
+import com.michasoft.thelasttime.model.Event
+import com.michasoft.thelasttime.viewModel.EventListViewModel
 
 /**
- * Created by mśmiech on 08.07.2021.
+ * Created by mśmiech on 02.05.2021.
  */
 class EventViewHolder(
     val binding: ListitemEventBinding,
-    val viewModel: EventTypeViewModel
+    val viewModel: EventListViewModel
 ): RecyclerView.ViewHolder(binding.root) {
-    var eventInstance: EventInstance? = null
+    var event: Event? = null
         set(value) {
             field = value
             value?.let {
-                binding.timestamp = it.timestamp.toString()
+                binding.name = it.displayName
+                binding.lastEventTimestamp = it.lastEventTimestamp?.toString() ?: ""
             }
         }
     init {
-        binding.listitemEventLayout.setOnClickListener {
-            viewModel.showEvent(eventInstance!!)
+        binding.quickAddActionButton.setOnClickListener {
+            event?.let {
+                viewModel.quickAddEventInstance(it)
+            }
+        }
+        binding.addActionButton.setOnClickListener {
+            event?.let {
+                viewModel.addEvent(it)
+            }
+        }
+        binding.listitemEventTypeLayout.setOnClickListener {
+            event?.let {
+                viewModel.showEventType(it)
+            }
         }
     }
 }

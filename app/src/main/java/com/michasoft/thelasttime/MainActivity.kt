@@ -10,11 +10,17 @@ import com.michasoft.thelasttime.model.EventInstanceFieldSchema
 import com.michasoft.thelasttime.model.EventInstanceSchema
 import com.michasoft.thelasttime.model.repo.IBackupRepository
 import com.michasoft.thelasttime.model.repo.IEventRepository
+import com.michasoft.thelasttime.util.BackupConfig
 import com.michasoft.thelasttime.util.IdGenerator
+import com.michasoft.thelasttime.view.EditEventActivity.Companion.start
+import com.michasoft.thelasttime.view.EventActivity.Companion.start
+import com.michasoft.thelasttime.view.EventListActivity
 import dagger.android.AndroidInjection
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.joda.time.DateTime
 import javax.inject.Inject
 import kotlin.system.measureNanoTime
@@ -27,24 +33,25 @@ class MainActivity : AppCompatActivity() {
     @Inject
     lateinit var backupRepository: IBackupRepository
 
+    @Inject
+    lateinit var backupConfig: BackupConfig
+
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-    }
 
-    override fun onStart() {
-        super.onStart()
         CoroutineScope(Dispatchers.IO).launch {
-//            addEvent()
-//            addEvent()
-//            addEvent()
-//            val event = eventRepository.getEvent(1L)
-//            Log.d("asd", "onStart: " + event)
-//            val time = measureTimeMillis {
-//                backupRepository.clearBackup()
-//            }
-//            Log.d("asd", "clearBackup: " + time)
+            val autoBackup = backupConfig.isAutoBackup()
+            withContext(Dispatchers.Main) {
+                switch1.isChecked = autoBackup
+            }
+        }
+
+        switch1.setOnCheckedChangeListener { buttonView, isChecked ->
+            CoroutineScope(Dispatchers.IO).launch {
+                backupConfig.setAutoBackup(isChecked)
+            }
         }
     }
 
@@ -93,5 +100,10 @@ class MainActivity : AppCompatActivity() {
             eventRepository.insertEvent(event)
             Log.d("asd", "Added: " + event)
         }
+    }
+
+
+    fun eventList(view: View) {
+        EventListActivity.start(this)
     }
 }

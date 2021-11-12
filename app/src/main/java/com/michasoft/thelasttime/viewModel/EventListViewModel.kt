@@ -12,38 +12,45 @@ import javax.inject.Inject
 /**
  * Created by mśmiech on 02.05.2021.
  */
-class EventTypeListViewModel @Inject constructor(
+class EventListViewModel @Inject constructor(
     private val eventRepository: IEventRepository
 ): CommonViewModel() {
-    var eventTypes = MutableLiveData<List<Event>>(emptyList())
+    var events = MutableLiveData<List<Event>>(emptyList())
+
+    init {
+        viewModelScope.launch {
+            events.value = eventRepository.getEvents()
+
+        }
+    }
 
     fun createNewEventType() {
-        flowEventBus.value = CreateNewEventType()
+        flowEventBus.value = CreateNewEvent()
     }
 
     fun refreshData() {
         viewModelScope.launch {
-            eventTypes.value = eventRepository.getEvents()
+            events.value = eventRepository.getEvents()
 
         }
     }
 
-    fun quickAddEvent(event: Event) {
-        eventTypes.value?.find { it.id == event.id }?.let {
+    fun quickAddEventInstance(event: Event) {
+        events.value?.find { it.id == event.id }?.let {
             it.lastEventTimestamp = DateTime.now()
         }?.also {
-            eventTypes.postValue(eventTypes.value)
+            events.postValue(events.value)
         }
     }
 
     fun showEventType(event: Event) {
-        flowEventBus.value = ShowEventType(event.id)
+        flowEventBus.value = ShowEvent(event.id)
     }
 
     fun addEvent(event: Event) {
         //TODO
     }
 
-    class CreateNewEventType : FlowEvent()
-    class ShowEventType(val eventTypeId: String) : FlowEvent()
+    class CreateNewEvent : FlowEvent()
+    class ShowEvent(val eventTypeId: String) : FlowEvent()
 }

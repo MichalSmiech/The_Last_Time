@@ -14,6 +14,7 @@ interface ILocalEventSource {
     suspend fun insertEvent(event: Event)
     suspend fun getEvent(eventId: String): Event?
     suspend fun getAllEvents(): Flow<Event>
+    suspend fun getAllEventsAtOnce(): ArrayList<Event>
     suspend fun deleteEvent(eventId: String)
     suspend fun deleteAllEvents()
 
@@ -22,6 +23,7 @@ interface ILocalEventSource {
     suspend fun insertEventInstance(instance: EventInstance)
     suspend fun getEventInstance(eventId: String, instanceId: String): EventInstance?
     suspend fun getAllEventInstances(eventId: String, eventInstanceSchema: EventInstanceSchema): Flow<EventInstance>
+    suspend fun getAllEventInstancesAtOnce(eventId: String): ArrayList<EventInstance>
     suspend fun getEventInstance(instanceSchema: EventInstanceSchema, instanceId: String): EventInstance?
     suspend fun deleteEventInstance(instance: EventInstance)
 }

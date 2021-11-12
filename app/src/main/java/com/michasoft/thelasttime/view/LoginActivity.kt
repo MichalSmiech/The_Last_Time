@@ -38,6 +38,7 @@ class LoginActivity : AppCompatActivity() {
     private fun onSignInResult(result: FirebaseAuthUIAuthenticationResult) {
         if (result.resultCode == RESULT_OK) {
             startActivity(Intent(this, MainActivity::class.java))
+            finish()
         } else {
             Log.e("login", "onSignInResult: error: " + result.resultCode)
         }

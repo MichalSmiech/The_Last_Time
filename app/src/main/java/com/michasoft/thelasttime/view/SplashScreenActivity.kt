@@ -40,6 +40,7 @@ class SplashScreenActivity : AppCompatActivity() {
             }
             splashScreenMinDuration.await()
             startActivity(intent)
+            finish()
         }
     }
 

@@ -24,6 +24,9 @@ interface EventDao {
     @Query("SELECT id FROM ${EventEntity.TABLE_NAME} LIMIT :limit OFFSET :offset")
     suspend fun getEventIds(limit: Long, offset: Long): List<String>
 
+    @Query("SELECT id FROM ${EventEntity.TABLE_NAME} ORDER BY createTimestamp DESC LIMIT :limit OFFSET :offset")
+    suspend fun getEventIdsOrderByCreateTimestamp(limit: Long, offset: Long): List<String>
+
     @Query("DELETE FROM ${EventEntity.TABLE_NAME} WHERE id=:id")
     suspend fun deleteEvent(id: String)
 
@@ -35,6 +38,9 @@ interface EventDao {
 
     @Query("SELECT id FROM ${EventInstanceEntity.TABLE_NAME} LIMIT :limit OFFSET :offset")
     suspend fun getEventInstanceIds(limit: Long, offset: Long): List<String>
+
+    @Query("SELECT id FROM ${EventInstanceEntity.TABLE_NAME} ORDER BY timestamp DESC LIMIT :limit OFFSET :offset")
+    suspend fun getEventInstanceIdsOrderByTimestamp(limit: Long, offset: Long): List<String>
 
     @Query("SELECT id FROM ${EventInstanceEntity.TABLE_NAME} WHERE eventId=:eventId")
     suspend fun getAllEventInstanceIdsWithEventId(eventId: String): List<String>

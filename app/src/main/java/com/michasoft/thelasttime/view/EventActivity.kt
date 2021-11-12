@@ -9,8 +9,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
 import com.michasoft.thelasttime.R
 import com.michasoft.thelasttime.databinding.ActivityEventBinding
-import com.michasoft.thelasttime.databinding.ActivityEventTypeBinding
-import com.michasoft.thelasttime.viewModel.EventTypeViewModel
+import com.michasoft.thelasttime.viewModel.CommonViewModel
 import com.michasoft.thelasttime.viewModel.EventViewModel
 import dagger.android.AndroidInjection
 import javax.inject.Inject
@@ -30,12 +29,15 @@ class EventActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        val eventId = ""//intent.getLongExtra(ARG_EVENT_ID, -1L)
-        viewModel.setEventId(eventId)
+        val eventId = intent.getStringExtra(ARG_EVENT_ID)
+        viewModel.start(eventId!!)
         viewModel.flowEventBus.observe(this) {
             when(it) {
-                is EventViewModel.ShowDatePicker -> {
-                    //TODO show date picker
+                is CommonViewModel.Finish -> {
+                    finish()
+                }
+                is EventViewModel.ShowEventInstance -> {
+                    EventInstanceActivity.start(this, it.eventId)
                 }
             }
         }

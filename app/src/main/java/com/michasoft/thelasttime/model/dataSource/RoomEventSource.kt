@@ -141,8 +141,41 @@ class RoomEventSource(private val eventDao: EventDao): ILocalEventSource {
                 val event = getEvent(eventId)!!
                 emit(event)
             }
-            hasNext = eventIds.isNotEmpty()
+            hasNext = eventIds.size.toLong() == limit
         }
+    }
+
+    override suspend fun getAllEventsAtOnce(): ArrayList<Event> {
+        val events = ArrayList<Event>()
+        val offset = 0L
+        val limit = 100L
+        var hasNext = true
+        while(hasNext) {
+            val eventIds = eventDao.getEventIdsOrderByCreateTimestamp(limit, offset)
+            eventIds.forEach { eventId ->
+                val event = getEvent(eventId)!!
+                events.add(event)
+            }
+            hasNext = eventIds.size.toLong() == limit
+        }
+        return events
+    }
+
+    override suspend fun getAllEventInstancesAtOnce(eventId: String): ArrayList<EventInstance> {
+        val eventInstanceSchema = getEventInstanceSchema(eventId)
+        val instances = ArrayList<EventInstance>()
+        val offset = 0L
+        val limit = 100L
+        var hasNext = true
+        while(hasNext) {
+            val instanceIds = eventDao.getEventInstanceIdsOrderByTimestamp(limit, offset)
+            instanceIds.forEach { instanceId ->
+                val instance = getEventInstance(eventInstanceSchema, instanceId)!!
+                instances.add(instance)
+            }
+            hasNext = instanceIds.size.toLong() == limit
+        }
+        return instances
     }
 
     override suspend fun getAllEventInstances(eventId: String, eventInstanceSchema: EventInstanceSchema): Flow<EventInstance> = flow {
@@ -155,7 +188,7 @@ class RoomEventSource(private val eventDao: EventDao): ILocalEventSource {
                 val instance = getEventInstance(eventInstanceSchema, instanceId)!!
                 emit(instance)
             }
-            hasNext = instanceIds.isNotEmpty()
+            hasNext = instanceIds.size.toLong() == limit
         }
     }
 

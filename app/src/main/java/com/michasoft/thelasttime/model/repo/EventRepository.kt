@@ -5,6 +5,8 @@ import com.michasoft.thelasttime.model.EventInstance
 import com.michasoft.thelasttime.model.dataSource.ILocalEventSource
 import com.michasoft.thelasttime.model.dataSource.IRemoteEventSource
 import com.michasoft.thelasttime.util.BackupConfig
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.first
 
 /**
  * Created by mśmiech on 01.11.2021.
@@ -27,7 +29,7 @@ class EventRepository(
     }
 
     override suspend fun getEvents(): ArrayList<Event> {
-        TODO("Not yet implemented")
+        return localSource.getAllEventsAtOnce()
     }
 
     override fun save(Event: Event) {
@@ -46,6 +48,6 @@ class EventRepository(
     }
 
     override suspend fun getEventInstances(eventId: String): List<EventInstance> {
-        TODO("Not yet implemented")
+        return localSource.getAllEventInstancesAtOnce(eventId)
     }
 }
