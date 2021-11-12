@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.michasoft.thelasttime.R
 import com.michasoft.thelasttime.databinding.ListitemEventBinding
 import com.michasoft.thelasttime.model.Event
+import com.michasoft.thelasttime.util.ListObserver
 import com.michasoft.thelasttime.view.viewHolder.EventViewHolder
 import com.michasoft.thelasttime.viewModel.EventListViewModel
 
@@ -18,7 +19,13 @@ class EventListAdapter(
     var viewModel: EventListViewModel
 ) :
     RecyclerView.Adapter<EventViewHolder>() {
-    private var eventTypes = ArrayList<Event>(events)
+    private var events = ArrayList<Event>(events)
+    val eventsObserver = object : ListObserver<Event> {
+        override fun onChanged(entry: Event) {
+            val index = this@EventListAdapter.events.indexOf(entry)
+            notifyItemChanged(index)
+        }
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EventViewHolder {
         val binding: ListitemEventBinding = DataBindingUtil.inflate(
@@ -32,16 +39,16 @@ class EventListAdapter(
     }
 
     override fun getItemCount(): Int {
-        return eventTypes.size
+        return events.size
     }
 
     override fun onBindViewHolder(holder: EventViewHolder, position: Int) {
-        val eventType = eventTypes[position]
-        holder.event = eventType
+        val event = events[position]
+        holder.event = event
     }
 
     fun setData(data: List<Event>) {
-        eventTypes = ArrayList(data)
+        events = ArrayList(data)
         notifyDataSetChanged()
     }
 }

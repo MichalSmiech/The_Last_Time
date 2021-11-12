@@ -13,18 +13,20 @@ import com.michasoft.thelasttime.viewModel.EventViewModel
  * Created by mśmiech on 02.05.2021.
  */
 
-@BindingAdapter(value = ["eventTypes", "viewModel"], requireAll = true)
-fun RecyclerView.setEventTypes(events: List<Event>, viewModel: EventListViewModel) {
+@BindingAdapter(value = ["events", "viewModel"], requireAll = true)
+fun RecyclerView.setEvents(events: List<Event>, viewModel: EventListViewModel) {
     if (this.adapter == null) {
-        this.adapter = EventListAdapter(events, viewModel)
+        val eventListAdapter = EventListAdapter(events, viewModel)
+        this.adapter = eventListAdapter
+        viewModel.eventsObserver = eventListAdapter.eventsObserver
     } else {
         (this.adapter as EventListAdapter).setData(events)
         (this.adapter as EventListAdapter).viewModel = viewModel
     }
 }
 
-@BindingAdapter(value = ["eventTypes", "viewModel"], requireAll = true)
-fun RecyclerView.setEvents(eventInstances: List<EventInstance>, viewModel: EventViewModel) {
+@BindingAdapter(value = ["eventInstances", "viewModel"], requireAll = true)
+fun RecyclerView.setEventInstances(eventInstances: List<EventInstance>, viewModel: EventViewModel) {
     if (this.adapter == null) {
         this.adapter = EventInstanceListAdapter(eventInstances, viewModel)
     } else {

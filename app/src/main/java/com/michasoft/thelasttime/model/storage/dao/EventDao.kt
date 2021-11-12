@@ -8,6 +8,7 @@ import com.michasoft.thelasttime.model.storage.entity.EventInstanceFieldSchemaEn
 import com.michasoft.thelasttime.model.storage.entity.eventInstanceField.EventInstanceDoubleFieldEntity
 import com.michasoft.thelasttime.model.storage.entity.eventInstanceField.EventInstanceIntFieldEntity
 import com.michasoft.thelasttime.model.storage.entity.eventInstanceField.EventInstanceTextFieldEntity
+import org.joda.time.DateTime
 
 /**
  * Created by mśmiech on 11.11.2020.
@@ -67,7 +68,7 @@ interface EventDao {
     suspend fun deleteAllEventInstanceFieldSchemas()
 
     @Query("SELECT * FROM ${EventInstanceTextFieldEntity.TABLE_NAME} WHERE instanceId=:instanceId AND fieldSchemaId=:fieldSchemaId")
-    suspend fun getEventInstanceTextField(instanceId: String, fieldSchemaId: String): EventInstanceTextFieldEntity
+    suspend fun getEventInstanceTextField(instanceId: String, fieldSchemaId: String): EventInstanceTextFieldEntity?
 
     // TODO https://stackoverflow.com/a/66802331
     @Insert
@@ -80,7 +81,7 @@ interface EventDao {
     suspend fun deleteAllEventInstanceTextFields()
 
     @Query("SELECT * FROM ${EventInstanceIntFieldEntity.TABLE_NAME} WHERE instanceId=:instanceId AND fieldSchemaId=:fieldSchemaId")
-    suspend fun getEventInstanceIntField(instanceId: String, fieldSchemaId: String): EventInstanceIntFieldEntity
+    suspend fun getEventInstanceIntField(instanceId: String, fieldSchemaId: String): EventInstanceIntFieldEntity?
 
     @Insert
     suspend fun insertEventInstanceIntField(field: EventInstanceIntFieldEntity)
@@ -92,7 +93,7 @@ interface EventDao {
     suspend fun deleteAllEventInstanceIntFields()
 
     @Query("SELECT * FROM ${EventInstanceDoubleFieldEntity.TABLE_NAME} WHERE instanceId=:instanceId AND fieldSchemaId=:fieldSchemaId")
-    suspend fun getEventInstanceDoubleField(instanceId: String, fieldSchemaId: String): EventInstanceDoubleFieldEntity
+    suspend fun getEventInstanceDoubleField(instanceId: String, fieldSchemaId: String): EventInstanceDoubleFieldEntity?
 
     @Insert
     suspend fun insertEventInstanceDoubleField(field: EventInstanceDoubleFieldEntity)
@@ -102,4 +103,7 @@ interface EventDao {
 
     @Query("DELETE FROM ${EventInstanceDoubleFieldEntity.TABLE_NAME}")
     suspend fun deleteAllEventInstanceDoubleFields()
+
+    @Query("SELECT timestamp FROM ${EventInstanceEntity.TABLE_NAME} WHERE eventId = :eventId AND timestamp = (SELECT MAX(timestamp) FROM ${EventInstanceEntity.TABLE_NAME} WHERE eventId = :eventId)")
+    suspend fun getLastInstanceTimestamp(eventId: String): DateTime?
 }

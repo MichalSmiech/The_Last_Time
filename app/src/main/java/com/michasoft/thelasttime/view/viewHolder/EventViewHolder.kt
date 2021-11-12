@@ -17,7 +17,7 @@ class EventViewHolder(
             field = value
             value?.let {
                 binding.name = it.displayName
-                binding.lastEventTimestamp = it.lastEventTimestamp?.toString() ?: ""
+                binding.lastEventTimestamp = it.lastInstanceTimestamp?.toString() ?: ""
             }
         }
     init {

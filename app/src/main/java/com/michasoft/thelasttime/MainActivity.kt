@@ -1,9 +1,9 @@
 package com.michasoft.thelasttime
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import com.michasoft.thelasttime.model.Event
 import com.michasoft.thelasttime.model.EventInstanceField
 import com.michasoft.thelasttime.model.EventInstanceFieldSchema
@@ -12,8 +12,6 @@ import com.michasoft.thelasttime.model.repo.IBackupRepository
 import com.michasoft.thelasttime.model.repo.IEventRepository
 import com.michasoft.thelasttime.util.BackupConfig
 import com.michasoft.thelasttime.util.IdGenerator
-import com.michasoft.thelasttime.view.EditEventActivity.Companion.start
-import com.michasoft.thelasttime.view.EventActivity.Companion.start
 import com.michasoft.thelasttime.view.EventListActivity
 import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_main.*
@@ -23,8 +21,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.joda.time.DateTime
 import javax.inject.Inject
-import kotlin.system.measureNanoTime
-import kotlin.system.measureTimeMillis
 
 class MainActivity : AppCompatActivity() {
     @Inject

@@ -17,6 +17,7 @@ import com.michasoft.thelasttime.model.storage.entity.eventInstanceField.EventIn
 import com.michasoft.thelasttime.model.storage.entity.eventInstanceField.EventInstanceTextFieldEntity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import org.joda.time.DateTime
 
 /**
  * Created by mśmiech on 05.09.2021.
@@ -59,17 +60,23 @@ class RoomEventSource(private val eventDao: EventDao): ILocalEventSource {
                 Type.TextField -> {
                     val eventInstanceTextFieldEntity =
                         eventDao.getEventInstanceTextField(eventInstanceEntity.id, fieldSchema.id)
-                    eventInstanceFields.add(eventInstanceTextFieldEntity.toModel())
+                    if(eventInstanceTextFieldEntity != null) {
+                        eventInstanceFields.add(eventInstanceTextFieldEntity.toModel())
+                    }
                 }
                 Type.IntField -> {
                     val eventInstanceIntFieldEntity =
                         eventDao.getEventInstanceIntField(eventInstanceEntity.id, fieldSchema.id)
-                    eventInstanceFields.add(eventInstanceIntFieldEntity.toModel())
+                    if(eventInstanceIntFieldEntity != null) {
+                        eventInstanceFields.add(eventInstanceIntFieldEntity.toModel())
+                    }
                 }
                 Type.DoubleField -> {
                     val eventInstanceDoubleFieldEntity =
                         eventDao.getEventInstanceDoubleField(eventInstanceEntity.id, fieldSchema.id)
-                    eventInstanceFields.add(eventInstanceDoubleFieldEntity.toModel())
+                        if(eventInstanceDoubleFieldEntity != null) {
+                            eventInstanceFields.add(eventInstanceDoubleFieldEntity.toModel())
+                        }
                 }
                 else -> {
                     throw NotImplementedError()
@@ -176,6 +183,10 @@ class RoomEventSource(private val eventDao: EventDao): ILocalEventSource {
             hasNext = instanceIds.size.toLong() == limit
         }
         return instances
+    }
+
+    override suspend fun getLastInstanceTimestamp(eventId: String): DateTime? {
+        return eventDao.getLastInstanceTimestamp(eventId)
     }
 
     override suspend fun getAllEventInstances(eventId: String, eventInstanceSchema: EventInstanceSchema): Flow<EventInstance> = flow {

@@ -4,6 +4,7 @@ import com.michasoft.thelasttime.model.Event
 import com.michasoft.thelasttime.model.EventInstance
 import com.michasoft.thelasttime.model.EventInstanceSchema
 import kotlinx.coroutines.flow.Flow
+import org.joda.time.DateTime
 
 /**
  * Created by mśmiech on 01.11.2021.
@@ -26,4 +27,5 @@ interface ILocalEventSource {
     suspend fun getAllEventInstancesAtOnce(eventId: String): ArrayList<EventInstance>
     suspend fun getEventInstance(instanceSchema: EventInstanceSchema, instanceId: String): EventInstance?
     suspend fun deleteEventInstance(instance: EventInstance)
+    suspend fun getLastInstanceTimestamp(eventId: String): DateTime?
 }

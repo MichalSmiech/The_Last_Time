@@ -5,11 +5,11 @@ import org.joda.time.DateTime
 /**
  * Created by mśmiech on 02.05.2021.
  */
-data class Event(
+open class Event(
     var id: String,
     var displayName: String,
     val createTimestamp: DateTime
 ) {
-    var lastEventTimestamp: DateTime? = null
+    open var lastInstanceTimestamp: DateTime? = null
     var eventInstanceSchema: EventInstanceSchema? = null
 }
