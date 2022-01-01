@@ -1,7 +1,7 @@
 package com.michasoft.thelasttime.di
 
 import android.content.Context
-import com.michasoft.thelasttime.TheLastTimeApplication
+import com.michasoft.thelasttime.LastTimeApplication
 import dagger.BindsInstance
 import dagger.Component
 import dagger.android.AndroidInjectionModule
@@ -23,7 +23,7 @@ import javax.inject.Singleton
         ActivityModule::class
     ]
 )
-interface ApplicationComponent : AndroidInjector<TheLastTimeApplication> {
+interface ApplicationComponent : AndroidInjector<LastTimeApplication> {
     @Component.Factory
     interface Factory {
         fun create(@BindsInstance applicationContext: Context): ApplicationComponent
