@@ -19,7 +19,7 @@ import javax.inject.Singleton
         EventTypeListModule::class,
         EditEventTypeModule::class,
         EventTypeModule::class,
-        EventModule::class,
+        EventInstanceModule::class,
         ActivityModule::class
     ]
 )

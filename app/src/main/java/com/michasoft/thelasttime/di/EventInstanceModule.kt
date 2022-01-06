@@ -9,12 +9,12 @@ import dagger.android.ContributesAndroidInjector
 import dagger.multibindings.IntoMap
 
 @Module
-abstract class EventModule {
+abstract class EventInstanceModule {
 
     @ContributesAndroidInjector(modules = [
         ViewModelBuilder::class
     ])
-    internal abstract fun eventActivity(): EventInstanceActivity
+    internal abstract fun eventInstanceActivity(): EventInstanceActivity
 
     @Binds
     @IntoMap

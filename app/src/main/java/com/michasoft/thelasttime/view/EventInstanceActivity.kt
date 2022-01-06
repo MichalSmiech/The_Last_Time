@@ -1,15 +1,25 @@
 package com.michasoft.thelasttime.view
 
+import android.app.DatePickerDialog
+import android.app.Dialog
+import android.app.TimePickerDialog
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.format.DateFormat
+import android.widget.DatePicker
+import android.widget.TimePicker
 import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import com.michasoft.thelasttime.R
 import com.michasoft.thelasttime.databinding.ActivityEventInstanceBinding
 import com.michasoft.thelasttime.viewModel.EventInstanceViewModel
 import dagger.android.AndroidInjection
+import org.joda.time.DateTime
+import org.joda.time.DateTimeFieldType
 import javax.inject.Inject
 
 class EventInstanceActivity : AppCompatActivity() {
@@ -32,9 +42,47 @@ class EventInstanceActivity : AppCompatActivity() {
         instanceViewModel.flowEventBus.observe(this) {
             when(it) {
                 is EventInstanceViewModel.ShowDatePicker -> {
-                    //TODO show date picker
+                    DatePickerFragment().show(supportFragmentManager, "datePicker")
+                }
+                is EventInstanceViewModel.ShowTimePicker -> {
+                    TimePickerFragment().show(supportFragmentManager, "timePicker")
                 }
             }
+        }
+    }
+
+    class TimePickerFragment : DialogFragment(), TimePickerDialog.OnTimeSetListener {
+        private val instanceViewModel: EventInstanceViewModel by viewModels(ownerProducer = this::requireActivity)
+
+        override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+            val dateTime = instanceViewModel.timestamp.value ?: DateTime.now()
+            val hour = dateTime.get(DateTimeFieldType.clockhourOfDay())
+            val minute = dateTime.get(DateTimeFieldType.minuteOfHour())
+            return TimePickerDialog(activity, this, hour, minute, DateFormat.is24HourFormat(activity))
+        }
+
+        override fun onTimeSet(view: TimePicker, hourOfDay: Int, minute: Int) {
+            val timestamp = instanceViewModel.timestamp.value ?: DateTime.now()
+            val newTimestamp = timestamp.withTime(hourOfDay, minute, 0, 0)
+            instanceViewModel.timestamp.value = newTimestamp
+        }
+    }
+
+    class DatePickerFragment : DialogFragment(), DatePickerDialog.OnDateSetListener {
+        private val instanceViewModel: EventInstanceViewModel by viewModels(ownerProducer = this::requireActivity)
+
+        override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+            val dateTime = instanceViewModel.timestamp.value ?: DateTime.now()
+            val year = dateTime.get(DateTimeFieldType.year())
+            val month = dateTime.get(DateTimeFieldType.monthOfYear())
+            val day = dateTime.get(DateTimeFieldType.dayOfMonth())
+            return DatePickerDialog(requireActivity(), this, year, month, day)
+        }
+
+        override fun onDateSet(view: DatePicker, year: Int, month: Int, day: Int) {
+            val timestamp = instanceViewModel.timestamp.value ?: DateTime.now()
+            val newTimestamp = timestamp.withDate(year, month, day)
+            instanceViewModel.timestamp.value = newTimestamp
         }
     }
 

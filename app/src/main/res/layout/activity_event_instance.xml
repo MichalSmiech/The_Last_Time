@@ -14,39 +14,62 @@
         android:layout_height="match_parent"
         tools:context=".view.EventInstanceActivity">
 
-        <TextView
-            android:id="@+id/textView4"
+        <ImageButton
+            android:id="@+id/imageButton"
+            style="?android:attr/borderlessButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="24dp"
-            android:text="@{viewModel.eventTypeName}"
-            android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+            android:minWidth="48dp"
+            android:minHeight="48dp"
+            android:onClick="@{(view) -> viewModel.showDatePicker()}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="Water plants" />
+            app:srcCompat="@drawable/baseline_event_24" />
 
-        <TextView
-            android:id="@+id/textView5"
+        <Button
+            android:id="@+id/textButton"
+            style="?attr/materialButtonOutlinedStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:text="@{viewModel.timestampString}"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView4"
-            tools:text="31.03.2020 18:29" />
-
-        <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
+            android:layout_marginStart="8dp"
+            android:fontFamily="sans-serif"
+            android:text="@{viewModel.timestampDateString}"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:textColor="#ffffff"
             android:onClick="@{(view) -> viewModel.showDatePicker()}"
-            app:layout_constraintBottom_toBottomOf="@+id/textView5"
-            app:layout_constraintStart_toEndOf="@+id/textView5"
-            app:layout_constraintTop_toTopOf="@+id/textView5"
-            app:srcCompat="@android:drawable/ic_menu_my_calendar" />
+            app:backgroundTint="#17FFFFFF"
+            app:layout_constraintStart_toEndOf="@+id/imageButton"
+            app:layout_constraintTop_toTopOf="@+id/imageButton"
+            app:layout_constraintBottom_toBottomOf="@+id/imageButton"
+            tools:text="Tue, 14 Dec 2021" />
+
+        <ImageButton
+            android:id="@+id/imageButton1"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minWidth="48dp"
+            android:minHeight="48dp"
+            android:onClick="@{(view) -> viewModel.showTimePicker()}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageButton"
+            app:srcCompat="@drawable/baseline_schedule_24" />
+
+        <Button
+            android:id="@+id/textButton1"
+            style="?attr/materialButtonOutlinedStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:fontFamily="sans-serif"
+            android:text="@{viewModel.timestampTimeString}"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:textColor="#ffffff"
+            android:onClick="@{(view) -> viewModel.showTimePicker()}"
+            app:backgroundTint="#17FFFFFF"
+            app:layout_constraintStart_toEndOf="@+id/imageButton1"
+            app:layout_constraintTop_toTopOf="@+id/imageButton1"
+            app:layout_constraintBottom_toBottomOf="@+id/imageButton1"
+            tools:text="01:11:46" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
