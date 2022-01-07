@@ -21,6 +21,10 @@ import dagger.android.AndroidInjection
 import org.joda.time.DateTime
 import org.joda.time.DateTimeFieldType
 import javax.inject.Inject
+import android.view.Menu
+import android.view.MenuItem
+import android.widget.Toast
+
 
 class EventInstanceActivity : AppCompatActivity() {
     @Inject
@@ -31,8 +35,32 @@ class EventInstanceActivity : AppCompatActivity() {
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
         val binding: ActivityEventInstanceBinding = DataBindingUtil.setContentView(this, R.layout.activity_event_instance)
+        setSupportActionBar(binding.topAppBar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
+        supportActionBar?.setDisplayShowTitleEnabled(false)
         binding.viewModel = instanceViewModel
         binding.lifecycleOwner = this
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.top_app_bar, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
+        R.id.delete -> {
+            Toast.makeText(this@EventInstanceActivity, "aaa", Toast.LENGTH_SHORT).show()
+            true
+        }
+        else -> {
+            super.onOptionsItemSelected(item)
+        }
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        finish()
+        return true
     }
 
     override fun onStart() {
