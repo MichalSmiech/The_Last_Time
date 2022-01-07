@@ -16,7 +16,8 @@ class EventInstanceViewModel @Inject constructor(
 ) : CommonViewModel() {
     private var eventId: String? = null
     private var originalEventInstance: EventInstance? = null
-    private var event: Event? = null
+    private var event = MutableLiveData<Event>()
+    var eventName = Transformations.map(event) { it.displayName }
     val timestamp = MutableLiveData<DateTime>()
     val timestampDateString = Transformations.map(timestamp) {
         return@map it.toString("E, dd MMM yyyy")
@@ -28,10 +29,10 @@ class EventInstanceViewModel @Inject constructor(
     fun setEventId(eventId: String) {
         viewModelScope.launch {
             this@EventInstanceViewModel.eventId = eventId
-            val event = eventRepository.getEventInstance("1", eventId)!!
-            originalEventInstance = event
-            timestamp.value = event.timestamp
-            this@EventInstanceViewModel.event = eventRepository.getEvent(event.eventId)
+            val instance = eventRepository.getEventInstance("1", eventId)!!
+            originalEventInstance = instance
+            timestamp.value = instance.timestamp
+            this@EventInstanceViewModel.event.value = eventRepository.getEvent(instance.eventId)
         }
     }
 
