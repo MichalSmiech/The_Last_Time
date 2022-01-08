@@ -21,8 +21,14 @@ class EventInstanceViewHolder(
             field = value
             value?.let {
                 binding.timestamp = it.timestamp.toString("E, dd MMM yyyy HH:mm")
-                val period = Period(it.timestamp, DateTime.now())
-                binding.period = period.toString(periodFormatter) + if(it.timestamp.isBeforeNow) " ago" else " until"
+                if(it.timestamp.isBeforeNow) {
+                    val period = Period(it.timestamp, DateTime.now())
+                    binding.period = period.toString(periodFormatter) + " ago"
+                } else {
+                    val period = Period(DateTime.now(), it.timestamp)
+                    binding.period = period.toString(periodFormatter) + " until"
+                }
+
             }
         }
 
