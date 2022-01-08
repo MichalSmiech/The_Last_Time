@@ -28,12 +28,9 @@ class EventActivity : AppCompatActivity() {
         setSupportActionBar(binding.activityEventToolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
+        supportActionBar?.setDisplayShowTitleEnabled(false)
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
-
-        viewModel.name.observe(this) {
-            supportActionBar?.title = it
-        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
