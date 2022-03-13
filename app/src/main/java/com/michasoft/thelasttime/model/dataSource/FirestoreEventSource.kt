@@ -62,6 +62,15 @@ class FirestoreEventSource(private val firestore: FirebaseFirestore, private val
         instanceCollection.document(instance.id).set(instanceMap).await()
     }
 
+    override suspend fun updateEventInstance(instance: EventInstance) {
+        val instanceMap = instance.toMap()
+        val instanceCollection =
+            eventCollectionRef.document(instance.eventId).collection(
+                EVENT_INSTANCES_COLLECTION_NAME
+            )
+        instanceCollection.document(instance.id).set(instanceMap).await()
+    }
+
     override suspend fun insertEventInstances(instances: List<EventInstance>) {
         require(instances.size <= 500)
         val batch = firestore.batch()

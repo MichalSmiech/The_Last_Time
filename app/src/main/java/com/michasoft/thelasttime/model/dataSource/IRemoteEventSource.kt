@@ -19,6 +19,7 @@ interface IRemoteEventSource {
 
     suspend fun insertEventInstance(instance: EventInstance)
     suspend fun insertEventInstances(instances: List<EventInstance>)
+    suspend fun updateEventInstance(instance: EventInstance)
     suspend fun getEventInstance(eventId: String, instanceSchema: EventInstanceSchema, instanceId: String): EventInstance?
     suspend fun deleteEventInstance(instance: EventInstance)
 

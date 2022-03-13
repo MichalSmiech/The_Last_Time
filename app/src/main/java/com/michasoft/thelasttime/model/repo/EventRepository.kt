@@ -52,7 +52,7 @@ class EventRepository(
     override suspend fun update(instance: EventInstance) {
         localSource.updateEventInstance(instance)
         if (backupConfig.isAutoBackup()) {
-            //TODO remoteSource.updateEventInstance(...)
+            remoteSource.updateEventInstance(instance)
         }
     }
 
