@@ -45,8 +45,15 @@ class EventRepository(
         return events
     }
 
-    override fun save(event: Event) {
-        TODO("Not yet implemented")
+    override suspend fun update(event: Event) {
+        //TODO check if eventInstanceSchema changed then have to update all instances
+        localSource.updateEvent(event)
+        if (backupConfig.isAutoBackup()) {
+            if(event.eventInstanceSchema == null) {
+                event.eventInstanceSchema = localSource.getEventInstanceSchema(event.id)
+            }
+            remoteSource.updateEvent(event)
+        }
     }
 
     override suspend fun update(instance: EventInstance) {

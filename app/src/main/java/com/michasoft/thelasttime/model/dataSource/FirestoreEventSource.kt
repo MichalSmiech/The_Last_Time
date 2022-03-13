@@ -31,6 +31,19 @@ class FirestoreEventSource(private val firestore: FirebaseFirestore, private val
         }
     }
 
+    override suspend fun updateEvent(event: Event) {
+        requireNotNull(event.eventInstanceSchema)
+        val dto = EventDto(event)
+        val documentRef = eventCollectionRef.document(event.id)
+        documentRef.set(dto).await()
+        val fieldSchemaCollection =
+            documentRef.collection(EVENT_INSTANCE_FIELD_SCHEMAS_COLLECTION_NAME)
+        event.eventInstanceSchema!!.fieldSchemas.forEach { fieldSchema ->
+            val fieldSchemaDto = EventInstanceFieldSchemaDto(fieldSchema)
+            fieldSchemaCollection.document(fieldSchema.id).set(fieldSchemaDto).await()
+        }
+    }
+
     override suspend fun getEvent(eventId: String): Event? {
         val eventDocument = eventCollectionRef.document(eventId).get().await()
         val dto = eventDocument.toObject(EventDto::class.java)

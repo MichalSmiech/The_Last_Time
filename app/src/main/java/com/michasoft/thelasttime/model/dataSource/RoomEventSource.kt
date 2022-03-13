@@ -225,6 +225,16 @@ class RoomEventSource(private val appDatabase: AppDatabase, private val eventDao
         }
     }
 
+    override suspend fun updateEvent(event: Event) {
+        appDatabase.withTransaction {
+            val oldEvent = getEvent(event.id)
+            if(event.displayName != oldEvent!!.displayName) {
+                eventDao.updateEventDisplayName(event.id, event.displayName)
+            }
+            //TODO compare scheme and update if needed
+        }
+    }
+
     override suspend fun updateEventInstance(instance: EventInstance) {
         appDatabase.withTransaction {
             val oldInstance = getEventInstance(instance.eventId, instance.id)!!

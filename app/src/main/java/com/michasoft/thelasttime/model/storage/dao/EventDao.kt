@@ -28,6 +28,9 @@ interface EventDao {
     @Query("SELECT id FROM ${EventEntity.TABLE_NAME} ORDER BY createTimestamp DESC LIMIT :limit OFFSET :offset")
     suspend fun getEventIdsOrderByCreateTimestamp(limit: Long, offset: Long): List<String>
 
+    @Query("UPDATE ${EventEntity.TABLE_NAME} SET displayName = :displayName WHERE id = :eventId")
+    suspend fun updateEventDisplayName(eventId: String, displayName: String)
+
     @Query("DELETE FROM ${EventEntity.TABLE_NAME} WHERE id=:id")
     suspend fun deleteEvent(id: String)
 

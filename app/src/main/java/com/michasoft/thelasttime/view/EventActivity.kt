@@ -14,6 +14,9 @@ import com.michasoft.thelasttime.databinding.ActivityEventBinding
 import com.michasoft.thelasttime.viewModel.CommonViewModel
 import com.michasoft.thelasttime.viewModel.EventViewModel
 import dagger.android.AndroidInjection
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class EventActivity : AppCompatActivity() {
@@ -49,8 +52,18 @@ class EventActivity : AppCompatActivity() {
     }
 
     override fun onSupportNavigateUp(): Boolean {
+        CoroutineScope(Dispatchers.IO).launch {
+            viewModel.saveIfNeeded()
+        }
         finish()
         return true
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        CoroutineScope(Dispatchers.IO).launch {
+            viewModel.saveIfNeeded()
+        }
     }
 
     override fun onStart() {

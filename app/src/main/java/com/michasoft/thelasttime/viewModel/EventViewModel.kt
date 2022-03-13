@@ -34,5 +34,20 @@ class EventViewModel @Inject constructor(
         flowEventBus.value = ShowEventInstance(instance.id)
     }
 
+    private fun buildEvent(): Event {
+        return originalEvent!!.copy(displayName = name.value!!)
+    }
+
+    suspend fun saveIfNeeded() {
+        val event = buildEvent()
+        if(event != originalEvent) {
+            saveEvent(event)
+        }
+    }
+
+    private suspend fun saveEvent(event: Event) {
+        eventRepository.update(event)
+    }
+
     class ShowEventInstance(val eventId: String): FlowEvent()
 }
