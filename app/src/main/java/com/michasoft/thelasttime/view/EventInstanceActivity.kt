@@ -118,14 +118,14 @@ class EventInstanceActivity : AppCompatActivity() {
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
             val dateTime = instanceViewModel.timestamp.value ?: DateTime.now()
             val year = dateTime.get(DateTimeFieldType.year())
-            val month = dateTime.get(DateTimeFieldType.monthOfYear())
+            val month = dateTime.get(DateTimeFieldType.monthOfYear()) - 1
             val day = dateTime.get(DateTimeFieldType.dayOfMonth())
             return DatePickerDialog(requireActivity(), this, year, month, day)
         }
 
         override fun onDateSet(view: DatePicker, year: Int, month: Int, day: Int) {
             val timestamp = instanceViewModel.timestamp.value ?: DateTime.now()
-            val newTimestamp = timestamp.withDate(year, month, day)
+            val newTimestamp = timestamp.withDate(year, month + 1, day)
             instanceViewModel.timestamp.value = newTimestamp
         }
     }
