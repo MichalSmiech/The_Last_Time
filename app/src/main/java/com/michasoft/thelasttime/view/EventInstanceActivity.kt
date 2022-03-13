@@ -24,12 +24,15 @@ import javax.inject.Inject
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 
 class EventInstanceActivity : AppCompatActivity() {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
-    private val instanceViewModel: EventInstanceViewModel by viewModels{ viewModelFactory }
+    private val viewModel: EventInstanceViewModel by viewModels{ viewModelFactory }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
@@ -38,10 +41,10 @@ class EventInstanceActivity : AppCompatActivity() {
         setSupportActionBar(binding.topAppBar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
-        binding.viewModel = instanceViewModel
+        binding.viewModel = viewModel
         binding.lifecycleOwner = this
 
-        instanceViewModel.eventName.observe(this) {
+        viewModel.eventName.observe(this) {
             supportActionBar?.title = it
         }
     }
@@ -62,15 +65,25 @@ class EventInstanceActivity : AppCompatActivity() {
     }
 
     override fun onSupportNavigateUp(): Boolean {
+        CoroutineScope(Dispatchers.IO).launch {
+            viewModel.saveIfNeeded()
+        }
         finish()
         return true
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        CoroutineScope(Dispatchers.IO).launch {
+            viewModel.saveIfNeeded()
+        }
     }
 
     override fun onStart() {
         super.onStart()
         val eventId = intent.getStringExtra(ARG_EVENT_INSTANCE_ID)
-        instanceViewModel.setEventId(eventId!!)
-        instanceViewModel.flowEventBus.observe(this) {
+        viewModel.setEventId(eventId!!)
+        viewModel.flowEventBus.observe(this) {
             when(it) {
                 is EventInstanceViewModel.ShowDatePicker -> {
                     DatePickerFragment().show(supportFragmentManager, "datePicker")

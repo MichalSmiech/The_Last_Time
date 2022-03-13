@@ -65,7 +65,7 @@ class ApplicationModule {
     @Singleton
     @Provides
     fun provideLocalEventSource(appDatabase: AppDatabase): ILocalEventSource {
-        return RoomEventSource(appDatabase.eventDao)
+        return RoomEventSource(appDatabase, appDatabase.eventDao)
     }
 
     @Singleton

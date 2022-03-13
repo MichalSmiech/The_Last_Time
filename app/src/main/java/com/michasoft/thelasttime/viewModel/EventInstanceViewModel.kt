@@ -18,7 +18,7 @@ class EventInstanceViewModel @Inject constructor(
     private var originalEventInstance: EventInstance? = null
     private var event = MutableLiveData<Event>()
     var eventName = Transformations.map(event) { it.displayName }
-    val timestamp = MutableLiveData<DateTime>()
+    val timestamp = MutableLiveData(DateTime.now())
     val timestampDateString = Transformations.map(timestamp) {
         return@map it.toString("E, dd MMM yyyy")
     }
@@ -42,6 +42,24 @@ class EventInstanceViewModel @Inject constructor(
 
     fun showTimePicker() {
         flowEventBus.value = ShowTimePicker(timestamp.value!!)
+    }
+
+    private fun buildInstance(): EventInstance {
+        val instance = originalEventInstance!!.copy(
+            timestamp = timestamp.value!!
+        )
+        return instance
+    }
+
+    suspend fun saveIfNeeded() {
+        val instance = buildInstance()
+        if (instance != originalEventInstance) {
+            saveInstance(instance)
+        }
+    }
+
+    private suspend fun saveInstance(instance: EventInstance = buildInstance()) {
+        eventRepository.update(instance)
     }
 
     class ShowDatePicker(val timestamp: DateTime): FlowEvent()

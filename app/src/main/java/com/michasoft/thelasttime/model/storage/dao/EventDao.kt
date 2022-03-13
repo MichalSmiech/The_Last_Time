@@ -106,4 +106,7 @@ interface EventDao {
 
     @Query("SELECT timestamp FROM ${EventInstanceEntity.TABLE_NAME} WHERE eventId = :eventId AND timestamp = (SELECT MAX(timestamp) FROM ${EventInstanceEntity.TABLE_NAME} WHERE eventId = :eventId)")
     suspend fun getLastInstanceTimestamp(eventId: String): DateTime?
+
+    @Query("UPDATE ${EventInstanceEntity.TABLE_NAME} SET timestamp = :timestamp WHERE id = :instanceId")
+    suspend fun updateEventInstanceTimestamp(instanceId: String, timestamp: DateTime)
 }
