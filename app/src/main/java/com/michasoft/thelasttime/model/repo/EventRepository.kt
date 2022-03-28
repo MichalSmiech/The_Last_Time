@@ -6,6 +6,7 @@ import com.michasoft.thelasttime.model.EventInstanceSchema
 import com.michasoft.thelasttime.model.dataSource.ILocalEventSource
 import com.michasoft.thelasttime.model.dataSource.IRemoteEventSource
 import com.michasoft.thelasttime.util.BackupConfig
+import com.michasoft.thelasttime.util.EventInstanceFactory
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
 
@@ -63,7 +64,7 @@ class EventRepository(
         }
     }
 
-    override suspend fun insertEventInstance(instance: EventInstance) {
+    override suspend fun insert(instance: EventInstance) {
         localSource.insertEventInstance(instance)
         if (backupConfig.isAutoBackup()) {
             remoteSource.insertEventInstance(instance)
@@ -72,6 +73,11 @@ class EventRepository(
 
     override suspend fun getEventInstance(eventId: String, instanceId: String): EventInstance? {
         return localSource.getEventInstance(eventId, instanceId)
+    }
+
+    override suspend fun createEventInstance(eventId: String): EventInstance {
+        val event = getEvent(eventId)!!
+        return EventInstanceFactory.createEmptyEventInstance(event)
     }
 
     override suspend fun getEventInstances(eventId: String): List<EventInstance> {

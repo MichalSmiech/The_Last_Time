@@ -14,7 +14,8 @@ interface IEventRepository {
     suspend fun getEventsWithLastInstanceTimestamp(): ArrayList<Event>
     suspend fun update(event: Event)
 
-    suspend fun insertEventInstance(instance: EventInstance)
+    suspend fun createEventInstance(eventId: String): EventInstance
+    suspend fun insert(instance: EventInstance)
     suspend fun getEventInstance(eventId: String, instanceId: String): EventInstance?
     suspend fun getEventInstances(eventId: String): List<EventInstance>
     suspend fun update(instance: EventInstance)

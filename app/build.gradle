@@ -48,6 +48,7 @@ dependencies {
     implementation libraries.jodatime
     implementation libraries.fragment_ktx
     implementation libraries.dagger_android
+    implementation libraries.dagger_support
     kapt libraries.dagger_compiler
     kapt libraries.dagger_android_processor
     implementation libraries.kotlinx_coroutines_android

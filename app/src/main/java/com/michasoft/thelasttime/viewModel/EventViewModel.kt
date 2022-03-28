@@ -30,8 +30,12 @@ class EventViewModel @Inject constructor(
         }
     }
 
+    fun createEventInstance() {
+        flowEventBus.value = ShowAddEventInstanceBottomSheet(eventId!!)
+    }
+
     fun showEvent(instance: EventInstance) {
-        flowEventBus.value = ShowEventInstance(instance.id)
+        flowEventBus.value = ShowEventInstance(instance.eventId, instance.id)
     }
 
     private fun buildEvent(): Event {
@@ -49,5 +53,6 @@ class EventViewModel @Inject constructor(
         eventRepository.update(event)
     }
 
-    class ShowEventInstance(val eventId: String): FlowEvent()
+    class ShowEventInstance(val eventId: String, val instanceId: String): FlowEvent()
+    class ShowAddEventInstanceBottomSheet(val eventId: String): FlowEvent()
 }

@@ -11,6 +11,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.michasoft.thelasttime.R
 import com.michasoft.thelasttime.databinding.ActivityEventBinding
+import com.michasoft.thelasttime.view.bottomSheet.AddEventInstanceBottomSheet
 import com.michasoft.thelasttime.viewModel.CommonViewModel
 import com.michasoft.thelasttime.viewModel.EventViewModel
 import dagger.android.AndroidInjection
@@ -76,7 +77,10 @@ class EventActivity : AppCompatActivity() {
                     finish()
                 }
                 is EventViewModel.ShowEventInstance -> {
-                    EventInstanceActivity.start(this, it.eventId)
+                    EventInstanceActivity.start(this, it.eventId, it.instanceId)
+                }
+                is EventViewModel.ShowAddEventInstanceBottomSheet -> {
+                    AddEventInstanceBottomSheet.show(supportFragmentManager, it.eventId)
                 }
             }
         }

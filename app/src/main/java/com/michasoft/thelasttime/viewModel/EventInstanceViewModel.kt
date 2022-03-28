@@ -15,6 +15,7 @@ class EventInstanceViewModel @Inject constructor(
     private val eventRepository: IEventRepository
 ) : CommonViewModel() {
     private var eventId: String? = null
+    private var instanceId: String? = null
     private var originalEventInstance: EventInstance? = null
     private var event = MutableLiveData<Event>()
     var eventName = Transformations.map(event) { it.displayName }
@@ -26,13 +27,22 @@ class EventInstanceViewModel @Inject constructor(
         return@map it.toString("HH:mm")
     }
 
-    fun setEventId(eventId: String) {
-        viewModelScope.launch {
-            this@EventInstanceViewModel.eventId = eventId
-            val instance = eventRepository.getEventInstance("1", eventId)!!
-            originalEventInstance = instance
-            timestamp.value = instance.timestamp
-            this@EventInstanceViewModel.event.value = eventRepository.getEvent(instance.eventId)
+    fun setInitData(eventId: String, instanceId: String? = null) {
+        this@EventInstanceViewModel.eventId = eventId
+        if(instanceId != null) {
+            this@EventInstanceViewModel.instanceId = instanceId
+            viewModelScope.launch {
+                val instance = eventRepository.getEventInstance(eventId, instanceId)!!
+                originalEventInstance = instance
+                timestamp.value = instance.timestamp
+                this@EventInstanceViewModel.event.value = eventRepository.getEvent(instance.eventId)
+            }
+        } else {
+            viewModelScope.launch {
+                originalEventInstance = eventRepository.createEventInstance(eventId)
+                timestamp.value = originalEventInstance!!.timestamp
+                this@EventInstanceViewModel.event.value = eventRepository.getEvent(eventId)
+            }
         }
     }
 
@@ -42,6 +52,14 @@ class EventInstanceViewModel @Inject constructor(
 
     fun showTimePicker() {
         flowEventBus.value = ShowTimePicker(timestamp.value!!)
+    }
+
+    fun save() {
+        viewModelScope.launch {
+            val instance = buildInstance()
+            eventRepository.insert(instance)
+            flowEventBus.value = Finish()
+        }
     }
 
     private fun buildInstance(): EventInstance {

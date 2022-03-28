@@ -7,10 +7,7 @@ import com.michasoft.thelasttime.model.repo.IEventRepository
 import com.michasoft.thelasttime.util.EventInstanceFactory
 import com.michasoft.thelasttime.util.FlowEvent
 import com.michasoft.thelasttime.util.ListObserver
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import org.joda.time.DateTime
 import javax.inject.Inject
 
 /**
@@ -41,7 +38,7 @@ class EventListViewModel @Inject constructor(
     fun quickAddEventInstance(event: Event) {
         viewModelScope.launch {
             val instance = EventInstanceFactory.createEmptyEventInstance(event)
-            eventRepository.insertEventInstance(instance)
+            eventRepository.insert(instance)
             event.lastInstanceTimestamp = instance.timestamp
             eventsObserver?.onChanged(event)
         }

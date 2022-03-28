@@ -81,8 +81,9 @@ class EventInstanceActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        val eventId = intent.getStringExtra(ARG_EVENT_INSTANCE_ID)
-        viewModel.setEventId(eventId!!)
+        val eventId = intent.getStringExtra(ARG_EVENT_ID)!!
+        val instanceId = intent.getStringExtra(ARG_EVENT_INSTANCE_ID)!!
+        viewModel.setInitData(eventId, instanceId)
         viewModel.flowEventBus.observe(this) {
             when(it) {
                 is EventInstanceViewModel.ShowDatePicker -> {
@@ -131,11 +132,13 @@ class EventInstanceActivity : AppCompatActivity() {
     }
 
     companion object {
+        const val ARG_EVENT_ID = "EVENT_ID"
         const val ARG_EVENT_INSTANCE_ID = "EVENT_INSTANCE_ID"
 
-        fun start(activity: AppCompatActivity, eventId: String) {
+        fun start(activity: AppCompatActivity, eventId: String, instanceId: String) {
             val intent = Intent(activity, EventInstanceActivity::class.java)
-            intent.putExtra(ARG_EVENT_INSTANCE_ID, eventId)
+            intent.putExtra(ARG_EVENT_ID, eventId)
+            intent.putExtra(ARG_EVENT_INSTANCE_ID, instanceId)
             activity.startActivity(intent)
         }
     }
