@@ -8,20 +8,21 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
 import com.michasoft.thelasttime.R
-import com.michasoft.thelasttime.databinding.ActivityEventTypeListBinding
-import com.michasoft.thelasttime.viewModel.EventTypeListViewModel
+import com.michasoft.thelasttime.databinding.ActivityEventListBinding
+import com.michasoft.thelasttime.util.IdGenerator
+import com.michasoft.thelasttime.viewModel.EventListViewModel
 import dagger.android.AndroidInjection
 import javax.inject.Inject
 
-class EventTypeListActivity : AppCompatActivity() {
+class EventListActivity : AppCompatActivity() {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
-    private val viewModel: EventTypeListViewModel by viewModels { viewModelFactory }
+    private val viewModel: EventListViewModel by viewModels { viewModelFactory }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
-        val binding: ActivityEventTypeListBinding = DataBindingUtil.setContentView(this, R.layout.activity_event_type_list)
+        val binding: ActivityEventListBinding = DataBindingUtil.setContentView(this, R.layout.activity_event_list)
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
     }
@@ -30,12 +31,11 @@ class EventTypeListActivity : AppCompatActivity() {
         super.onStart()
         viewModel.flowEventBus.observe(this) {
             when(it) {
-                is EventTypeListViewModel.CreateNewEventType -> {
-                    val intent = Intent(this, EditEventTypeActivity::class.java)
-                    startActivity(intent)
+                is EventListViewModel.CreateNewEvent -> {
+                    EditEventActivity.start(this, IdGenerator.autoId())
                 }
-                is EventTypeListViewModel.ShowEventType -> {
-                    EventTypeActivity.start(this, it.eventTypeId)
+                is EventListViewModel.ShowEvent -> {
+                    EventActivity.start(this, it.eventTypeId)
                 }
             }
         }
@@ -44,5 +44,12 @@ class EventTypeListActivity : AppCompatActivity() {
     override fun onRestart() {
         super.onRestart()
         viewModel.refreshData()
+    }
+
+    companion object {
+        fun start(activity: AppCompatActivity) {
+            val intent = Intent(activity, EventListActivity::class.java)
+            activity.startActivity(intent)
+        }
     }
 }

@@ -1,20 +1,22 @@
 package com.michasoft.thelasttime.di
 
 import android.content.Context
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreSettings
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import com.michasoft.thelasttime.MainActivity
+import com.michasoft.thelasttime.model.dataSource.FirestoreEventSource
+import com.michasoft.thelasttime.model.dataSource.ILocalEventSource
+import com.michasoft.thelasttime.model.dataSource.IRemoteEventSource
+import com.michasoft.thelasttime.model.dataSource.RoomEventSource
 import com.michasoft.thelasttime.model.repo.*
 import com.michasoft.thelasttime.model.storage.AppDatabase
-import com.michasoft.thelasttime.model.storage.dao.EventDao
-import com.michasoft.thelasttime.view.EventActivity
+import com.michasoft.thelasttime.util.BackupConfig
 import dagger.Module
 import dagger.Provides
-import dagger.android.ContributesAndroidInjector
 import javax.inject.Named
 import javax.inject.Singleton
 
@@ -37,15 +39,21 @@ class ApplicationModule {
     @Singleton
     @Provides
     @Named("eventCollectionRef")
-    fun provideEventCollectionRef(firestore: FirebaseFirestore): CollectionReference {
-        return firestore.collection("users").document(Firebase.auth.currentUser!!.uid)
+    fun provideEventCollectionRef(firestore: FirebaseFirestore, firebaseAuth: FirebaseAuth): CollectionReference {
+        return firestore.collection("users").document(firebaseAuth.currentUser!!.uid)
             .collection("events")
     }
 
     @Singleton
     @Provides
-    fun provideRemoteEventSource(@Named("eventCollectionRef") eventCollectionRef: CollectionReference): IRemoteEventSource {
-        return FirestoreEventSource(eventCollectionRef)
+    fun provideRemoteEventSource(firestore: FirebaseFirestore, @Named("eventCollectionRef") eventCollectionRef: CollectionReference): IRemoteEventSource {
+        return FirestoreEventSource(firestore, eventCollectionRef)
+    }
+
+    @Singleton
+    @Provides
+    fun provideFirebaseAuth(): FirebaseAuth {
+        return Firebase.auth
     }
 
     @Singleton
@@ -57,21 +65,29 @@ class ApplicationModule {
     @Singleton
     @Provides
     fun provideLocalEventSource(appDatabase: AppDatabase): ILocalEventSource {
-        return RoomEventSource(appDatabase.eventDao)
+        return RoomEventSource(appDatabase, appDatabase.eventDao)
     }
 
     @Singleton
     @Provides
     fun provideEventsRepository(
         localSource: ILocalEventSource,
-        remoteSource: IRemoteEventSource
+        remoteSource: IRemoteEventSource,
+        backupConfig: BackupConfig
     ): IEventRepository {
-        return EventRepository(localSource, remoteSource)
+        return EventRepository(localSource, remoteSource, backupConfig)
     }
 
-//    @Singleton
-//    @Provides
-//    fun provideEventsRepository(): IEventRepository {
-//        return MockEventRepository()
-//    }
+    @Singleton
+    @Provides
+    fun provideBackupRepository(
+        localSource: ILocalEventSource,
+        remoteSource: IRemoteEventSource
+    ): IBackupRepository {
+        return BackupRepository(localSource, remoteSource)
+    }
+
+    @Singleton
+    @Provides
+    fun provideBackupConfig(context: Context, auth: FirebaseAuth): BackupConfig = BackupConfig(context, auth)
 }

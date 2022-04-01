@@ -10,14 +10,14 @@ import com.michasoft.thelasttime.model.EventInstanceFieldSchema
  */
 @Entity(tableName = EventInstanceFieldSchemaEntity.TABLE_NAME)
 class EventInstanceFieldSchemaEntity(
-    val eventId: Long,
+    @PrimaryKey
+    var id: String,
+    val eventId: String,
     val order: Int,
     val type: EventInstanceField.Type,
     val displayTitle: String,
-    @PrimaryKey(autoGenerate = true)
-    var id: Long = 0L
 ) {
-    constructor(eventId: Long, schema: EventInstanceFieldSchema): this(eventId, schema.order, schema.type, schema.displayTitle)
+    constructor(eventId: String, schema: EventInstanceFieldSchema): this(schema.id, eventId, schema.order, schema.type, schema.displayTitle)
 
     fun toModel() = EventInstanceFieldSchema(id, order, type, displayTitle)
 

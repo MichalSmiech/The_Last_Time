@@ -9,11 +9,11 @@ import com.michasoft.thelasttime.model.eventInstanceField.TextField
 
 @Entity(tableName = EventInstanceTextFieldEntity.TABLE_NAME, primaryKeys = ["instanceId", "fieldSchemaId"])
 class EventInstanceTextFieldEntity(
-    val instanceId: Long,
-    val fieldSchemaId: Long,
+    val instanceId: String,
+    val fieldSchemaId: String,
     val value: String?
 ) {
-    constructor(eventId: Long, field: TextField): this(eventId, field.fieldSchemaId, field.value)
+    constructor(eventId: String, field: TextField): this(eventId, field.fieldSchemaId, field.value)
 
     fun toModel() = TextField(fieldSchemaId, value)
 

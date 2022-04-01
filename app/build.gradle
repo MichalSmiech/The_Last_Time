@@ -6,7 +6,7 @@ apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.google.firebase.crashlytics'
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion 31
     dataBinding {
         enabled = true
     }
@@ -14,7 +14,7 @@ android {
     defaultConfig {
         applicationId "com.michasoft.thelasttime"
         minSdkVersion 24
-        targetSdkVersion 30
+        targetSdkVersion 31
         versionCode 10000
         versionName "1.0.0"
 
@@ -48,11 +48,14 @@ dependencies {
     implementation libraries.jodatime
     implementation libraries.fragment_ktx
     implementation libraries.dagger_android
+    implementation libraries.dagger_support
     kapt libraries.dagger_compiler
     kapt libraries.dagger_android_processor
     implementation libraries.kotlinx_coroutines_android
     implementation libraries.kotlinx_coroutines_core
     implementation libraries.kotlinx_coroutines_play_services
+    implementation libraries.datastore
+    implementation libraries.timber
 
     implementation androidx_lifecycle.lifecycle_viewmodel_ktx
     implementation androidx_lifecycle.lifecycle_livedata_ktx

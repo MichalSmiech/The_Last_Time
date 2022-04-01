@@ -1,10 +1,8 @@
 package com.michasoft.thelasttime.di
 
 import androidx.lifecycle.ViewModel
-import com.michasoft.thelasttime.view.EventTypeActivity
-import com.michasoft.thelasttime.view.EventTypeListActivity
-import com.michasoft.thelasttime.viewModel.EventTypeListViewModel
-import com.michasoft.thelasttime.viewModel.EventTypeViewModel
+import com.michasoft.thelasttime.view.EventActivity
+import com.michasoft.thelasttime.viewModel.EventViewModel
 import dagger.Binds
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
@@ -19,10 +17,10 @@ abstract class EventTypeModule {
     @ContributesAndroidInjector(modules = [
         ViewModelBuilder::class
     ])
-    internal abstract fun eventTypeActivity(): EventTypeActivity
+    internal abstract fun eventTypeActivity(): EventActivity
 
     @Binds
     @IntoMap
-    @ViewModelKey(EventTypeViewModel::class)
-    abstract fun bindViewModel(viewModel: EventTypeViewModel): ViewModel
+    @ViewModelKey(EventViewModel::class)
+    abstract fun bindViewModel(viewModel: EventViewModel): ViewModel
 }

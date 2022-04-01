@@ -6,13 +6,13 @@
     <data>
         <variable
             name="viewModel"
-            type="com.michasoft.thelasttime.viewModel.EventTypeListViewModel" />
+            type="com.michasoft.thelasttime.viewModel.EventListViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".view.EventTypeListActivity">
+        tools:context=".view.EventListActivity">
 
         <androidx.recyclerview.widget.RecyclerView
             android:layout_width="0dp"
@@ -20,8 +20,8 @@
             android:layout_marginTop="16dp"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
-            tools:listitem="@layout/listitem_event_type"
-            app:eventTypes="@{viewModel.eventTypes}"
+            tools:listitem="@layout/listitem_event"
+            app:events="@{viewModel.events}"
             app:viewModel="@{viewModel}"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintTop_toTopOf="parent"

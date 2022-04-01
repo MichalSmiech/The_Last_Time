@@ -6,9 +6,10 @@ import org.joda.time.DateTime
  * Created by mśmiech on 02.05.2021.
  */
 data class Event(
-    var id: Long,
-    var displayName: String
+    var id: String,
+    var displayName: String,
+    val createTimestamp: DateTime
 ) {
-    var lastEventTimestamp: DateTime? = null
+    var lastInstanceTimestamp: DateTime? = null
     var eventInstanceSchema: EventInstanceSchema? = null
 }

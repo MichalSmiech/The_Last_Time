@@ -22,12 +22,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".view.EventInstanceActivity" />
         <activity android:name=".view.EventActivity" />
-        <activity android:name=".view.EventTypeActivity" />
-        <activity android:name=".view.EditEventTypeActivity" />
+        <activity android:name=".view.EditEventActivity" />
         <activity android:name=".MainActivity" >
         </activity>
-        <activity android:name=".view.EventTypeListActivity" />
+        <activity android:name=".view.EventListActivity" />
     </application>
 
 </manifest>

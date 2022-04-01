@@ -6,13 +6,13 @@
     <data>
         <variable
             name="viewModel"
-            type="com.michasoft.thelasttime.viewModel.EditEventTypeViewModel" />
+            type="com.michasoft.thelasttime.viewModel.EditEventViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".view.EditEventTypeActivity">
+        tools:context=".view.EditEventActivity">
 
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"

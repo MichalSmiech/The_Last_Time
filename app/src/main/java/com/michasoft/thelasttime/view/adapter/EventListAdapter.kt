@@ -6,18 +6,26 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.michasoft.thelasttime.R
 import com.michasoft.thelasttime.databinding.ListitemEventBinding
-import com.michasoft.thelasttime.model.EventInstance
+import com.michasoft.thelasttime.model.Event
+import com.michasoft.thelasttime.util.ListObserver
 import com.michasoft.thelasttime.view.viewHolder.EventViewHolder
-import com.michasoft.thelasttime.viewModel.EventTypeViewModel
+import com.michasoft.thelasttime.viewModel.EventListViewModel
 
 /**
- * Created by mśmiech on 08.07.2021.
+ * Created by mśmiech on 02.05.2021.
  */
 class EventListAdapter(
-    eventInstances: List<EventInstance>,
-    var viewModel: EventTypeViewModel
-) : RecyclerView.Adapter<EventViewHolder>() {
-    private var events = ArrayList<EventInstance>(eventInstances)
+    events: List<Event>,
+    var viewModel: EventListViewModel
+) :
+    RecyclerView.Adapter<EventViewHolder>() {
+    private var events = ArrayList<Event>(events)
+    val eventsObserver = object : ListObserver<Event> {
+        override fun onChanged(entry: Event) {
+            val index = this@EventListAdapter.events.indexOf(entry)
+            notifyItemChanged(index)
+        }
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EventViewHolder {
         val binding: ListitemEventBinding = DataBindingUtil.inflate(
@@ -30,16 +38,16 @@ class EventListAdapter(
         return EventViewHolder(binding, viewModel)
     }
 
-    override fun onBindViewHolder(holder: EventViewHolder, position: Int) {
-        val event = events[position]
-        holder.eventInstance = event
-    }
-
     override fun getItemCount(): Int {
         return events.size
     }
 
-    fun setData(data: List<EventInstance>) {
+    override fun onBindViewHolder(holder: EventViewHolder, position: Int) {
+        val event = events[position]
+        holder.event = event
+    }
+
+    fun setData(data: List<Event>) {
         events = ArrayList(data)
         notifyDataSetChanged()
     }
