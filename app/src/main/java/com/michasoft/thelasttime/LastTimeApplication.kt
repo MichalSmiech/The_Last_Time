@@ -9,7 +9,7 @@ import timber.log.Timber
 /**
  * Created by mśmiech on 09.05.2021.
  */
-open class TheLastTimeApplication: DaggerApplication() {
+open class LastTimeApplication: DaggerApplication() {
     override fun applicationInjector(): AndroidInjector<out DaggerApplication> {
         return DaggerApplicationComponent.factory().create(applicationContext)
     }
