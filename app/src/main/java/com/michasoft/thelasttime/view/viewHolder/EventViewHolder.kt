@@ -28,7 +28,7 @@ class EventViewHolder(
         }
         binding.addActionButton.setOnClickListener {
             event?.let {
-                viewModel.addEvent(it)
+                viewModel.addEventInstance(it)
             }
         }
         binding.listitemEventTypeLayout.setOnClickListener {

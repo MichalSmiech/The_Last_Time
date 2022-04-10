@@ -48,10 +48,11 @@ class EventListViewModel @Inject constructor(
         flowEventBus.value = ShowEvent(event.id)
     }
 
-    fun addEvent(event: Event) {
-        //TODO
+    fun addEventInstance(event: Event) {
+        flowEventBus.value = ShowAddEventInstanceBottomSheet(event.id)
     }
 
     class CreateNewEvent : FlowEvent()
     class ShowEvent(val eventTypeId: String) : FlowEvent()
+    class ShowAddEventInstanceBottomSheet(val eventId: String): FlowEvent()
 }
