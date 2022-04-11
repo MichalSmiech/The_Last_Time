@@ -21,11 +21,6 @@ class EventViewHolder(
             }
         }
     init {
-        binding.quickAddActionButton.setOnClickListener {
-            event?.let {
-                viewModel.quickAddEventInstance(it)
-            }
-        }
         binding.addActionButton.setOnClickListener {
             event?.let {
                 viewModel.addEventInstance(it)

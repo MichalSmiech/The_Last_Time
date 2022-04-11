@@ -35,15 +35,6 @@ class EventListViewModel @Inject constructor(
         }
     }
 
-    fun quickAddEventInstance(event: Event) {
-        viewModelScope.launch {
-            val instance = EventInstanceFactory.createEmptyEventInstance(event)
-            eventRepository.insert(instance)
-            event.lastInstanceTimestamp = instance.timestamp
-            eventsObserver?.onChanged(event)
-        }
-    }
-
     fun showEventType(event: Event) {
         flowEventBus.value = ShowEvent(event.id)
     }

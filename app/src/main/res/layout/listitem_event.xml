@@ -50,17 +50,6 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <ImageButton
-            android:id="@+id/quick_add_action_button"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:src="@drawable/outline_bolt"
-            app:tint="@color/colorAccent"
-            android:backgroundTint="@android:color/transparent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:contentDescription="Quick" />
-
-        <ImageButton
             android:id="@+id/add_action_button"
             android:layout_width="50dp"
             android:layout_height="50dp"
@@ -69,7 +58,7 @@
             android:backgroundTint="@android:color/transparent"
             android:contentDescription="New"
             android:src="@drawable/outline_add"
-            app:layout_constraintEnd_toStartOf="@+id/quick_add_action_button"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
