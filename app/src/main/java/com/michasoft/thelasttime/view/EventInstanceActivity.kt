@@ -102,7 +102,7 @@ class EventInstanceActivity : AppCompatActivity() {
                 }
                 is ShowDeleteConfirmationDialog -> {
                     AlertDialog.Builder(this)
-                        .setTitle("Delete?")
+                        .setTitle(R.string.delete_confirmation_title)
                         .setPositiveButton(R.string.action_ok) { dialog, _ ->
                             viewModel.delete()
                             dialog.dismiss()

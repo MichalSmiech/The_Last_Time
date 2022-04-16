@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">Last Time</string>
 
+    <string name="delete_confirmation_title">Delete?</string>
+
     <string name="action_ok">OK</string>
     <string name="action_cancel">Cancel</string>
 </resources>
