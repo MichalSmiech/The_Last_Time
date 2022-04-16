@@ -21,5 +21,6 @@ interface IEventRepository {
     suspend fun update(instance: EventInstance)
 
     suspend fun getEventInstanceSchema(eventId: String): EventInstanceSchema
+    suspend fun deleteEventInstance(eventId: String, instanceId: String)
 
 }

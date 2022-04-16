@@ -38,6 +38,13 @@ class EventRepository(
         return localSource.getEventInstanceSchema(eventId)
     }
 
+    override suspend fun deleteEventInstance(eventId: String, instanceId: String) {
+        localSource.deleteEventInstance(eventId, instanceId)
+        if(backupConfig.isAutoBackup()) {
+            remoteSource.deleteEventInstance(eventId, instanceId)
+        }
+    }
+
     override suspend fun getEventsWithLastInstanceTimestamp(): ArrayList<Event> {
         val events = getEvents()
         events.forEach { event ->

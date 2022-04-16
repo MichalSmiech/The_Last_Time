@@ -7,6 +7,7 @@ import com.michasoft.thelasttime.model.EventInstance
 import com.michasoft.thelasttime.model.Event
 import com.michasoft.thelasttime.model.repo.IEventRepository
 import com.michasoft.thelasttime.util.FlowEvent
+import com.michasoft.thelasttime.util.ShowDeleteConfirmationDialog
 import kotlinx.coroutines.launch
 import org.joda.time.DateTime
 import javax.inject.Inject
@@ -78,6 +79,17 @@ class EventInstanceViewModel @Inject constructor(
 
     private suspend fun saveInstance(instance: EventInstance = buildInstance()) {
         eventRepository.update(instance)
+    }
+
+    fun delete(needConfirmation: Boolean = false) {
+        if (needConfirmation) {
+            flowEventBus.value = ShowDeleteConfirmationDialog()
+            return
+        }
+        viewModelScope.launch {
+            eventRepository.deleteEventInstance(eventId!!, instanceId!!)
+            flowEventBus.value = Finish()
+        }
     }
 
     class ShowDatePicker(val timestamp: DateTime): FlowEvent()

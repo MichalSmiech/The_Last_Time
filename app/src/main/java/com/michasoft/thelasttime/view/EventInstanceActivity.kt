@@ -24,6 +24,9 @@ import javax.inject.Inject
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
+import com.michasoft.thelasttime.util.ShowDeleteConfirmationDialog
+import com.michasoft.thelasttime.viewModel.CommonViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -32,12 +35,13 @@ import kotlinx.coroutines.launch
 class EventInstanceActivity : AppCompatActivity() {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
-    private val viewModel: EventInstanceViewModel by viewModels{ viewModelFactory }
+    private val viewModel: EventInstanceViewModel by viewModels { viewModelFactory }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
-        val binding: ActivityEventInstanceBinding = DataBindingUtil.setContentView(this, R.layout.activity_event_instance)
+        val binding: ActivityEventInstanceBinding =
+            DataBindingUtil.setContentView(this, R.layout.activity_event_instance)
         setSupportActionBar(binding.topAppBar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
@@ -47,6 +51,7 @@ class EventInstanceActivity : AppCompatActivity() {
         viewModel.eventName.observe(this) {
             supportActionBar?.title = it
         }
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -56,7 +61,7 @@ class EventInstanceActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
         R.id.delete -> {
-            Toast.makeText(this@EventInstanceActivity, "aaa", Toast.LENGTH_SHORT).show()
+            viewModel.delete(true)
             true
         }
         else -> {
@@ -85,12 +90,27 @@ class EventInstanceActivity : AppCompatActivity() {
         val instanceId = intent.getStringExtra(ARG_EVENT_INSTANCE_ID)!!
         viewModel.setInitData(eventId, instanceId)
         viewModel.flowEventBus.observe(this) {
-            when(it) {
+            when (it) {
                 is EventInstanceViewModel.ShowDatePicker -> {
                     DatePickerFragment().show(supportFragmentManager, "datePicker")
                 }
                 is EventInstanceViewModel.ShowTimePicker -> {
                     TimePickerFragment().show(supportFragmentManager, "timePicker")
+                }
+                is CommonViewModel.Finish -> {
+                    finish()
+                }
+                is ShowDeleteConfirmationDialog -> {
+                    AlertDialog.Builder(this)
+                        .setTitle("Delete?")
+                        .setPositiveButton("OK") { dialog, _ ->
+                            viewModel.delete()
+                            dialog.dismiss()
+                        }
+                        .setNegativeButton("CANCEL") { dialog, _ ->
+                            dialog.cancel()
+                        }
+                        .show()
                 }
             }
         }
@@ -103,7 +123,13 @@ class EventInstanceActivity : AppCompatActivity() {
             val dateTime = instanceViewModel.timestamp.value ?: DateTime.now()
             val hour = dateTime.get(DateTimeFieldType.clockhourOfDay())
             val minute = dateTime.get(DateTimeFieldType.minuteOfHour())
-            return TimePickerDialog(activity, this, hour, minute, DateFormat.is24HourFormat(activity))
+            return TimePickerDialog(
+                activity,
+                this,
+                hour,
+                minute,
+                DateFormat.is24HourFormat(activity)
+            )
         }
 
         override fun onTimeSet(view: TimePicker, hourOfDay: Int, minute: Int) {

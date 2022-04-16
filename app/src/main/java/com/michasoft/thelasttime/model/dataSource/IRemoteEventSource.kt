@@ -28,4 +28,5 @@ interface IRemoteEventSource {
 
     suspend fun deleteAllEvents()
     suspend fun updateEvent(event: Event)
+    suspend fun deleteEventInstance(eventId: String, instanceId: String)
 }

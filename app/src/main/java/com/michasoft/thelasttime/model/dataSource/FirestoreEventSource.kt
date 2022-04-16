@@ -226,11 +226,15 @@ class FirestoreEventSource(private val firestore: FirebaseFirestore, private val
     }
 
     override suspend fun deleteEventInstance(instance: EventInstance) {
+        deleteEventInstance(instance.eventId, instance.id)
+    }
+
+    override suspend fun deleteEventInstance(eventId: String, instanceId: String) {
         val instanceCollection =
-            eventCollectionRef.document(instance.eventId).collection(
+            eventCollectionRef.document(eventId).collection(
                 EVENT_INSTANCES_COLLECTION_NAME
             )
-        instanceCollection.document(instance.id).delete().await()
+        instanceCollection.document(instanceId).delete().await()
     }
 
     companion object {

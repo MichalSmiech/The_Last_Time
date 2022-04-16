@@ -97,7 +97,7 @@ class RoomEventSource(private val appDatabase: AppDatabase, private val eventDao
         deleteEventInstance(instance.eventId, instance.id)
     }
 
-    private suspend fun deleteEventInstance(eventId: String, instanceId: String) {
+    override suspend fun deleteEventInstance(eventId: String, instanceId: String) {
         val eventInstanceFieldSchemaEntities =
             eventDao.getEventInstanceFieldSchemas(eventId)
         eventInstanceFieldSchemaEntities.distinctBy { it.type }.forEach { fieldSchema ->

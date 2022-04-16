@@ -27,6 +27,7 @@ interface ILocalEventSource {
     suspend fun getAllEventInstancesAtOnce(eventId: String): ArrayList<EventInstance>
     suspend fun getEventInstance(instanceSchema: EventInstanceSchema, instanceId: String): EventInstance?
     suspend fun deleteEventInstance(instance: EventInstance)
+    suspend fun deleteEventInstance(eventId: String, instanceId: String)
     suspend fun getLastInstanceTimestamp(eventId: String): DateTime?
     suspend fun updateEventInstance(instance: EventInstance)
     suspend fun updateEvent(event: Event)
