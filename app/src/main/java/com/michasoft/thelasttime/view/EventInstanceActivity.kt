@@ -92,10 +92,10 @@ class EventInstanceActivity : AppCompatActivity() {
         viewModel.flowEventBus.observe(this) {
             when (it) {
                 is EventInstanceViewModel.ShowDatePicker -> {
-                    DatePickerFragment().show(supportFragmentManager, "datePicker")
+                    DatePickerFragment().show(supportFragmentManager, DatePickerFragment.TAG)
                 }
                 is EventInstanceViewModel.ShowTimePicker -> {
-                    TimePickerFragment().show(supportFragmentManager, "timePicker")
+                    TimePickerFragment().show(supportFragmentManager, TimePickerFragment.TAG)
                 }
                 is CommonViewModel.Finish -> {
                     finish()
@@ -137,6 +137,10 @@ class EventInstanceActivity : AppCompatActivity() {
             val newTimestamp = timestamp.withTime(hourOfDay, minute, 0, 0)
             instanceViewModel.timestamp.value = newTimestamp
         }
+
+        companion object {
+            const val TAG = "timePicker"
+        }
     }
 
     class DatePickerFragment : DialogFragment(), DatePickerDialog.OnDateSetListener {
@@ -154,6 +158,10 @@ class EventInstanceActivity : AppCompatActivity() {
             val timestamp = instanceViewModel.timestamp.value ?: DateTime.now()
             val newTimestamp = timestamp.withDate(year, month + 1, day)
             instanceViewModel.timestamp.value = newTimestamp
+        }
+
+        companion object {
+            const val TAG = "datePicker"
         }
     }
 
