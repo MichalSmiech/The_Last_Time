@@ -16,12 +16,9 @@ import javax.inject.Singleton
     modules = [
         ApplicationModule::class,
         AndroidInjectionModule::class,
-        EventTypeListModule::class,
-        EditEventTypeModule::class,
-        EventTypeModule::class,
-        EventInstanceModule::class,
         ActivityModule::class,
-        FragmentModule::class
+        FragmentModule::class,
+        ViewModelModule::class
     ]
 )
 interface ApplicationComponent : AndroidInjector<LastTimeApplication> {

@@ -12,7 +12,7 @@ import kotlin.reflect.KClass
 /**
  * Created by mśmiech on 23.05.2021.
  */
-class TodoViewModelFactory @Inject constructor(
+class ViewModelFactory @Inject constructor(
     private val creators: @JvmSuppressWildcards Map<Class<out ViewModel>, Provider<ViewModel>>
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
@@ -41,7 +41,7 @@ class TodoViewModelFactory @Inject constructor(
 internal abstract class ViewModelBuilder {
     @Binds
     internal abstract fun bindViewModelFactory(
-        factory: TodoViewModelFactory
+        factory: ViewModelFactory
     ): ViewModelProvider.Factory
 }
 
