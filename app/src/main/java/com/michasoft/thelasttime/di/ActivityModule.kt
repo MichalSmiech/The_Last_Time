@@ -21,7 +21,7 @@ abstract class ActivityModule {
     @ContributesAndroidInjector(modules = [
         ViewModelBuilder::class
     ])
-    internal abstract fun editEventTypeActivity(): EditEventActivity
+    internal abstract fun editEventActivity(): EditEventActivity
 
     @ContributesAndroidInjector(modules = [
         ViewModelBuilder::class
@@ -31,10 +31,10 @@ abstract class ActivityModule {
     @ContributesAndroidInjector(modules = [
         ViewModelBuilder::class
     ])
-    internal abstract fun eventTypeListActivity(): EventListActivity
+    internal abstract fun eventListActivity(): EventListActivity
 
     @ContributesAndroidInjector(modules = [
         ViewModelBuilder::class
     ])
-    internal abstract fun eventTypeActivity(): EventActivity
+    internal abstract fun eventActivity(): EventActivity
 }

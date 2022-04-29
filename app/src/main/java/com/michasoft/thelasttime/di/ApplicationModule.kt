@@ -70,7 +70,7 @@ class ApplicationModule {
 
     @Singleton
     @Provides
-    fun provideEventsRepository(
+    fun provideEventRepository(
         localSource: ILocalEventSource,
         remoteSource: IRemoteEventSource,
         backupConfig: BackupConfig

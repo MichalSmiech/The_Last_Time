@@ -22,7 +22,7 @@ abstract class ViewModelModule {
     @Binds
     @IntoMap
     @ViewModelKey(EventInstanceViewModel::class)
-    abstract fun bindEventInstanceViewModel(instanceViewModel: EventInstanceViewModel): ViewModel
+    abstract fun bindEventInstanceViewModel(viewModel: EventInstanceViewModel): ViewModel
 
     @Binds
     @IntoMap
