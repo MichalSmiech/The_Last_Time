@@ -2,6 +2,7 @@ package com.michasoft.thelasttime.di
 
 import android.content.Context
 import com.michasoft.thelasttime.LastTimeApplication
+import com.michasoft.thelasttime.model.repo.UserRepository
 import dagger.BindsInstance
 import dagger.Component
 import dagger.android.AndroidInjectionModule
@@ -26,4 +27,7 @@ interface ApplicationComponent : AndroidInjector<LastTimeApplication> {
     interface Factory {
         fun create(@BindsInstance applicationContext: Context): ApplicationComponent
     }
+    fun getUserRepository(): UserRepository
+
+    fun userSessionComponent(): UserSessionComponent.Builder
 }

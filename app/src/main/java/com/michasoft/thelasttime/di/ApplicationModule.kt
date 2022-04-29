@@ -90,4 +90,8 @@ class ApplicationModule {
     @Singleton
     @Provides
     fun provideBackupConfig(context: Context, auth: FirebaseAuth): BackupConfig = BackupConfig(context, auth)
+
+    @Singleton
+    @Provides
+    fun userRepository() = UserRepository()
 }
