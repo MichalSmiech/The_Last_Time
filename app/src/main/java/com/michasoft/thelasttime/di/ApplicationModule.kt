@@ -8,12 +8,10 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreSettings
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import com.michasoft.thelasttime.model.dataSource.FirestoreEventSource
-import com.michasoft.thelasttime.model.dataSource.ILocalEventSource
-import com.michasoft.thelasttime.model.dataSource.IRemoteEventSource
-import com.michasoft.thelasttime.model.dataSource.RoomEventSource
+import com.michasoft.thelasttime.model.dataSource.*
 import com.michasoft.thelasttime.model.repo.*
 import com.michasoft.thelasttime.model.storage.AppDatabase
+import com.michasoft.thelasttime.model.storage.UserDatabase
 import com.michasoft.thelasttime.util.BackupConfig
 import dagger.Module
 import dagger.Provides
@@ -93,5 +91,13 @@ class ApplicationModule {
 
     @Singleton
     @Provides
-    fun userRepository() = UserRepository()
+    fun provideUserRepository(userDataSource: IUserDataSource) = UserRepository(userDataSource)
+
+    @Singleton
+    @Provides
+    fun provideUserDatabase(context: Context) = UserDatabase.build(context)
+
+    @Singleton
+    @Provides
+    fun provideUserDataSource(userDatabase: UserDatabase): IUserDataSource = RoomUserDataSource(userDatabase.userDao)
 }
