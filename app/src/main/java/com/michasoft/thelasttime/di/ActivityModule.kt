@@ -1,10 +1,7 @@
 package com.michasoft.thelasttime.di
 
 import com.michasoft.thelasttime.MainActivity
-import com.michasoft.thelasttime.view.EditEventActivity
-import com.michasoft.thelasttime.view.EventActivity
-import com.michasoft.thelasttime.view.EventInstanceActivity
-import com.michasoft.thelasttime.view.EventListActivity
+import com.michasoft.thelasttime.view.*
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
@@ -13,6 +10,11 @@ import dagger.android.ContributesAndroidInjector
  */
 @Module
 abstract class ActivityModule {
+    @ContributesAndroidInjector(modules = [
+        ViewModelBuilder::class
+    ])
+    internal abstract fun loginActivity(): LoginActivity
+
     @ContributesAndroidInjector(modules = [
         ViewModelBuilder::class
     ])

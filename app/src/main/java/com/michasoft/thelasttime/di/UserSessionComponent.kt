@@ -18,4 +18,6 @@ interface UserSessionComponent {
         fun user(@BindsInstance user: User): Builder
         fun build(): UserSessionComponent
     }
+
+    fun getUser(): User
 }

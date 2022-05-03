@@ -15,16 +15,14 @@ import com.michasoft.thelasttime.model.EventInstanceFieldSchema
 import com.michasoft.thelasttime.model.EventInstanceSchema
 import com.michasoft.thelasttime.model.repo.IBackupRepository
 import com.michasoft.thelasttime.model.repo.IEventRepository
+import com.michasoft.thelasttime.model.repo.UserRepository
 import com.michasoft.thelasttime.util.BackupConfig
 import com.michasoft.thelasttime.util.IdGenerator
 import com.michasoft.thelasttime.view.EventListActivity
 import com.michasoft.thelasttime.view.LoginActivity
 import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import org.joda.time.DateTime
 import javax.inject.Inject
 
@@ -37,6 +35,8 @@ class MainActivity : AppCompatActivity() {
 
     @Inject
     lateinit var backupConfig: BackupConfig
+
+    @Inject lateinit var userRepository: UserRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
@@ -110,7 +110,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun logout(view: View) {
-        AuthUI.getInstance().signOut(this)
+        runBlocking {
+            userRepository.logout()
+        }
         Intent(this, LoginActivity::class.java).also {
             startActivity(it)
         }

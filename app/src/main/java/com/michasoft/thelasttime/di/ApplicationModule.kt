@@ -37,14 +37,20 @@ class ApplicationModule {
     @Singleton
     @Provides
     @Named("eventCollectionRef")
-    fun provideEventCollectionRef(firestore: FirebaseFirestore, firebaseAuth: FirebaseAuth): CollectionReference {
+    fun provideEventCollectionRef(
+        firestore: FirebaseFirestore,
+        firebaseAuth: FirebaseAuth
+    ): CollectionReference {
         return firestore.collection("users").document(firebaseAuth.currentUser!!.uid)
             .collection("events")
     }
 
     @Singleton
     @Provides
-    fun provideRemoteEventSource(firestore: FirebaseFirestore, @Named("eventCollectionRef") eventCollectionRef: CollectionReference): IRemoteEventSource {
+    fun provideRemoteEventSource(
+        firestore: FirebaseFirestore,
+        @Named("eventCollectionRef") eventCollectionRef: CollectionReference
+    ): IRemoteEventSource {
         return FirestoreEventSource(firestore, eventCollectionRef)
     }
 
@@ -87,11 +93,13 @@ class ApplicationModule {
 
     @Singleton
     @Provides
-    fun provideBackupConfig(context: Context, auth: FirebaseAuth): BackupConfig = BackupConfig(context, auth)
+    fun provideBackupConfig(context: Context, auth: FirebaseAuth): BackupConfig =
+        BackupConfig(context, auth)
 
     @Singleton
     @Provides
-    fun provideUserRepository(userDataSource: IUserDataSource) = UserRepository(userDataSource)
+    fun provideUserRepository(context: Context, userDataSource: IUserDataSource) =
+        UserRepository(context, userDataSource)
 
     @Singleton
     @Provides
@@ -99,5 +107,6 @@ class ApplicationModule {
 
     @Singleton
     @Provides
-    fun provideUserDataSource(userDatabase: UserDatabase): IUserDataSource = RoomUserDataSource(userDatabase.userDao)
+    fun provideUserDataSource(userDatabase: UserDatabase): IUserDataSource =
+        RoomUserDataSource(userDatabase.userDao)
 }

@@ -11,11 +11,13 @@ import com.michasoft.thelasttime.model.User
 class UserEntity(
     @PrimaryKey
     var id: String,
+    var remoteId: String?,
+    val displayName: String,
     var isCurrent: Boolean
 ) {
-    constructor(user: User, isCurrent: Boolean = false): this(user.id, isCurrent)
+    constructor(user: User, isCurrent: Boolean = false): this(user.id, user.remoteId, user.displayName, isCurrent)
 
-    fun toModel() = User(id)
+    fun toModel() = User(id, remoteId, displayName)
 
     companion object {
         const val TABLE_NAME = "Users"

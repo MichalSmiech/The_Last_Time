@@ -7,4 +7,8 @@ import com.michasoft.thelasttime.model.User
  */
 interface IUserDataSource {
     suspend fun insertUser(user: User)
+    suspend fun getUserByRemoteId(remoteId: String): User?
+    suspend fun clearCurrentUserFlag()
+    suspend fun setCurrentUserFlag(userId: String)
+    suspend fun getCurrentUser(): User?
 }
