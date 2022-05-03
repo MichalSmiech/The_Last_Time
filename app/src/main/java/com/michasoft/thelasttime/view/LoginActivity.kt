@@ -4,13 +4,14 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.view.View
+import androidx.databinding.DataBindingUtil
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
-import com.google.firebase.auth.FirebaseAuth
 import com.michasoft.thelasttime.MainActivity
 import com.michasoft.thelasttime.R
+import com.michasoft.thelasttime.databinding.ActivityLoginBinding
+import timber.log.Timber
 
 class LoginActivity : AppCompatActivity() {
     private val signInLauncher = registerForActivityResult(
@@ -21,10 +22,13 @@ class LoginActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_login)
+        val binding: ActivityLoginBinding = DataBindingUtil.setContentView(this, R.layout.activity_login)
+        binding.signInButton.setOnClickListener {
+            signIn()
+        }
     }
 
-    fun login(view: View) {
+    private fun signIn() {
         val providers = arrayListOf(
             AuthUI.IdpConfig.GoogleBuilder().build()
         )
@@ -40,7 +44,7 @@ class LoginActivity : AppCompatActivity() {
             startActivity(Intent(this, MainActivity::class.java))
             finish()
         } else {
-            Log.e("login", "onSignInResult: error: " + result.resultCode)
+            Timber.e("onSignInResult: error: " + result.resultCode)
         }
     }
 }
