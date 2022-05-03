@@ -13,6 +13,7 @@ import com.michasoft.thelasttime.model.EventInstanceSchema
 import com.michasoft.thelasttime.model.repo.IBackupRepository
 import com.michasoft.thelasttime.model.repo.IEventRepository
 import com.michasoft.thelasttime.model.repo.UserRepository
+import com.michasoft.thelasttime.model.repo.UserSessionRepository
 import com.michasoft.thelasttime.util.BackupConfig
 import com.michasoft.thelasttime.util.IdGenerator
 import kotlinx.android.synthetic.main.activity_main.*
@@ -30,7 +31,7 @@ class MainActivity : UserSessionActivity() {
     @Inject
     lateinit var backupConfig: BackupConfig
 
-    @Inject lateinit var userRepository: UserRepository
+    @Inject lateinit var userSessionRepository: UserSessionRepository
 
     override fun onActivityCreate(savedInstanceState: Bundle?) {
         (application as LastTimeApplication).userSessionComponent!!.inject(this)
@@ -104,7 +105,7 @@ class MainActivity : UserSessionActivity() {
 
     fun logout(view: View) {
         runBlocking {
-            userRepository.logout()
+            userSessionRepository.logout()
         }
         Intent(this, LoginActivity::class.java).also {
             startActivity(it)

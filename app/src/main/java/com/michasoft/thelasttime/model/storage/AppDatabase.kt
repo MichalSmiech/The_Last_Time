@@ -5,6 +5,7 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import com.michasoft.thelasttime.model.User
 import com.michasoft.thelasttime.model.storage.dao.EventDao
 import com.michasoft.thelasttime.model.storage.entity.EventInstanceEntity
 import com.michasoft.thelasttime.model.storage.entity.EventEntity
@@ -30,8 +31,8 @@ abstract class AppDatabase : RoomDatabase() {
     abstract val eventDao: EventDao
 
     companion object {
-        fun build(context: Context) : AppDatabase {
-            val databaseName = "AppDatabase.db"
+        fun build(context: Context, user: User) : AppDatabase {
+            val databaseName = "AppDatabase_${user.id}.db"
             return Room.databaseBuilder(context, AppDatabase::class.java, databaseName)
                 .build()
         }

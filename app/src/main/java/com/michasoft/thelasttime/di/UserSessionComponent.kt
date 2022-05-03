@@ -2,6 +2,7 @@ package com.michasoft.thelasttime.di
 
 import com.michasoft.thelasttime.view.MainActivity
 import com.michasoft.thelasttime.model.User
+import com.michasoft.thelasttime.model.repo.UserSessionRepository
 import com.michasoft.thelasttime.view.EditEventActivity
 import com.michasoft.thelasttime.view.EventActivity
 import com.michasoft.thelasttime.view.EventInstanceActivity
@@ -25,6 +26,7 @@ interface UserSessionComponent {
     }
 
     fun getUser(): User
+    fun getUserSessionRepository(): UserSessionRepository
     fun inject(activity: MainActivity)
     fun inject(activity: EventListActivity)
     fun inject(activity: EventInstanceActivity)

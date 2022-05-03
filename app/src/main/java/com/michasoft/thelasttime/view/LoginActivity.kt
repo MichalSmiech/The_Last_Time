@@ -61,8 +61,6 @@ class LoginActivity : AppCompatActivity() {
             if(Firebase.auth.currentUser != null) {
                 onSignIn()
             }
-            startActivity(Intent(this, MainActivity::class.java))
-            finish()
         } else {
             Timber.e("onSignInResult: error: " + result.resultCode)
         }

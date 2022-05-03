@@ -16,7 +16,6 @@ import com.michasoft.thelasttime.util.BackupConfig
 import dagger.Module
 import dagger.Provides
 import javax.inject.Named
-import javax.inject.Singleton
 
 /**
  * Created by mśmiech on 29.04.2022.
@@ -25,15 +24,18 @@ import javax.inject.Singleton
 class UserSessionModule {
     @Provides
     @UserSessionScope
-    fun provideUserSessionRepository(user: User) = UserSessionRepository(user)
+    fun provideUserSessionRepository(user: User, userRepository: UserRepository) =
+        UserSessionRepository(user, userRepository)
 
     @Provides
     @UserSessionScope
     @Named("eventCollectionRef")
     fun provideEventCollectionRef(
         firestore: FirebaseFirestore,
+        user: User
     ): CollectionReference {
-        return firestore.collection("users").document(Firebase.auth.currentUser!!.uid)
+        return firestore.collection("users")
+            .document(user.remoteId!!) //TODO co w przypadku gdy lokalne konto nie jest zlinkowane z firebase?
             .collection("events")
     }
 
@@ -48,8 +50,8 @@ class UserSessionModule {
 
     @Provides
     @UserSessionScope
-    fun provideAppDatabase(applicationContext: Context): AppDatabase {
-        return AppDatabase.build(applicationContext)
+    fun provideAppDatabase(applicationContext: Context, user: User): AppDatabase {
+        return AppDatabase.build(applicationContext, user)
     }
 
     @Provides
@@ -79,6 +81,15 @@ class UserSessionModule {
 
     @Provides
     @UserSessionScope
-    fun provideBackupConfig(context: Context): BackupConfig =
-        BackupConfig(context)
+    fun provideBackupConfig(
+        context: Context,
+        user: User,
+        userSessionRepository: UserSessionRepository
+    ): BackupConfig {
+        return BackupConfig(context, user).also {
+            userSessionRepository.closableList.add(it)
+        }
+
+    }
 }
+
