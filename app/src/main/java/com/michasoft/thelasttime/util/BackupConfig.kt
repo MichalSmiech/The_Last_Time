@@ -5,15 +5,17 @@ import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.preferencesDataStore
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 
 /**
  * Created by mśmiech on 08.11.2021.
  */
-class BackupConfig(context: Context, auth: FirebaseAuth) {
+class BackupConfig(context: Context) {
     private val Context.backupConfigDataStore by preferencesDataStore(
-        name = auth.currentUser!!.uid.plus("_backupConfig")
+        name = Firebase.auth.currentUser!!.uid.plus("_backupConfig")
     )
     private val backupConfigDataStore = context.backupConfigDataStore
     private var autoBackup: Boolean? = null

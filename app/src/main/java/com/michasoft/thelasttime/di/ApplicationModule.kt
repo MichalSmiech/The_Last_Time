@@ -39,9 +39,8 @@ class ApplicationModule {
     @Named("eventCollectionRef")
     fun provideEventCollectionRef(
         firestore: FirebaseFirestore,
-        firebaseAuth: FirebaseAuth
     ): CollectionReference {
-        return firestore.collection("users").document(firebaseAuth.currentUser!!.uid)
+        return firestore.collection("users").document(Firebase.auth.currentUser!!.uid)
             .collection("events")
     }
 
@@ -52,12 +51,6 @@ class ApplicationModule {
         @Named("eventCollectionRef") eventCollectionRef: CollectionReference
     ): IRemoteEventSource {
         return FirestoreEventSource(firestore, eventCollectionRef)
-    }
-
-    @Singleton
-    @Provides
-    fun provideFirebaseAuth(): FirebaseAuth {
-        return Firebase.auth
     }
 
     @Singleton
@@ -93,8 +86,8 @@ class ApplicationModule {
 
     @Singleton
     @Provides
-    fun provideBackupConfig(context: Context, auth: FirebaseAuth): BackupConfig =
-        BackupConfig(context, auth)
+    fun provideBackupConfig(context: Context): BackupConfig =
+        BackupConfig(context)
 
     @Singleton
     @Provides
