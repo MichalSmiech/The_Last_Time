@@ -7,6 +7,7 @@ import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
+import com.michasoft.thelasttime.LastTimeApplication
 import com.michasoft.thelasttime.R
 import com.michasoft.thelasttime.databinding.ActivityEditEventBinding
 import com.michasoft.thelasttime.viewModel.CommonViewModel
@@ -14,14 +15,13 @@ import com.michasoft.thelasttime.viewModel.EditEventViewModel
 import dagger.android.AndroidInjection
 import javax.inject.Inject
 
-class EditEventActivity : AppCompatActivity() {
+class EditEventActivity : UserSessionActivity() {
     @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
+    lateinit var viewModelFactory: EditEventViewModel.Factory
     private val viewModel: EditEventViewModel by viewModels{ viewModelFactory }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        AndroidInjection.inject(this)
-        super.onCreate(savedInstanceState)
+    override fun onActivityCreate(savedInstanceState: Bundle?) {
+        (application as LastTimeApplication).userSessionComponent!!.inject(this)
         val binding: ActivityEditEventBinding = DataBindingUtil.setContentView(this, R.layout.activity_edit_event)
         binding.viewModel = viewModel
         binding.lifecycleOwner = this

@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
+import com.michasoft.thelasttime.LastTimeApplication
 import com.michasoft.thelasttime.R
 import com.michasoft.thelasttime.databinding.ActivityEventListBinding
 import com.michasoft.thelasttime.util.IdGenerator
@@ -16,14 +17,12 @@ import com.michasoft.thelasttime.viewModel.EventViewModel
 import dagger.android.AndroidInjection
 import javax.inject.Inject
 
-class EventListActivity : AppCompatActivity() {
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
+class EventListActivity : UserSessionActivity() {
+    @Inject lateinit var viewModelFactory: EventListViewModel.Factory
     private val viewModel: EventListViewModel by viewModels { viewModelFactory }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        AndroidInjection.inject(this)
-        super.onCreate(savedInstanceState)
+    override fun onActivityCreate(savedInstanceState: Bundle?) {
+        (application as LastTimeApplication).userSessionComponent!!.inject(this)
         val binding: ActivityEventListBinding = DataBindingUtil.setContentView(this, R.layout.activity_event_list)
         binding.viewModel = viewModel
         binding.lifecycleOwner = this

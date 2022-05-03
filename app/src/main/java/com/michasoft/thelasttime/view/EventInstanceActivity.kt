@@ -25,6 +25,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import com.michasoft.thelasttime.LastTimeApplication
 import com.michasoft.thelasttime.util.ShowDeleteConfirmationDialog
 import com.michasoft.thelasttime.viewModel.CommonViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -32,14 +33,13 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 
-class EventInstanceActivity : AppCompatActivity() {
+class EventInstanceActivity : UserSessionActivity() {
     @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
+    lateinit var viewModelFactory: EventInstanceViewModel.Factory
     private val viewModel: EventInstanceViewModel by viewModels { viewModelFactory }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        AndroidInjection.inject(this)
-        super.onCreate(savedInstanceState)
+    override fun onActivityCreate(savedInstanceState: Bundle?) {
+        (application as LastTimeApplication).userSessionComponent!!.inject(this)
         val binding: ActivityEventInstanceBinding =
             DataBindingUtil.setContentView(this, R.layout.activity_event_instance)
         setSupportActionBar(binding.topAppBar)

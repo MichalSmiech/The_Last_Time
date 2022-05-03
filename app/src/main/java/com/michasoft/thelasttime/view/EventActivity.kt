@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
+import com.michasoft.thelasttime.LastTimeApplication
 import com.michasoft.thelasttime.R
 import com.michasoft.thelasttime.databinding.ActivityEventBinding
 import com.michasoft.thelasttime.view.bottomSheet.AddEventInstanceBottomSheet
@@ -20,14 +21,13 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class EventActivity : AppCompatActivity() {
+class EventActivity : UserSessionActivity() {
     @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
+    lateinit var viewModelFactory: EventViewModel.Factory
     private val viewModel: EventViewModel by viewModels{ viewModelFactory }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        AndroidInjection.inject(this)
-        super.onCreate(savedInstanceState)
+    override fun onActivityCreate(savedInstanceState: Bundle?) {
+        (application as LastTimeApplication).userSessionComponent!!.inject(this)
         val binding: ActivityEventBinding = DataBindingUtil.setContentView(this, R.layout.activity_event)
         setSupportActionBar(binding.activityEventToolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)

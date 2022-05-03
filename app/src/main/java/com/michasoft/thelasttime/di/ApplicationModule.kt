@@ -36,61 +36,6 @@ class ApplicationModule {
 
     @Singleton
     @Provides
-    @Named("eventCollectionRef")
-    fun provideEventCollectionRef(
-        firestore: FirebaseFirestore,
-    ): CollectionReference {
-        return firestore.collection("users").document(Firebase.auth.currentUser!!.uid)
-            .collection("events")
-    }
-
-    @Singleton
-    @Provides
-    fun provideRemoteEventSource(
-        firestore: FirebaseFirestore,
-        @Named("eventCollectionRef") eventCollectionRef: CollectionReference
-    ): IRemoteEventSource {
-        return FirestoreEventSource(firestore, eventCollectionRef)
-    }
-
-    @Singleton
-    @Provides
-    fun provideAppDatabase(applicationContext: Context): AppDatabase {
-        return AppDatabase.build(applicationContext)
-    }
-
-    @Singleton
-    @Provides
-    fun provideLocalEventSource(appDatabase: AppDatabase): ILocalEventSource {
-        return RoomEventSource(appDatabase, appDatabase.eventDao)
-    }
-
-    @Singleton
-    @Provides
-    fun provideEventRepository(
-        localSource: ILocalEventSource,
-        remoteSource: IRemoteEventSource,
-        backupConfig: BackupConfig
-    ): IEventRepository {
-        return EventRepository(localSource, remoteSource, backupConfig)
-    }
-
-    @Singleton
-    @Provides
-    fun provideBackupRepository(
-        localSource: ILocalEventSource,
-        remoteSource: IRemoteEventSource
-    ): IBackupRepository {
-        return BackupRepository(localSource, remoteSource)
-    }
-
-    @Singleton
-    @Provides
-    fun provideBackupConfig(context: Context): BackupConfig =
-        BackupConfig(context)
-
-    @Singleton
-    @Provides
     fun provideUserRepository(context: Context, userDataSource: IUserDataSource) =
         UserRepository(context, userDataSource)
 

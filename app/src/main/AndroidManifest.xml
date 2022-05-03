@@ -26,7 +26,7 @@
         <activity android:name=".view.EventInstanceActivity" />
         <activity android:name=".view.EventActivity" />
         <activity android:name=".view.EditEventActivity" />
-        <activity android:name=".MainActivity" >
+        <activity android:name=".view.MainActivity" >
         </activity>
         <activity android:name=".view.EventListActivity" />
     </application>

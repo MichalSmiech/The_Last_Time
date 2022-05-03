@@ -1,8 +1,6 @@
 package com.michasoft.thelasttime.viewModel
 
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.michasoft.thelasttime.model.EventInstance
 import com.michasoft.thelasttime.model.Event
 import com.michasoft.thelasttime.model.repo.IEventRepository
@@ -12,7 +10,7 @@ import kotlinx.coroutines.launch
 import org.joda.time.DateTime
 import javax.inject.Inject
 
-class EventInstanceViewModel @Inject constructor(
+class EventInstanceViewModel(
     private val eventRepository: IEventRepository
 ) : CommonViewModel() {
     private var eventId: String? = null
@@ -94,4 +92,16 @@ class EventInstanceViewModel @Inject constructor(
 
     class ShowDatePicker(val timestamp: DateTime): FlowEvent()
     class ShowTimePicker(val timestamp: DateTime): FlowEvent()
+
+    @Suppress("UNCHECKED_CAST")
+    class Factory @Inject constructor(
+        private val eventRepository: IEventRepository
+    ) : ViewModelProvider.Factory {
+        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+            if (modelClass.isAssignableFrom(EventInstanceViewModel::class.java)) {
+                return EventInstanceViewModel(eventRepository) as T
+            }
+            throw IllegalArgumentException("Unknown ViewModel class")
+        }
+    }
 }

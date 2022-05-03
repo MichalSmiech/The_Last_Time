@@ -1,14 +1,11 @@
-package com.michasoft.thelasttime
+package com.michasoft.thelasttime.view
 
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
-import com.firebase.ui.auth.AuthUI
-import com.google.android.gms.auth.api.identity.Identity
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
+import com.michasoft.thelasttime.LastTimeApplication
+import com.michasoft.thelasttime.R
 import com.michasoft.thelasttime.model.Event
 import com.michasoft.thelasttime.model.EventInstanceField
 import com.michasoft.thelasttime.model.EventInstanceFieldSchema
@@ -18,15 +15,12 @@ import com.michasoft.thelasttime.model.repo.IEventRepository
 import com.michasoft.thelasttime.model.repo.UserRepository
 import com.michasoft.thelasttime.util.BackupConfig
 import com.michasoft.thelasttime.util.IdGenerator
-import com.michasoft.thelasttime.view.EventListActivity
-import com.michasoft.thelasttime.view.LoginActivity
-import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.*
 import org.joda.time.DateTime
 import javax.inject.Inject
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : UserSessionActivity() {
     @Inject
     lateinit var eventRepository: IEventRepository
 
@@ -38,9 +32,8 @@ class MainActivity : AppCompatActivity() {
 
     @Inject lateinit var userRepository: UserRepository
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        AndroidInjection.inject(this)
-        super.onCreate(savedInstanceState)
+    override fun onActivityCreate(savedInstanceState: Bundle?) {
+        (application as LastTimeApplication).userSessionComponent!!.inject(this)
         setContentView(R.layout.activity_main)
 
         CoroutineScope(Dispatchers.IO).launch {

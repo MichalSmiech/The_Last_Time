@@ -4,12 +4,9 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.lifecycle.lifecycleScope
-import com.google.firebase.analytics.FirebaseAnalytics
-import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.michasoft.thelasttime.BuildConfig
-import com.michasoft.thelasttime.MainActivity
 import com.michasoft.thelasttime.R
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay

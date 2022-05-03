@@ -1,5 +1,7 @@
 package com.michasoft.thelasttime.viewModel
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 import com.michasoft.thelasttime.util.FlowEvent
 import com.michasoft.thelasttime.util.SingleLiveEvent

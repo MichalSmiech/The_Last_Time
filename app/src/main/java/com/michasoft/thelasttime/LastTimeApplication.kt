@@ -1,17 +1,16 @@
 package com.michasoft.thelasttime
 
+import android.app.Application
 import com.michasoft.thelasttime.di.ApplicationComponent
 import com.michasoft.thelasttime.di.DaggerApplicationComponent
 import com.michasoft.thelasttime.di.UserSessionComponent
-import dagger.android.AndroidInjector
-import dagger.android.DaggerApplication
 import kotlinx.coroutines.runBlocking
 import timber.log.Timber
 
 /**
  * Created by mśmiech on 09.05.2021.
  */
-open class LastTimeApplication: DaggerApplication() {
+open class LastTimeApplication: Application() {
     lateinit var applicationComponent: ApplicationComponent
     var userSessionComponent: UserSessionComponent? = null
         get() {
@@ -19,11 +18,11 @@ open class LastTimeApplication: DaggerApplication() {
             val field1 = field
             if(field1 == null) {
                 if(currentUser != null) {
-                    field = applicationComponent.userSessionComponent().user(currentUser).build()
+                    field = applicationComponent.userSessionComponent().setUser(currentUser).build()
                 }
             } else if(field1.getUser() != currentUser) {
                 if(currentUser != null) {
-                    field = applicationComponent.userSessionComponent().user(currentUser).build()
+                    field = applicationComponent.userSessionComponent().setUser(currentUser).build()
                 } else {
                     field = null
                 }
@@ -32,8 +31,8 @@ open class LastTimeApplication: DaggerApplication() {
         }
 
     override fun onCreate() {
-        applicationComponent = DaggerApplicationComponent.factory().create(applicationContext)
         super.onCreate()
+        applicationComponent = DaggerApplicationComponent.factory().create(applicationContext)
         if(BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
         }
@@ -41,10 +40,6 @@ open class LastTimeApplication: DaggerApplication() {
         runBlocking {
             applicationComponent.getUserRepository().init()
         }
-    }
-
-    override fun applicationInjector(): AndroidInjector<out DaggerApplication> {
-        return applicationComponent
     }
 }
 

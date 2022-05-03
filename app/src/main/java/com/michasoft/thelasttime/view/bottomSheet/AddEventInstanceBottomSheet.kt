@@ -17,6 +17,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.michasoft.thelasttime.LastTimeApplication
 import com.michasoft.thelasttime.R
 import com.michasoft.thelasttime.databinding.BottomSheetAddEventInstanceBinding
 import com.michasoft.thelasttime.view.EventInstanceActivity
@@ -30,9 +31,9 @@ import javax.inject.Inject
 /**
  * Created by mśmiech on 28.03.2022.
  */
-class AddEventInstanceBottomSheet(private val eventId: String) : BottomSheetDialogFragment() {
+class AddEventInstanceBottomSheet(private val eventId: String) : UserSessionBottomSheetDialogFragment() {
     @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
+    lateinit var viewModelFactory: EventInstanceViewModel.Factory
     private val viewModel: EventInstanceViewModel by viewModels{ viewModelFactory }
 
     override fun onCreateView(
@@ -67,9 +68,9 @@ class AddEventInstanceBottomSheet(private val eventId: String) : BottomSheetDial
         return binding.root
     }
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        AndroidSupportInjection.inject(this@AddEventInstanceBottomSheet)
+    override fun onFragmentAttach(context: Context) {
+        super.onFragmentAttach(context)
+        (requireActivity().application as LastTimeApplication).userSessionComponent!!.inject(this@AddEventInstanceBottomSheet)
     }
 
     class TimePickerFragment : DialogFragment(), TimePickerDialog.OnTimeSetListener {

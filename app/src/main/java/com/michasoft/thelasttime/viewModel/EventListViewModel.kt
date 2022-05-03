@@ -1,6 +1,9 @@
 package com.michasoft.thelasttime.viewModel
 
+import android.app.Application
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.michasoft.thelasttime.model.Event
 import com.michasoft.thelasttime.model.repo.IEventRepository
@@ -13,7 +16,7 @@ import javax.inject.Inject
 /**
  * Created by mśmiech on 02.05.2021.
  */
-class EventListViewModel @Inject constructor(
+class EventListViewModel(
     private val eventRepository: IEventRepository
 ): CommonViewModel() {
     var events = MutableLiveData<List<Event>>(emptyList())
@@ -46,4 +49,16 @@ class EventListViewModel @Inject constructor(
     class CreateNewEvent : FlowEvent()
     class ShowEvent(val eventTypeId: String) : FlowEvent()
     class ShowAddEventInstanceBottomSheet(val eventId: String): FlowEvent()
+
+    @Suppress("UNCHECKED_CAST")
+    class Factory @Inject constructor(
+        private val eventRepository: IEventRepository
+    ) : ViewModelProvider.Factory {
+        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+            if (modelClass.isAssignableFrom(EventListViewModel::class.java)) {
+                return EventListViewModel(eventRepository) as T
+            }
+            throw IllegalArgumentException("Unknown ViewModel class")
+        }
+    }
 }

@@ -10,7 +10,7 @@ import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-import com.michasoft.thelasttime.MainActivity
+import com.michasoft.thelasttime.LastTimeApplication
 import com.michasoft.thelasttime.R
 import com.michasoft.thelasttime.databinding.ActivityLoginBinding
 import com.michasoft.thelasttime.model.User
@@ -33,8 +33,8 @@ class LoginActivity : AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
+        (application as LastTimeApplication).applicationComponent.inject(this)
         val binding: ActivityLoginBinding = DataBindingUtil.setContentView(this, R.layout.activity_login)
         binding.signInButton.setOnClickListener {
             signIn()
@@ -90,5 +90,12 @@ class LoginActivity : AppCompatActivity() {
     private fun routeFurther() {
         startActivity(Intent(this, MainActivity::class.java))
         finish()
+    }
+
+    companion object {
+        fun start(activity: AppCompatActivity) {
+            val intent = Intent(activity, LoginActivity::class.java)
+            activity.startActivity(intent)
+        }
     }
 }
