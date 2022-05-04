@@ -8,57 +8,58 @@
             name="name"
             type="String" />
         <variable
-            name="lastEventTimestamp"
+            name="lastInstanceTimestamp"
             type="String" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/listitem_event_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="16dp">
+        android:paddingStart="16dp"
+        android:background="?android:selectableItemBackground"
+        android:minHeight="64dp">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/listitem_event_type_layout"
+        <TextView
+            android:id="@+id/textView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="parent"
+            android:firstBaselineToTopHeight="28dp"
+            android:text="@{name}"
+            android:textAppearance="?attr/textAppearanceListItem"
+            android:textSize="20sp"
             app:layout_constraintEnd_toStartOf="@+id/add_action_button"
-            app:layout_constraintStart_toStartOf="parent">
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Event.name" />
 
-            <TextView
-                android:id="@+id/textView"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="@{name}"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:text="EventType.name" />
-
-            <TextView
-                android:id="@+id/textView2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@{lastEventTimestamp}"
-                android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                android:textSize="12sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView"
-                tools:text="lastEventTimestamp" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:firstBaselineToTopHeight="48dp"
+            android:text="@{lastInstanceTimestamp}"
+            android:textAppearance="?attr/textAppearanceListItemSecondary"
+            android:textColor="#CCFFFFFF"
+            android:textSize="12sp"
+            android:typeface="monospace"
+            app:layout_constraintEnd_toStartOf="@+id/add_action_button"
+            app:layout_constraintStart_toStartOf="@+id/textView"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="lastEventTimestamp" />
 
         <ImageButton
             android:id="@+id/add_action_button"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginEnd="8dp"
-            app:tint="@color/colorAccent"
-            android:backgroundTint="@android:color/transparent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="?android:selectableItemBackgroundBorderless"
             android:contentDescription="New"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="16dp"
             android:src="@drawable/outline_add"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@color/colorAccent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

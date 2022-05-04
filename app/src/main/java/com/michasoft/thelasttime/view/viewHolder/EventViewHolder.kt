@@ -17,7 +17,7 @@ class EventViewHolder(
             field = value
             value?.let {
                 binding.name = it.displayName
-                binding.lastEventTimestamp = it.lastInstanceTimestamp?.toString() ?: ""
+                binding.lastInstanceTimestamp = it.lastInstanceTimestamp?.toString() ?: ""
             }
         }
     init {
@@ -26,7 +26,7 @@ class EventViewHolder(
                 viewModel.addEventInstance(it)
             }
         }
-        binding.listitemEventTypeLayout.setOnClickListener {
+        binding.listitemEventLayout.setOnClickListener {
             event?.let {
                 viewModel.showEventType(it)
             }

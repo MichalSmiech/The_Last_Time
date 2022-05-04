@@ -13,7 +13,7 @@ android {
 
     defaultConfig {
         applicationId "com.michasoft.thelasttime"
-        minSdkVersion 24
+        minSdkVersion 28
         targetSdkVersion 31
         versionCode 10000
         versionName "1.0.0"
