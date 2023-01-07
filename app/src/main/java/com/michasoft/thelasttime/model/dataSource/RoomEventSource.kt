@@ -173,16 +173,17 @@ class RoomEventSource(private val appDatabase: AppDatabase, private val eventDao
     override suspend fun getAllEventInstancesAtOnce(eventId: String): ArrayList<EventInstance> {
         val eventInstanceSchema = getEventInstanceSchema(eventId)
         val instances = ArrayList<EventInstance>()
-        val offset = 0L
+        var offset = 0L
         val limit = 100L
         var hasNext = true
         while(hasNext) {
-            val instanceIds = eventDao.getEventInstanceIdsOrderByTimestamp(limit, offset)
+            val instanceIds = eventDao.getEventInstanceIdsWithEventIdOrderByTimestamp(eventId, limit, offset)
             instanceIds.forEach { instanceId ->
                 val instance = getEventInstance(eventInstanceSchema, instanceId)!!
                 instances.add(instance)
             }
             hasNext = instanceIds.size.toLong() == limit
+            offset += limit
         }
         return instances
     }

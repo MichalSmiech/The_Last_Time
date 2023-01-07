@@ -183,7 +183,7 @@ class FirestoreEventSource(private val firestore: FirebaseFirestore, private val
 
     override fun getAllEventInstances(eventId: String, instanceSchema: EventInstanceSchema): Flow<EventInstance> = flow {
         val baseQuery = eventCollectionRef.document(eventId).collection(
-            EVENT_INSTANCE_FIELD_SCHEMAS_COLLECTION_NAME
+            EVENT_INSTANCES_COLLECTION_NAME
         ).orderBy("timestamp").limit(100)
         var hasNext = true
         var startAfter: DocumentSnapshot? = null
@@ -195,8 +195,8 @@ class FirestoreEventSource(private val firestore: FirebaseFirestore, private val
                     val instanceMap = it.data
                     if(instanceMap != null) {
                         val eventInstance = EventInstance(
-                            eventId,
                             it.id,
+                            eventId,
                             instanceMap,
                             instanceSchema
                         )
