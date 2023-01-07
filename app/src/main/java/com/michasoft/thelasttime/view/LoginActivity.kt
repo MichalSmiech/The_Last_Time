@@ -6,8 +6,12 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import com.firebase.ui.auth.AuthUI
+import com.firebase.ui.auth.ErrorCodes
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
+import com.firebase.ui.auth.ui.email.EmailLinkErrorRecoveryActivity
+import com.firebase.ui.auth.viewmodel.RequestCodes
+import com.firebase.ui.auth.viewmodel.RequestCodes.EMAIL_LINK_CROSS_DEVICE_LINKING_FLOW
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.michasoft.thelasttime.LastTimeApplication
@@ -62,7 +66,10 @@ class LoginActivity : AppCompatActivity() {
                 onSignIn()
             }
         } else {
-            Timber.e("onSignInResult: error: " + result.resultCode)
+            Timber.e("onSignInResult error: " + result.resultCode)
+            if(result.idpResponse?.error != null) {
+                Timber.e(result.idpResponse?.error, "onSignInResult error: ${ErrorCodes.toFriendlyMessage(result.idpResponse?.error?.errorCode!!)}")
+            }
         }
     }
 

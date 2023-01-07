@@ -12,7 +12,6 @@ import com.michasoft.thelasttime.model.EventInstanceFieldSchema
 import com.michasoft.thelasttime.model.EventInstanceSchema
 import com.michasoft.thelasttime.model.repo.IBackupRepository
 import com.michasoft.thelasttime.model.repo.IEventRepository
-import com.michasoft.thelasttime.model.repo.UserRepository
 import com.michasoft.thelasttime.model.repo.UserSessionRepository
 import com.michasoft.thelasttime.util.BackupConfig
 import com.michasoft.thelasttime.util.IdGenerator
@@ -93,7 +92,7 @@ class MainActivity : UserSessionActivity() {
         val eventInstanceSchema = EventInstanceSchema(fieldSchemas)
         event.eventInstanceSchema = eventInstanceSchema
         CoroutineScope(Dispatchers.IO).launch {
-            eventRepository.insertEvent(event)
+            eventRepository.insert(event)
             Log.d("asd", "Added: " + event)
         }
     }

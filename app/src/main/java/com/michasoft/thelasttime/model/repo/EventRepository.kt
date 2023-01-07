@@ -19,7 +19,7 @@ class EventRepository(
     private val backupConfig: BackupConfig
 ): IEventRepository {
 
-    override suspend fun insertEvent(event: Event) {
+    override suspend fun insert(event: Event) {
         localSource.insertEvent(event)
         if(backupConfig.isAutoBackup()) {
             remoteSource.insertEvent(event)

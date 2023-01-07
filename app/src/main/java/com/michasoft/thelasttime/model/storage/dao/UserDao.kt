@@ -15,7 +15,7 @@ interface UserDao {
     suspend fun insertUser(user: UserEntity)
 
     @Query("SELECT * FROM ${UserEntity.TABLE_NAME} WHERE remoteId = :remoteId")
-    fun getUserByRemoteId(remoteId: String): User?
+    fun getUserByRemoteId(remoteId: String): UserEntity?
 
     @Query("UPDATE ${UserEntity.TABLE_NAME} SET isCurrent = 0 WHERE isCurrent = 1")
     suspend fun clearCurrentUserFlag()
@@ -24,5 +24,5 @@ interface UserDao {
     suspend fun setCurrentUserFlag(userId: String)
 
     @Query("SELECT * FROM ${UserEntity.TABLE_NAME} WHERE isCurrent = 1")
-    suspend fun getCurrentUser(): User?
+    suspend fun getCurrentUser(): UserEntity?
 }

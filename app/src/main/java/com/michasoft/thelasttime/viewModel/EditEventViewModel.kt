@@ -34,7 +34,7 @@ class EditEventViewModel(
                     DateTime.now()
                 )
                 newEvent.eventInstanceSchema = EventInstanceSchema()
-                eventRepository.insertEvent(newEvent)
+                eventRepository.insert(newEvent)
             } else {
                 originalEvent.displayName = name.value!!
 //              TODO  eventRepository.updateEvent(originalEvent)

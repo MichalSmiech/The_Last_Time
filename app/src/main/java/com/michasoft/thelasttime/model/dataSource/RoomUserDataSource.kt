@@ -22,10 +22,10 @@ class RoomUserDataSource(private val userDao: UserDao): IUserDataSource {
     }
 
     override suspend fun getCurrentUser(): User? {
-        return userDao.getCurrentUser()
+        return userDao.getCurrentUser()?.toModel()
     }
 
     override suspend fun getUserByRemoteId(remoteId: String): User? {
-        return userDao.getUserByRemoteId(remoteId)
+        return userDao.getUserByRemoteId(remoteId)?.toModel()
     }
 }

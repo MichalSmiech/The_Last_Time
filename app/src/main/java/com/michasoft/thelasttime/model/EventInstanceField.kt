@@ -22,7 +22,8 @@ abstract class EventInstanceField(
     }
 
     companion object {
-        fun getMapKey(fieldSchemaId: String, type: Type) = "$fieldSchemaId;${type.name}"
+        fun getMapKey(fieldSchemaId: String, type: Type) =
+            "$fieldSchemaId;${type.name}"
         fun getMapKey(instanceField: EventInstanceField) =
             getMapKey(instanceField.fieldSchemaId, instanceField.type)
         fun getMapKey(instanceSchema: EventInstanceFieldSchema) =

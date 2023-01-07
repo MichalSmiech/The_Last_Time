@@ -8,7 +8,7 @@ import com.michasoft.thelasttime.model.EventInstanceSchema
  * Created by mśmiech on 02.05.2021.
  */
 interface IEventRepository {
-    suspend fun insertEvent(event: Event)
+    suspend fun insert(event: Event)
     suspend fun getEvent(eventId: String): Event?
     suspend fun getEvents(): ArrayList<Event>
     suspend fun getEventsWithLastInstanceTimestamp(): ArrayList<Event>
