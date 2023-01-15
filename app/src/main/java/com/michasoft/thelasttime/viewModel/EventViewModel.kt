@@ -8,7 +8,9 @@ import com.michasoft.thelasttime.model.EventInstance
 import com.michasoft.thelasttime.model.Event
 import com.michasoft.thelasttime.model.repo.IEventRepository
 import com.michasoft.thelasttime.util.FlowEvent
+import com.michasoft.thelasttime.util.ShowDeleteConfirmationDialog
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 /**
@@ -46,7 +48,7 @@ class EventViewModel(
 
     suspend fun saveIfNeeded() {
         val event = buildEvent()
-        if(event != originalEvent) {
+        if (event != originalEvent) {
             saveEvent(event)
         }
     }
@@ -55,8 +57,18 @@ class EventViewModel(
         eventRepository.update(event)
     }
 
-    class ShowEventInstance(val eventId: String, val instanceId: String): FlowEvent()
-    class ShowAddEventInstanceBottomSheet(val eventId: String): FlowEvent()
+    suspend fun deleteEvent(needConfirmation: Boolean = false) {
+        if (needConfirmation) {
+            flowEventBus.postValue(ShowDeleteConfirmationDialog())
+            return
+        }
+        eventId?.let { eventRepository.deleteEvent(it) }
+            ?: Timber.e("eventId is null while call deleteEvent function")
+        flowEventBus.postValue(Finish())
+    }
+
+    class ShowEventInstance(val eventId: String, val instanceId: String) : FlowEvent()
+    class ShowAddEventInstanceBottomSheet(val eventId: String) : FlowEvent()
 
     @Suppress("UNCHECKED_CAST")
     class Factory @Inject constructor(

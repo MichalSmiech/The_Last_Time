@@ -71,6 +71,13 @@ class EventRepository(
         }
     }
 
+    override suspend fun deleteEvent(eventId: String) {
+        localSource.deleteEvent(eventId)
+        if(backupConfig.isAutoBackup()) {
+            remoteSource.deleteEvent(eventId)
+        }
+    }
+
     override suspend fun insert(instance: EventInstance) {
         localSource.insertEventInstance(instance)
         if (backupConfig.isAutoBackup()) {

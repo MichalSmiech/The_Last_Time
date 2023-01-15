@@ -13,20 +13,25 @@ interface IRemoteEventSource {
 
     suspend fun insertEvent(event: Event)
     suspend fun getEvent(eventId: String): Event?
+    fun getAllEvents(): Flow<Event>
+    suspend fun updateEvent(event: Event)
     suspend fun deleteEvent(eventId: String)
+    suspend fun deleteAllEvents()
 
     suspend fun getEventInstanceSchema(eventId: String): EventInstanceSchema
 
     suspend fun insertEventInstance(instance: EventInstance)
     suspend fun insertEventInstances(instances: List<EventInstance>)
-    suspend fun updateEventInstance(instance: EventInstance)
     suspend fun getEventInstance(eventId: String, instanceSchema: EventInstanceSchema, instanceId: String): EventInstance?
-    suspend fun deleteEventInstance(instance: EventInstance)
-
-    fun getAllEvents(): Flow<Event>
     fun getAllEventInstances(eventId: String, instanceSchema: EventInstanceSchema): Flow<EventInstance>
-
-    suspend fun deleteAllEvents()
-    suspend fun updateEvent(event: Event)
+    suspend fun updateEventInstance(instance: EventInstance)
+    suspend fun deleteEventInstance(instance: EventInstance)
     suspend fun deleteEventInstance(eventId: String, instanceId: String)
+
+
+
+
+
+
+
 }

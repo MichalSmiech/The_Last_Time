@@ -7,15 +7,15 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.ViewModelProvider
 import com.michasoft.thelasttime.LastTimeApplication
 import com.michasoft.thelasttime.R
 import com.michasoft.thelasttime.databinding.ActivityEventBinding
+import com.michasoft.thelasttime.util.ShowDeleteConfirmationDialog
 import com.michasoft.thelasttime.view.bottomSheet.AddEventInstanceBottomSheet
 import com.michasoft.thelasttime.viewModel.CommonViewModel
 import com.michasoft.thelasttime.viewModel.EventViewModel
-import dagger.android.AndroidInjection
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -44,7 +44,9 @@ class EventActivity : UserSessionActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
         R.id.delete -> {
-            Toast.makeText(this@EventActivity, "aaa", Toast.LENGTH_SHORT).show()
+            CoroutineScope(Dispatchers.IO).launch {
+                viewModel.deleteEvent(true)
+            }
             true
         }
         else -> {
@@ -81,6 +83,20 @@ class EventActivity : UserSessionActivity() {
                 }
                 is EventViewModel.ShowAddEventInstanceBottomSheet -> {
                     AddEventInstanceBottomSheet.show(supportFragmentManager, it.eventId)
+                }
+                is ShowDeleteConfirmationDialog -> {
+                    AlertDialog.Builder(this)
+                        .setTitle(R.string.delete_confirmation_title)
+                        .setPositiveButton(R.string.action_ok) { dialog, _ ->
+                            CoroutineScope(Dispatchers.IO).launch {
+                                viewModel.deleteEvent(false)
+                            }
+                            dialog.dismiss()
+                        }
+                        .setNegativeButton(R.string.action_cancel) { dialog, _ ->
+                            dialog.cancel()
+                        }
+                        .show()
                 }
             }
         }
