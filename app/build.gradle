@@ -4,6 +4,7 @@ plugins {
     id 'kotlin-kapt'
     id 'com.google.gms.google-services'
     id 'com.google.firebase.crashlytics'
+    id 'com.google.devtools.ksp'
 }
 
 android {
@@ -43,7 +44,7 @@ android {
         enabled = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion '1.4.0'
+        kotlinCompilerExtensionVersion '1.4.2'
     }
     packagingOptions {
         resources {
@@ -53,25 +54,19 @@ android {
 }
 
 dependencies {
-    implementation fileTree(dir: "libs", include: ["*.jar"])
-//    implementation "org.jetbrains.kotlin:kotlin-stdlib:1.8.0"
     implementation 'androidx.core:core-ktx:1.12.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-    implementation libraries.material
-    implementation libraries.jodatime
-    implementation libraries.fragment_ktx
+    implementation 'com.google.android.material:material:1.9.0'
+    implementation 'joda-time:joda-time:2.10.8'
+    implementation 'androidx.fragment:fragment-ktx:1.7.0-alpha04'
     implementation 'com.google.dagger:dagger:2.45'
     kapt 'com.google.dagger:dagger-compiler:2.45'
-//    implementation libraries.dagger_android
-//    implementation libraries.dagger_support
-//    kapt libraries.dagger_compiler
-//    kapt libraries.dagger_android_processor
-    implementation libraries.kotlinx_coroutines_android
-    implementation libraries.kotlinx_coroutines_core
-    implementation libraries.kotlinx_coroutines_play_services
-    implementation libraries.datastore
-    implementation libraries.timber
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.3"
+    implementation "androidx.datastore:datastore-preferences:1.0.0"
+    implementation "com.jakewharton.timber:timber:5.0.1"
     implementation 'androidx.activity:activity-compose:1.7.2'
     implementation "androidx.compose.ui:ui:$compose_ui_version"
     implementation "androidx.compose.ui:ui-tooling-preview:$compose_ui_version"
@@ -83,20 +78,21 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.6.2'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
 
-    implementation room.room_runtime
+    implementation "androidx.room:room-runtime:$room_version"
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    kapt room.room_compiler
-    implementation room.room_ktx
-    implementation room.room_rxjava2
+    implementation "androidx.room:room-ktx:$room_version"
+    implementation "androidx.room:room-rxjava2:$room_version"
+    ksp "androidx.room:room-compiler:$room_version"
 
-    implementation firebase.firebase_analytics
-    implementation firebase.firebase_crashlytics
-    implementation firebase.firebase_ui_auth
-    implementation firebase.firebase_auth
-    implementation firebase.firebase_firestore
+    implementation(platform("com.google.firebase:firebase-bom:32.2.3"))
+    implementation "com.google.firebase:firebase-crashlytics-ktx"
+    implementation "com.google.firebase:firebase-analytics-ktx"
+    implementation "com.google.firebase:firebase-auth-ktx"
+    implementation "com.google.firebase:firebase-firestore-ktx"
+    implementation 'com.firebaseui:firebase-ui-auth:8.0.0'
 
     //testing
-    testImplementation testing.junit
-    androidTestImplementation testing.android_junit
-    androidTestImplementation testing.espresso_core
+    testImplementation "junit:junit:4.13.2"
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 }
