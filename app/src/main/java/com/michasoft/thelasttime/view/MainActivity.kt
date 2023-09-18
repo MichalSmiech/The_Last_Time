@@ -15,7 +15,6 @@ import com.michasoft.thelasttime.model.repo.IEventRepository
 import com.michasoft.thelasttime.model.repo.UserSessionRepository
 import com.michasoft.thelasttime.util.BackupConfig
 import com.michasoft.thelasttime.util.IdGenerator
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.*
 import org.joda.time.DateTime
 import javax.inject.Inject
@@ -35,7 +34,7 @@ class MainActivity : UserSessionActivity() {
     override fun onActivityCreate(savedInstanceState: Bundle?) {
         (application as LastTimeApplication).userSessionComponent!!.inject(this)
         setContentView(R.layout.activity_main)
-
+        val switch1 = findViewById<com.google.android.material.switchmaterial.SwitchMaterial>(R.id.switch1)
         CoroutineScope(Dispatchers.IO).launch {
             val autoBackup = backupConfig.isAutoBackup()
             withContext(Dispatchers.Main) {

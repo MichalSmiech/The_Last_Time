@@ -17,12 +17,12 @@ class EventInstanceViewModel(
     private var instanceId: String? = null
     private var originalEventInstance: EventInstance? = null
     private var event = MutableLiveData<Event>()
-    var eventName = Transformations.map(event) { it.displayName }
+    var eventName = event.map { it.displayName }
     val timestamp = MutableLiveData(DateTime.now())
-    val timestampDateString = Transformations.map(timestamp) {
+    val timestampDateString = timestamp.map {
         return@map it.toString("E, dd MMM yyyy")
     }
-    val timestampTimeString = Transformations.map(timestamp) {
+    val timestampTimeString = timestamp.map {
         return@map it.toString("HH:mm")
     }
 
@@ -97,7 +97,7 @@ class EventInstanceViewModel(
     class Factory @Inject constructor(
         private val eventRepository: IEventRepository
     ) : ViewModelProvider.Factory {
-        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
             if (modelClass.isAssignableFrom(EventInstanceViewModel::class.java)) {
                 return EventInstanceViewModel(eventRepository) as T
             }

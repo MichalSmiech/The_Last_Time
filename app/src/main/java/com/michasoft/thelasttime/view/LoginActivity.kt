@@ -19,7 +19,6 @@ import com.michasoft.thelasttime.R
 import com.michasoft.thelasttime.databinding.ActivityLoginBinding
 import com.michasoft.thelasttime.model.User
 import com.michasoft.thelasttime.model.repo.UserRepository
-import dagger.android.AndroidInjection
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -68,7 +67,7 @@ class LoginActivity : AppCompatActivity() {
         } else {
             Timber.e("onSignInResult error: " + result.resultCode)
             if(result.idpResponse?.error != null) {
-                Timber.e(result.idpResponse?.error, "onSignInResult error: ${ErrorCodes.toFriendlyMessage(result.idpResponse?.error?.errorCode!!)}")
+                Timber.e(result.idpResponse?.error, "onSignInResult error: ${result.idpResponse?.error?.errorCode!!}")
             }
         }
     }

@@ -23,7 +23,6 @@ import com.michasoft.thelasttime.databinding.BottomSheetAddEventInstanceBinding
 import com.michasoft.thelasttime.view.EventInstanceActivity
 import com.michasoft.thelasttime.viewModel.CommonViewModel
 import com.michasoft.thelasttime.viewModel.EventInstanceViewModel
-import dagger.android.support.AndroidSupportInjection
 import org.joda.time.DateTime
 import org.joda.time.DateTimeFieldType
 import javax.inject.Inject

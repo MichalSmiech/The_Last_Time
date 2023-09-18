@@ -59,7 +59,7 @@ class EditEventViewModel(
     class Factory @Inject constructor(
         private val eventRepository: IEventRepository
     ) : ViewModelProvider.Factory {
-        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
             if (modelClass.isAssignableFrom(EditEventViewModel::class.java)) {
                 return EditEventViewModel(eventRepository) as T
             }

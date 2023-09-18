@@ -6,8 +6,6 @@ import com.michasoft.thelasttime.model.repo.UserRepository
 import com.michasoft.thelasttime.view.LoginActivity
 import dagger.BindsInstance
 import dagger.Component
-import dagger.android.AndroidInjectionModule
-import dagger.android.AndroidInjector
 import javax.inject.Singleton
 
 /**

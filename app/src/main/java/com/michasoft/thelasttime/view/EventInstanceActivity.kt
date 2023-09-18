@@ -17,7 +17,6 @@ import androidx.lifecycle.ViewModelProvider
 import com.michasoft.thelasttime.R
 import com.michasoft.thelasttime.databinding.ActivityEventInstanceBinding
 import com.michasoft.thelasttime.viewModel.EventInstanceViewModel
-import dagger.android.AndroidInjection
 import org.joda.time.DateTime
 import org.joda.time.DateTimeFieldType
 import javax.inject.Inject

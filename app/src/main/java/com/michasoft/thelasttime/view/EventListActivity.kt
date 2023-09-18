@@ -14,7 +14,6 @@ import com.michasoft.thelasttime.util.IdGenerator
 import com.michasoft.thelasttime.view.bottomSheet.AddEventInstanceBottomSheet
 import com.michasoft.thelasttime.viewModel.EventListViewModel
 import com.michasoft.thelasttime.viewModel.EventViewModel
-import dagger.android.AndroidInjection
 import javax.inject.Inject
 
 class EventListActivity : UserSessionActivity() {

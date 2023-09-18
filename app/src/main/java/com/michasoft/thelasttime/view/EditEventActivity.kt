@@ -12,7 +12,6 @@ import com.michasoft.thelasttime.R
 import com.michasoft.thelasttime.databinding.ActivityEditEventBinding
 import com.michasoft.thelasttime.viewModel.CommonViewModel
 import com.michasoft.thelasttime.viewModel.EditEventViewModel
-import dagger.android.AndroidInjection
 import javax.inject.Inject
 
 class EditEventActivity : UserSessionActivity() {

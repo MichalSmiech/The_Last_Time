@@ -1,24 +1,26 @@
-apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
-apply plugin: 'kotlin-kapt'
-apply plugin: 'com.google.gms.google-services'
-apply plugin: 'com.google.firebase.crashlytics'
+plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+    id 'kotlin-kapt'
+    id 'com.google.gms.google-services'
+    id 'com.google.firebase.crashlytics'
+}
 
 android {
-    compileSdkVersion 31
-    dataBinding {
-        enabled = true
-    }
+    namespace 'com.michasoft.thelasttime'
+    compileSdk 34
 
     defaultConfig {
         applicationId "com.michasoft.thelasttime"
-        minSdkVersion 28
-        targetSdkVersion 31
+        minSdk 26
+        targetSdk 34
         versionCode 10000
         versionName "1.0.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        vectorDrawables {
+            useSupportLibrary true
+        }
     }
 
     buildTypes {
@@ -27,40 +29,59 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
-
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
-
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_1_8.toString()
+        jvmTarget = '17'
+    }
+    buildFeatures {
+        compose true
+    }
+    dataBinding {
+        enabled = true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion '1.4.0'
+    }
+    packagingOptions {
+        resources {
+            excludes += '/META-INF/{AL2.0,LGPL2.1}'
+        }
     }
 }
 
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
-    implementation libraries.kotlin_stdlib
-    implementation libraries.core_ktx
-    implementation libraries.appcompat
-    implementation libraries.constraintlayout
+//    implementation "org.jetbrains.kotlin:kotlin-stdlib:1.8.0"
+    implementation 'androidx.core:core-ktx:1.12.0'
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation libraries.material
     implementation libraries.jodatime
     implementation libraries.fragment_ktx
-    implementation libraries.dagger_android
-    implementation libraries.dagger_support
-    kapt libraries.dagger_compiler
-    kapt libraries.dagger_android_processor
+    implementation 'com.google.dagger:dagger:2.45'
+    kapt 'com.google.dagger:dagger-compiler:2.45'
+//    implementation libraries.dagger_android
+//    implementation libraries.dagger_support
+//    kapt libraries.dagger_compiler
+//    kapt libraries.dagger_android_processor
     implementation libraries.kotlinx_coroutines_android
     implementation libraries.kotlinx_coroutines_core
     implementation libraries.kotlinx_coroutines_play_services
     implementation libraries.datastore
     implementation libraries.timber
+    implementation 'androidx.activity:activity-compose:1.7.2'
+    implementation "androidx.compose.ui:ui:$compose_ui_version"
+    implementation "androidx.compose.ui:ui-tooling-preview:$compose_ui_version"
+    implementation 'androidx.compose.material:material:1.5.1'
+    implementation "androidx.compose.material:material-icons-extended:1.5.1"
 
-    implementation androidx_lifecycle.lifecycle_viewmodel_ktx
-    implementation androidx_lifecycle.lifecycle_livedata_ktx
-    implementation androidx_lifecycle.lifecycle_extensions
-    implementation androidx_lifecycle.lifecycle_runtime_ktx
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2'
+    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.6.2'
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.6.2'
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
 
     implementation room.room_runtime
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
