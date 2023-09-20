@@ -3,6 +3,9 @@ package com.michasoft.thelasttime.model
 import android.content.Context
 import com.michasoft.thelasttime.model.syncJob.SyncJob
 import com.michasoft.thelasttime.userSessionComponent
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import timber.log.Timber
@@ -16,22 +19,25 @@ class SyncJobQueueCoordinator(
 ) {
     var isActive = false
     private val activeMutex = Mutex()
+    private val syncScope = CoroutineScope(Dispatchers.IO)
 
-    suspend fun triggerSync() {
-        activeMutex.withLock {
-            if (isActive) {
-                return
-            } else {
-                isActive = true
+    fun triggerSync() {
+        syncScope.launch {
+            activeMutex.withLock {
+                if (isActive) {
+                    return@launch
+                } else {
+                    isActive = true
+                }
             }
-        }
-        kotlin.runCatching {
-            sync()
-        }.onFailure {
-            Timber.e("sync failed.", it)
-        }
-        activeMutex.withLock {
-            this@SyncJobQueueCoordinator.isActive = false
+            kotlin.runCatching {
+                sync()
+            }.onFailure {
+                Timber.e("sync failed.", it)
+            }
+            activeMutex.withLock {
+                this@SyncJobQueueCoordinator.isActive = false
+            }
         }
     }
 
