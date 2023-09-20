@@ -63,21 +63,21 @@ class RoomEventSource(private val appDatabase: AppDatabase, private val eventDao
                     val eventInstanceTextFieldEntity =
                         eventDao.getEventInstanceTextField(eventInstanceEntity.id, fieldSchema.id)
                     if(eventInstanceTextFieldEntity != null) {
-                        eventInstanceFields.add(eventInstanceTextFieldEntity.toModel())
+                        eventInstanceFields.add(eventInstanceTextFieldEntity.toModel(fieldSchema))
                     }
                 }
                 Type.IntField -> {
                     val eventInstanceIntFieldEntity =
                         eventDao.getEventInstanceIntField(eventInstanceEntity.id, fieldSchema.id)
                     if(eventInstanceIntFieldEntity != null) {
-                        eventInstanceFields.add(eventInstanceIntFieldEntity.toModel())
+                        eventInstanceFields.add(eventInstanceIntFieldEntity.toModel(fieldSchema))
                     }
                 }
                 Type.DoubleField -> {
                     val eventInstanceDoubleFieldEntity =
                         eventDao.getEventInstanceDoubleField(eventInstanceEntity.id, fieldSchema.id)
                         if(eventInstanceDoubleFieldEntity != null) {
-                            eventInstanceFields.add(eventInstanceDoubleFieldEntity.toModel())
+                            eventInstanceFields.add(eventInstanceDoubleFieldEntity.toModel(fieldSchema))
                         }
                 }
                 else -> {

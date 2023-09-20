@@ -7,9 +7,9 @@ import com.michasoft.thelasttime.model.EventInstanceFieldSchema
  * Created by mśmiech on 31.10.2021.
  */
 class DoubleField(
-    fieldSchemaId: String,
+    fieldSchema: EventInstanceFieldSchema,
     val value: Double?
-) : EventInstanceField(fieldSchemaId, Type.DoubleField) {
+) : EventInstanceField(fieldSchema, Type.DoubleField) {
 
     override fun toMap(): Map<String, Any?> {
         return hashMapOf(
@@ -20,7 +20,7 @@ class DoubleField(
     class Factory: EventInstanceField.Factory {
         override fun create(schema: EventInstanceFieldSchema, map: Map<String, Any?>): EventInstanceField {
             val value = map[getMapKey(schema)] as Double?
-            return DoubleField(schema.id, value)
+            return DoubleField(schema, value)
         }
     }
 }

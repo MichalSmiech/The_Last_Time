@@ -7,9 +7,9 @@ import com.michasoft.thelasttime.model.EventInstanceFieldSchema
  * Created by mśmiech on 31.10.2021.
  */
 class IntField(
-    fieldSchemaId: String,
+    fieldSchema: EventInstanceFieldSchema,
     val value: Int?
-) : EventInstanceField(fieldSchemaId, Type.IntField) {
+) : EventInstanceField(fieldSchema, Type.IntField) {
 
     override fun toMap(): Map<String, Any?> {
         return hashMapOf(
@@ -20,7 +20,7 @@ class IntField(
     class Factory: EventInstanceField.Factory {
         override fun create(schema: EventInstanceFieldSchema, map: Map<String, Any?>): EventInstanceField {
             val value = map[getMapKey(schema)] as Int?
-            return IntField(schema.id, value)
+            return IntField(schema, value)
         }
     }
 }

@@ -1,6 +1,7 @@
 package com.michasoft.thelasttime.model.storage.entity.eventInstanceField
 
 import androidx.room.Entity
+import com.michasoft.thelasttime.model.EventInstanceFieldSchema
 import com.michasoft.thelasttime.model.eventInstanceField.IntField
 import com.michasoft.thelasttime.model.eventInstanceField.TextField
 
@@ -13,9 +14,9 @@ class EventInstanceIntFieldEntity(
     val fieldSchemaId: String,
     val value: Int?
 ) {
-    constructor(eventId: String, field: IntField): this(eventId, field.fieldSchemaId, field.value)
+    constructor(eventId: String, field: IntField): this(eventId, field.fieldSchema.id, field.value)
 
-    fun toModel() = IntField(fieldSchemaId, value)
+    fun toModel(fieldSchema: EventInstanceFieldSchema) = IntField(fieldSchema, value)
 
     companion object {
         const val TABLE_NAME = "EventInstanceIntFields"
