@@ -3,6 +3,7 @@ package com.michasoft.thelasttime.model.storage.entity
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.michasoft.thelasttime.model.Event
+import com.michasoft.thelasttime.model.EventInstanceSchema
 import org.joda.time.DateTime
 
 /**
@@ -17,7 +18,7 @@ class EventEntity(
 ) {
     constructor(event: Event): this(event.id, event.displayName, event.createTimestamp)
 
-    fun toModel() = Event(id, displayName, createTimestamp)
+    fun toModel(eventInstanceSchema: EventInstanceSchema) = Event(id, displayName, createTimestamp, eventInstanceSchema)
 
     companion object {
         const val TABLE_NAME = "Events"

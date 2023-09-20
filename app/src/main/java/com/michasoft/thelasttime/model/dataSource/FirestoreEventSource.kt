@@ -34,7 +34,8 @@ class FirestoreEventSource(private val firestore: FirebaseFirestore, private val
     override suspend fun getEvent(eventId: String): Event? {
         val eventDocument = eventCollectionRef.document(eventId).get().await()
         val dto = eventDocument.toObject(EventDto::class.java)
-        return dto?.toModel(eventDocument.id)
+        val eventInstanceSchema = getEventInstanceSchema(eventId)
+        return dto?.toModel(eventDocument.id, eventInstanceSchema)
     }
 
     override fun getAllEvents(): Flow<Event> = flow {
@@ -47,7 +48,8 @@ class FirestoreEventSource(private val firestore: FirebaseFirestore, private val
             if (querySnapshot.documents.size > 0) {
                 querySnapshot.documents.forEach {
                     val eventDto = it.toObject(EventDto::class.java)
-                    val event = eventDto?.toModel(it.id)
+                    val eventInstanceSchema = getEventInstanceSchema(it.id)
+                    val event = eventDto?.toModel(it.id, eventInstanceSchema)
                     if (event != null) {
                         emit(event)
                     }

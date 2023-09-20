@@ -28,7 +28,6 @@ class BackupRepository(
         remoteSource.getAllEvents()
             .buffer(100)
             .collect { event ->
-                event.eventInstanceSchema = remoteSource.getEventInstanceSchema(event.id)
                 localSource.insertEvent(event)
                 remoteSource.getAllEventInstances(event.id, event.eventInstanceSchema!!)
                     .buffer(100)
@@ -42,7 +41,6 @@ class BackupRepository(
         localSource.getAllEvents()
             .buffer(10)
             .collect { event ->
-                event.eventInstanceSchema = localSource.getEventInstanceSchema(event.id)
                 remoteSource.insertEvent(event)
                 val buffer = ArrayList<EventInstance>(100)
                 localSource.getAllEventInstances(event.id, event.eventInstanceSchema!!)

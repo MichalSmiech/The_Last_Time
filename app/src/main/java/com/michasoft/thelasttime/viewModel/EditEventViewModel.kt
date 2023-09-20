@@ -31,9 +31,9 @@ class EditEventViewModel(
                 val newEvent = Event(
                     eventId,
                     name.value!!,
-                    DateTime.now()
+                    DateTime.now(),
+                    EventInstanceSchema()
                 )
-                newEvent.eventInstanceSchema = EventInstanceSchema()
                 eventRepository.insert(newEvent)
             } else {
                 originalEvent.displayName = name.value!!

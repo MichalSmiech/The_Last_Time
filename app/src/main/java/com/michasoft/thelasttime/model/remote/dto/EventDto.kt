@@ -3,6 +3,7 @@ package com.michasoft.thelasttime.model.remote.dto
 import com.google.firebase.firestore.Exclude
 import com.google.firebase.firestore.IgnoreExtraProperties
 import com.michasoft.thelasttime.model.Event
+import com.michasoft.thelasttime.model.EventInstanceSchema
 import org.joda.time.DateTime
 import java.util.*
 
@@ -15,5 +16,5 @@ class EventDto(
 ) {
     constructor(event: Event): this(event.displayName, event.createTimestamp.toDate())
 
-    fun toModel(id: String) = Event(id, displayName!!, DateTime(createTimestamp))
+    fun toModel(id: String, eventInstanceSchema: EventInstanceSchema) = Event(id, displayName!!, DateTime(createTimestamp), eventInstanceSchema)
 }

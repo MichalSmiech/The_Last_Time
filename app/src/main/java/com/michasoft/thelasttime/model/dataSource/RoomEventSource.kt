@@ -27,7 +27,8 @@ import org.joda.time.DateTime
 class RoomEventSource(private val appDatabase: AppDatabase, private val eventDao: EventDao): ILocalEventSource {
     override suspend fun getEvent(eventId: String): Event? {
         val eventEntity = eventDao.getEvent(eventId) ?: return null
-        return eventEntity.toModel()
+        val eventInstanceSchema = getEventInstanceSchema(eventId)
+        return eventEntity.toModel(eventInstanceSchema)
     }
 
     override suspend fun deleteEvent(eventId: String) {
@@ -120,9 +121,8 @@ class RoomEventSource(private val appDatabase: AppDatabase, private val eventDao
     }
 
     override suspend fun insertEvent(event: Event) {
-        requireNotNull(event.eventInstanceSchema)
         eventDao.insertEvent(EventEntity(event))
-        event.eventInstanceSchema!!.fieldSchemas.forEach { fieldSchema ->
+        event.eventInstanceSchema.fieldSchemas.forEach { fieldSchema ->
             eventDao.insertEventInstanceFieldSchema(EventInstanceFieldSchemaEntity(event.id, fieldSchema))
         }
     }

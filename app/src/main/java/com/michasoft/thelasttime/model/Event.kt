@@ -8,8 +8,8 @@ import org.joda.time.DateTime
 data class Event(
     var id: String,
     var displayName: String,
-    val createTimestamp: DateTime
+    val createTimestamp: DateTime,
+    val eventInstanceSchema: EventInstanceSchema
 ) {
     var lastInstanceTimestamp: DateTime? = null
-    var eventInstanceSchema: EventInstanceSchema? = null
 }

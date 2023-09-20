@@ -62,7 +62,6 @@ class MainActivity : UserSessionActivity() {
     }
 
     fun addEvents(view: View) {
-        val event = Event(IdGenerator.autoId(), "Water plants", DateTime.now())
         val fieldSchemas = mutableListOf<EventInstanceFieldSchema>()
         fieldSchemas.add(
             EventInstanceFieldSchema(
@@ -89,7 +88,7 @@ class MainActivity : UserSessionActivity() {
             )
         )
         val eventInstanceSchema = EventInstanceSchema(fieldSchemas)
-        event.eventInstanceSchema = eventInstanceSchema
+        val event = Event(IdGenerator.autoId(), "Water plants", DateTime.now(), eventInstanceSchema)
         CoroutineScope(Dispatchers.IO).launch {
             eventRepository.insert(event)
             Log.d("asd", "Added: " + event)

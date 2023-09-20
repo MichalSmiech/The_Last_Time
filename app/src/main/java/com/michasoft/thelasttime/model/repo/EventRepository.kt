@@ -57,9 +57,6 @@ class EventRepository(
         //TODO check if eventInstanceSchema changed then have to update all instances
         localSource.updateEvent(event)
         if (backupConfig.isAutoBackup()) {
-            if(event.eventInstanceSchema == null) {
-                event.eventInstanceSchema = localSource.getEventInstanceSchema(event.id)
-            }
             remoteSource.updateEvent(event)
         }
     }
