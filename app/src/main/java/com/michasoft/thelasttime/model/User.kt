@@ -17,6 +17,10 @@ class User(
         return super.equals(other)
     }
 
+    override fun hashCode(): Int {
+        return id.hashCode()
+    }
+
     companion object {
         fun generateId(): String {
             return UUID.randomUUID().toString().replace("-", "")
