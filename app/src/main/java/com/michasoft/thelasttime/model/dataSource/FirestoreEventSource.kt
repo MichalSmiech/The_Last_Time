@@ -19,7 +19,6 @@ import timber.log.Timber
 class FirestoreEventSource(private val firestore: FirebaseFirestore, private val eventCollectionRef: CollectionReference) :
     IRemoteEventSource {
     override suspend fun insertEvent(event: Event) {
-        requireNotNull(event.eventInstanceSchema)
         val dto = EventDto(event)
         val documentRef = eventCollectionRef.document(event.id)
         documentRef.set(dto).await()
@@ -62,7 +61,6 @@ class FirestoreEventSource(private val firestore: FirebaseFirestore, private val
     }
 
     override suspend fun updateEvent(event: Event) {
-        requireNotNull(event.eventInstanceSchema)
         val dto = EventDto(event)
         val documentRef = eventCollectionRef.document(event.id)
         documentRef.set(dto).await()
