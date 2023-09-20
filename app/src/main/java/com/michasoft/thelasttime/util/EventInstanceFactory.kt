@@ -10,7 +10,7 @@ import org.joda.time.DateTime
 object EventInstanceFactory {
     fun createEmptyEventInstance(event: Event): EventInstance {
         return EventInstance(
-            IdGenerator.autoId(),
+            IdGenerator.newId(),
             event.id,
             DateTime.now(),
             ArrayList()

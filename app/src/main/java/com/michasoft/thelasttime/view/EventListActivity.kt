@@ -5,15 +5,12 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.observe
 import com.michasoft.thelasttime.LastTimeApplication
 import com.michasoft.thelasttime.R
 import com.michasoft.thelasttime.databinding.ActivityEventListBinding
 import com.michasoft.thelasttime.util.IdGenerator
 import com.michasoft.thelasttime.view.bottomSheet.AddEventInstanceBottomSheet
 import com.michasoft.thelasttime.viewModel.EventListViewModel
-import com.michasoft.thelasttime.viewModel.EventViewModel
 import javax.inject.Inject
 
 class EventListActivity : UserSessionActivity() {
@@ -32,7 +29,7 @@ class EventListActivity : UserSessionActivity() {
         viewModel.flowEventBus.observe(this) {
             when(it) {
                 is EventListViewModel.CreateNewEvent -> {
-                    EditEventActivity.start(this, IdGenerator.autoId())
+                    EditEventActivity.start(this, IdGenerator.newId())
                 }
                 is EventListViewModel.ShowEvent -> {
                     EventActivity.start(this, it.eventTypeId)

@@ -24,7 +24,7 @@ class FirestoreEventSource(private val firestore: FirebaseFirestore, private val
         documentRef.set(dto).await()
         val fieldSchemaCollection =
             documentRef.collection(EVENT_INSTANCE_FIELD_SCHEMAS_COLLECTION_NAME)
-        event.eventInstanceSchema!!.fieldSchemas.forEach { fieldSchema ->
+        event.eventInstanceSchema.fieldSchemas.forEach { fieldSchema ->
             val fieldSchemaDto = EventInstanceFieldSchemaDto(fieldSchema)
             fieldSchemaCollection.document(fieldSchema.id).set(fieldSchemaDto).await()
         }
@@ -66,7 +66,7 @@ class FirestoreEventSource(private val firestore: FirebaseFirestore, private val
         documentRef.set(dto).await()
         val fieldSchemaCollection =
             documentRef.collection(EVENT_INSTANCE_FIELD_SCHEMAS_COLLECTION_NAME)
-        event.eventInstanceSchema!!.fieldSchemas.forEach { fieldSchema ->
+        event.eventInstanceSchema.fieldSchemas.forEach { fieldSchema ->
             val fieldSchemaDto = EventInstanceFieldSchemaDto(fieldSchema)
             fieldSchemaCollection.document(fieldSchema.id).set(fieldSchemaDto).await()
         }

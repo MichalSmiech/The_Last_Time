@@ -1,10 +1,10 @@
 package com.michasoft.thelasttime.di
 
 import android.content.Context
-import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.ktx.Firebase
+import com.michasoft.thelasttime.model.SyncJobQueue
+import com.michasoft.thelasttime.model.SyncJobQueueCoordinator
 import com.michasoft.thelasttime.model.User
 import com.michasoft.thelasttime.model.dataSource.FirestoreEventSource
 import com.michasoft.thelasttime.model.dataSource.ILocalEventSource
@@ -65,16 +65,24 @@ class UserSessionModule {
     fun provideEventRepository(
         localSource: ILocalEventSource,
         remoteSource: IRemoteEventSource,
-        backupConfig: BackupConfig
-    ): IEventRepository {
-        return EventRepository(localSource, remoteSource, backupConfig)
+        backupConfig: BackupConfig,
+        syncJobQueue: SyncJobQueue,
+        syncJobQueueCoordinator: SyncJobQueueCoordinator
+    ): EventRepository {
+        return EventRepository(
+            localSource,
+            remoteSource,
+            backupConfig,
+            syncJobQueue,
+            syncJobQueueCoordinator
+        )
     }
 
     @Provides
     @UserSessionScope
     fun provideBackupRepository(
         localSource: ILocalEventSource,
-        remoteSource: IRemoteEventSource
+        remoteSource: IRemoteEventSource,
     ): IBackupRepository {
         return BackupRepository(localSource, remoteSource)
     }
@@ -89,7 +97,21 @@ class UserSessionModule {
         return BackupConfig(context, user).also {
             userSessionRepository.closableList.add(it)
         }
+    }
 
+    @Provides
+    @UserSessionScope
+    fun provideSyncJobQueue(): SyncJobQueue {
+        return SyncJobQueue()
+    }
+
+    @Provides
+    @UserSessionScope
+    fun provideSyncJobQueueCoordinator(
+        context: Context,
+        syncJobQueue: SyncJobQueue
+    ): SyncJobQueueCoordinator {
+        return SyncJobQueueCoordinator(context, syncJobQueue)
     }
 }
 

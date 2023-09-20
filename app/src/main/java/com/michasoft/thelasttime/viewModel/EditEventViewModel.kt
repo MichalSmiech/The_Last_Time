@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.michasoft.thelasttime.model.Event
 import com.michasoft.thelasttime.model.EventInstanceSchema
-import com.michasoft.thelasttime.model.repo.IEventRepository
+import com.michasoft.thelasttime.model.repo.EventRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -18,7 +18,7 @@ import javax.inject.Inject
  */
 
 class EditEventViewModel(
-    private val eventRepository: IEventRepository
+    private val eventRepository: EventRepository
 ) : CommonViewModel() {
     private lateinit var eventId: String
     private var originalEvent: Event? = null
@@ -57,7 +57,7 @@ class EditEventViewModel(
 
     @Suppress("UNCHECKED_CAST")
     class Factory @Inject constructor(
-        private val eventRepository: IEventRepository
+        private val eventRepository: EventRepository
     ) : ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             if (modelClass.isAssignableFrom(EditEventViewModel::class.java)) {

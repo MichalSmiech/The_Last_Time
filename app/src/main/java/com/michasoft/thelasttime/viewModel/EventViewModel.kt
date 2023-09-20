@@ -4,9 +4,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.michasoft.thelasttime.model.EventInstance
 import com.michasoft.thelasttime.model.Event
-import com.michasoft.thelasttime.model.repo.IEventRepository
+import com.michasoft.thelasttime.model.EventInstance
+import com.michasoft.thelasttime.model.repo.EventRepository
 import com.michasoft.thelasttime.util.FlowEvent
 import com.michasoft.thelasttime.util.ShowDeleteConfirmationDialog
 import kotlinx.coroutines.launch
@@ -17,7 +17,7 @@ import javax.inject.Inject
  * Created by mśmiech on 08.07.2021.
  */
 class EventViewModel(
-    private val eventRepository: IEventRepository
+    private val eventRepository: EventRepository
 ) : CommonViewModel() {
     private var eventId: String? = null
     private var originalEvent: Event? = null
@@ -72,7 +72,7 @@ class EventViewModel(
 
     @Suppress("UNCHECKED_CAST")
     class Factory @Inject constructor(
-        private val eventRepository: IEventRepository
+        private val eventRepository: EventRepository
     ) : ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             if (modelClass.isAssignableFrom(EventViewModel::class.java)) {

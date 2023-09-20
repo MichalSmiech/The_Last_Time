@@ -1,9 +1,9 @@
 package com.michasoft.thelasttime.viewModel
 
 import androidx.lifecycle.*
-import com.michasoft.thelasttime.model.EventInstance
 import com.michasoft.thelasttime.model.Event
-import com.michasoft.thelasttime.model.repo.IEventRepository
+import com.michasoft.thelasttime.model.EventInstance
+import com.michasoft.thelasttime.model.repo.EventRepository
 import com.michasoft.thelasttime.util.FlowEvent
 import com.michasoft.thelasttime.util.ShowDeleteConfirmationDialog
 import kotlinx.coroutines.launch
@@ -11,7 +11,7 @@ import org.joda.time.DateTime
 import javax.inject.Inject
 
 class EventInstanceViewModel(
-    private val eventRepository: IEventRepository
+    private val eventRepository: EventRepository
 ) : CommonViewModel() {
     private var eventId: String? = null
     private var instanceId: String? = null
@@ -95,7 +95,7 @@ class EventInstanceViewModel(
 
     @Suppress("UNCHECKED_CAST")
     class Factory @Inject constructor(
-        private val eventRepository: IEventRepository
+        private val eventRepository: EventRepository
     ) : ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             if (modelClass.isAssignableFrom(EventInstanceViewModel::class.java)) {

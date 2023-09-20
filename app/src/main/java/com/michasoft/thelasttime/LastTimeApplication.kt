@@ -1,6 +1,7 @@
 package com.michasoft.thelasttime
 
 import android.app.Application
+import android.content.Context
 import com.michasoft.thelasttime.di.ApplicationComponent
 import com.michasoft.thelasttime.di.DaggerApplicationComponent
 import com.michasoft.thelasttime.di.UserSessionComponent
@@ -33,7 +34,7 @@ open class LastTimeApplication: Application() {
     override fun onCreate() {
         super.onCreate()
         applicationComponent = DaggerApplicationComponent.factory().create(applicationContext)
-        if(BuildConfig.DEBUG) {
+        if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
         }
 
@@ -42,4 +43,6 @@ open class LastTimeApplication: Application() {
         }
     }
 }
+
+fun Context.userSessionComponent() = (this as LastTimeApplication).userSessionComponent!!
 

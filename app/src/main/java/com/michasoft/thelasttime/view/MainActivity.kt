@@ -10,18 +10,22 @@ import com.michasoft.thelasttime.model.Event
 import com.michasoft.thelasttime.model.EventInstanceField
 import com.michasoft.thelasttime.model.EventInstanceFieldSchema
 import com.michasoft.thelasttime.model.EventInstanceSchema
+import com.michasoft.thelasttime.model.repo.EventRepository
 import com.michasoft.thelasttime.model.repo.IBackupRepository
-import com.michasoft.thelasttime.model.repo.IEventRepository
 import com.michasoft.thelasttime.model.repo.UserSessionRepository
 import com.michasoft.thelasttime.util.BackupConfig
 import com.michasoft.thelasttime.util.IdGenerator
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import org.joda.time.DateTime
 import javax.inject.Inject
 
 class MainActivity : UserSessionActivity() {
     @Inject
-    lateinit var eventRepository: IEventRepository
+    lateinit var eventRepository: EventRepository
 
     @Inject
     lateinit var backupRepository: IBackupRepository
@@ -65,7 +69,7 @@ class MainActivity : UserSessionActivity() {
         val fieldSchemas = mutableListOf<EventInstanceFieldSchema>()
         fieldSchemas.add(
             EventInstanceFieldSchema(
-                IdGenerator.autoId(),
+                IdGenerator.newId(),
                 0,
                 EventInstanceField.Type.TextField,
                 "pierwsze pole"
@@ -73,7 +77,7 @@ class MainActivity : UserSessionActivity() {
         )
         fieldSchemas.add(
             EventInstanceFieldSchema(
-                IdGenerator.autoId(),
+                IdGenerator.newId(),
                 1,
                 EventInstanceField.Type.IntField,
                 "drugie pole"
@@ -81,14 +85,14 @@ class MainActivity : UserSessionActivity() {
         )
         fieldSchemas.add(
             EventInstanceFieldSchema(
-                IdGenerator.autoId(),
+                IdGenerator.newId(),
                 2,
                 EventInstanceField.Type.DoubleField,
                 "trzecie pole"
             )
         )
         val eventInstanceSchema = EventInstanceSchema(fieldSchemas)
-        val event = Event(IdGenerator.autoId(), "Water plants", DateTime.now(), eventInstanceSchema)
+        val event = Event(IdGenerator.newId(), "Water plants", DateTime.now(), eventInstanceSchema)
         CoroutineScope(Dispatchers.IO).launch {
             eventRepository.insert(event)
             Log.d("asd", "Added: " + event)

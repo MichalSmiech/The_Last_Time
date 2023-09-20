@@ -1,12 +1,13 @@
 package com.michasoft.thelasttime.di
 
-import com.michasoft.thelasttime.view.MainActivity
 import com.michasoft.thelasttime.model.User
 import com.michasoft.thelasttime.model.repo.UserSessionRepository
+import com.michasoft.thelasttime.model.syncJob.EventSyncJob
 import com.michasoft.thelasttime.view.EditEventActivity
 import com.michasoft.thelasttime.view.EventActivity
 import com.michasoft.thelasttime.view.EventInstanceActivity
 import com.michasoft.thelasttime.view.EventListActivity
+import com.michasoft.thelasttime.view.MainActivity
 import com.michasoft.thelasttime.view.bottomSheet.AddEventInstanceBottomSheet
 import dagger.BindsInstance
 import dagger.Subcomponent
@@ -33,5 +34,6 @@ interface UserSessionComponent {
     fun inject(activity: EventActivity)
     fun inject(activity: EditEventActivity)
     fun inject(bottomSheet: AddEventInstanceBottomSheet)
+    fun inject(eventSyncJob: EventSyncJob)
 
 }
