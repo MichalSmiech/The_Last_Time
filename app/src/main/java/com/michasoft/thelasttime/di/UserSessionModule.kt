@@ -13,7 +13,6 @@ import com.michasoft.thelasttime.model.SyncJobQueueCoordinator
 import com.michasoft.thelasttime.model.User
 import com.michasoft.thelasttime.repo.BackupRepository
 import com.michasoft.thelasttime.repo.EventRepository
-import com.michasoft.thelasttime.repo.IBackupRepository
 import com.michasoft.thelasttime.repo.UserRepository
 import com.michasoft.thelasttime.repo.UserSessionRepository
 import com.michasoft.thelasttime.storage.AppDatabase
@@ -89,7 +88,7 @@ class UserSessionModule {
     fun provideBackupRepository(
         localSource: ILocalEventSource,
         remoteSource: IRemoteEventSource,
-    ): IBackupRepository {
+    ): BackupRepository {
         return BackupRepository(localSource, remoteSource)
     }
 

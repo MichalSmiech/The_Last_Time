@@ -11,17 +11,16 @@ import kotlinx.coroutines.flow.buffer
 class BackupRepository(
     private val localSource: ILocalEventSource,
     private val remoteSource: IRemoteEventSource
-) : IBackupRepository {
-
-    override suspend fun clearLocalDatabase() {
+) {
+    suspend fun clearLocalDatabase() {
         localSource.clear()
     }
 
-    override suspend fun clearBackup() {
+    suspend fun clearBackup() {
         remoteSource.clear()
     }
 
-    override suspend fun restoreBackup() {
+    suspend fun restoreBackup() {
         remoteSource.getAllEvents()
             .buffer(100)
             .collect { event ->
@@ -34,7 +33,7 @@ class BackupRepository(
             }
     }
 
-    override suspend fun makeBackup() {
+    suspend fun makeBackup() {
         localSource.getAllEvents()
             .buffer(10)
             .collect { event ->
