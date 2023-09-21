@@ -69,14 +69,12 @@ class UserSessionModule {
     @UserSessionScope
     fun provideEventRepository(
         localSource: ILocalEventSource,
-        remoteSource: IRemoteEventSource,
         backupConfig: BackupConfig,
         syncJobQueue: SyncJobQueue,
         syncJobQueueCoordinator: SyncJobQueueCoordinator
     ): EventRepository {
         return EventRepository(
             localSource,
-            remoteSource,
             backupConfig,
             syncJobQueue,
             syncJobQueueCoordinator

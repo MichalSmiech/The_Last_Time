@@ -94,7 +94,7 @@ class MainActivity : UserSessionActivity() {
         val eventInstanceSchema = EventInstanceSchema(fieldSchemas)
         val event = Event(IdGenerator.newId(), "Water plants", DateTime.now(), eventInstanceSchema)
         CoroutineScope(Dispatchers.IO).launch {
-            eventRepository.insert(event)
+            eventRepository.insertEvent(event)
             Log.d("asd", "Added: " + event)
         }
     }

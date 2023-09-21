@@ -54,7 +54,7 @@ class EventViewModel(
     }
 
     private suspend fun saveEvent(event: Event) {
-        eventRepository.update(event)
+        eventRepository.updateEvent(event)
     }
 
     suspend fun deleteEvent(needConfirmation: Boolean = false) {

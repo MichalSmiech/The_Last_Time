@@ -56,7 +56,7 @@ class EventInstanceViewModel(
     fun save() {
         viewModelScope.launch {
             val instance = buildInstance()
-            eventRepository.insert(instance)
+            eventRepository.insertEventInstance(instance)
             flowEventBus.value = Finish()
         }
     }
@@ -76,7 +76,7 @@ class EventInstanceViewModel(
     }
 
     private suspend fun saveInstance(instance: EventInstance = buildInstance()) {
-        eventRepository.update(instance)
+        eventRepository.updateEventInstance(instance)
     }
 
     fun delete(needConfirmation: Boolean = false) {

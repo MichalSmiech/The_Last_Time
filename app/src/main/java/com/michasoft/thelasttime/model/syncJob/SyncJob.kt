@@ -11,7 +11,6 @@ abstract class SyncJob(
     val action: Action,
     val state: State,
     val serializedData: String,
-    val factory: Factory
 ) {
     enum class State {
         New,

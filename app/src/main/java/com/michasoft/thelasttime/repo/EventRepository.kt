@@ -1,11 +1,11 @@
 package com.michasoft.thelasttime.repo
 
 import com.michasoft.thelasttime.dataSource.ILocalEventSource
-import com.michasoft.thelasttime.dataSource.IRemoteEventSource
 import com.michasoft.thelasttime.model.Event
 import com.michasoft.thelasttime.model.EventInstance
 import com.michasoft.thelasttime.model.SyncJobQueue
 import com.michasoft.thelasttime.model.SyncJobQueueCoordinator
+import com.michasoft.thelasttime.model.syncJob.EventInstanceSyncJob
 import com.michasoft.thelasttime.model.syncJob.EventSyncJob
 import com.michasoft.thelasttime.model.syncJob.SyncJob
 import com.michasoft.thelasttime.util.BackupConfig
@@ -16,12 +16,11 @@ import com.michasoft.thelasttime.util.EventInstanceFactory
  */
 class EventRepository(
     private val localSource: ILocalEventSource,
-    private val remoteSource: IRemoteEventSource,
     private val backupConfig: BackupConfig,
     private val syncJobQueue: SyncJobQueue,
     private val syncJobQueueCoordinator: SyncJobQueueCoordinator
 ) {
-    suspend fun insert(event: Event) {
+    suspend fun insertEvent(event: Event) {
         localSource.insertEvent(event)
         if (backupConfig.isAutoBackup()) {
             val syncJob = EventSyncJob.Factory.create(event.id, SyncJob.Action.Insert)
@@ -41,7 +40,10 @@ class EventRepository(
     suspend fun deleteEventInstance(eventId: String, instanceId: String) {
         localSource.deleteEventInstance(eventId, instanceId)
         if (backupConfig.isAutoBackup()) {
-            remoteSource.deleteEventInstance(eventId, instanceId)
+            val syncJob =
+                EventInstanceSyncJob.Factory.create(eventId, instanceId, SyncJob.Action.Delete)
+            syncJobQueue.add(syncJob)
+            syncJobQueueCoordinator.triggerSync()
         }
     }
 
@@ -53,7 +55,7 @@ class EventRepository(
         return events
     }
 
-    suspend fun update(event: Event) {
+    suspend fun updateEvent(event: Event) {
         //TODO check if eventInstanceSchema changed then have to update all instances
         localSource.updateEvent(event)
         if (backupConfig.isAutoBackup()) {
@@ -63,10 +65,16 @@ class EventRepository(
         }
     }
 
-    suspend fun update(instance: EventInstance) {
+    suspend fun updateEventInstance(instance: EventInstance) {
         localSource.updateEventInstance(instance)
         if (backupConfig.isAutoBackup()) {
-            remoteSource.updateEventInstance(instance)
+            val syncJob = EventInstanceSyncJob.Factory.create(
+                instance.eventId,
+                instance.id,
+                SyncJob.Action.Update
+            )
+            syncJobQueue.add(syncJob)
+            syncJobQueueCoordinator.triggerSync()
         }
     }
 
@@ -79,10 +87,16 @@ class EventRepository(
         }
     }
 
-    suspend fun insert(instance: EventInstance) {
+    suspend fun insertEventInstance(instance: EventInstance) {
         localSource.insertEventInstance(instance)
         if (backupConfig.isAutoBackup()) {
-            remoteSource.insertEventInstance(instance)
+            val syncJob = EventInstanceSyncJob.Factory.create(
+                instance.eventId,
+                instance.id,
+                SyncJob.Action.Insert
+            )
+            syncJobQueue.add(syncJob)
+            syncJobQueueCoordinator.triggerSync()
         }
     }
 
