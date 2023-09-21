@@ -44,13 +44,7 @@ fun EventInstanceItem(instance: EventInstance, onClick: (String) -> Unit) {
             .clickable { onClick(instance.id) }
             .fillMaxWidth()
     ) {
-        val periodText = if (instance.timestamp.isBeforeNow) {
-            val period = Period(instance.timestamp, DateTime.now())
-            period.toString(periodFormatter).ifBlank { "moments" } + " ago"
-        } else {
-            val period = Period(DateTime.now(), instance.timestamp)
-            period.toString(periodFormatter).ifBlank { "moments" } + " until"
-        }
+        val periodText = getPeriodText(instance.timestamp)
         Text(text = periodText, modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 8.dp))
         Text(
             text = instance.timestamp.toString("EEE, dd MMM yyyy HH:mm").capitalize(Locale.current),
@@ -61,10 +55,42 @@ fun EventInstanceItem(instance: EventInstance, onClick: (String) -> Unit) {
     }
 }
 
+private fun getPeriodText(timestamp: DateTime): String {
+    var periodText = if (timestamp.isBeforeNow) {
+        val period = Period(timestamp, DateTime.now())
+        period.toString(periodFormatter).ifBlank { "moments" } + " ago"
+    } else {
+        val period = Period(DateTime.now(), timestamp)
+        period.toString(periodFormatter).ifBlank { "moments" } + " until"
+    }
+    if (periodText.contains("week")) {
+        periodText = changeWeeksToDays(periodText)
+    }
+    return periodText
+}
+
+private fun changeWeeksToDays(periodText1: String): String {
+    var periodText = periodText1
+    val weeksMatchResult = """, (\d+) (weeks|week)""".toRegex().find(periodText)!!
+    if (periodText.contains("day")) {
+        periodText = periodText.removeRange(weeksMatchResult.range)
+        val daysMatchResult = """, (\d+) (days|day)""".toRegex().find(periodText)!!
+        val days =
+            weeksMatchResult.groups[1]!!.value.toInt() * 7 + daysMatchResult.groups[1]!!.value.toInt()
+        periodText = periodText.replace(daysMatchResult.value, ", $days days")
+    } else {
+        val days = weeksMatchResult.groups[1]!!.value.toInt() * 7
+        periodText = periodText.replace(weeksMatchResult.value, ", $days days")
+    }
+    return periodText
+}
+
 private val periodFormatter: PeriodFormatter = PeriodFormatterBuilder()
     .appendYears().appendSuffix(" year", " years")
     .appendSeparator(", ")
     .appendMonths().appendSuffix(" month", " months")
+    .appendSeparator(", ")
+    .appendWeeks().appendSuffix(" week", " weeks")
     .appendSeparator(", ")
     .appendDays().appendSuffix(" day", " days")
     .appendSeparator(", ")
