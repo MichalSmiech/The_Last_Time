@@ -10,6 +10,9 @@
         android:supportsRtl="true"
         android:theme="@style/LastTimeTheme">
         <activity
+            android:name=".eventinstancedetails.EventInstanceDetailsActivity"
+            android:exported="false" />
+        <activity
             android:name=".eventdetails.EventDetailsActivity"
             android:exported="false" />
         <activity
@@ -23,11 +26,11 @@
         </activity>
         <activity
             android:name=".view.SplashScreenActivity"
-            android:exported="false"></activity>
+            android:exported="false" />
         <activity android:name=".view.EventInstanceActivity" />
         <activity android:name=".view.EventActivity" />
         <activity android:name=".view.EditEventActivity" />
-        <activity android:name=".view.MainActivity"></activity>
+        <activity android:name=".view.MainActivity" />
         <activity android:name=".view.EventListActivity" />
     </application>
 

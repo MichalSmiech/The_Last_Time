@@ -1,4 +1,4 @@
-package com.michasoft.thelasttime.eventdetails
+package com.michasoft.thelasttime.eventinstancedetails
 
 import android.content.Context
 import android.content.Intent
@@ -15,69 +15,61 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
-import com.michasoft.thelasttime.eventinstancedetails.EventInstanceDetailsActivity
 import com.michasoft.thelasttime.view.LoadingView
 import com.michasoft.thelasttime.view.theme.LastTimeTheme
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
-class EventDetailsActivity : AppCompatActivity() {
+class EventInstanceDetailsActivity : AppCompatActivity() {
     private lateinit var eventId: String
-    private val viewModel by viewModels<EventDetailsViewModel>(factoryProducer = {
-        EventDetailsViewModel.Factory(
-            eventId
+    private lateinit var instanceId: String
+    private val viewModel by viewModels<EventInstanceDetailsViewModel>(factoryProducer = {
+        EventInstanceDetailsViewModel.Factory(
+            eventId,
+            instanceId
         )
     })
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         eventId = intent.getStringExtra(ARG_EVENT_ID) ?: throw IllegalStateException("No event id")
+        instanceId = intent.getStringExtra(ARG_EVENT_INSTANCE_ID)
+            ?: throw IllegalStateException("No event instance id")
         setContent {
             LastTimeTheme {
-                EventDetailsScreen(viewModel)
+                EventInstanceDetailsScreen(viewModel)
             }
         }
 
         viewModel.actions.onEach {
             when (it) {
-                is EventDetailsAction.Finish -> finish()
-                is EventDetailsAction.NavigateToEventInstanceDetails -> launchEventInstanceDetailsActivity(
-                    it.instanceId
-                )
+                is EventInstanceDetailsAction.Finish -> finish()
             }
         }.launchIn(lifecycleScope)
     }
 
-    override fun onStart() {
-        super.onStart()
-        viewModel.onStart()
-    }
-
-    private fun launchEventInstanceDetailsActivity(instanceId: String) {
-//        EventInstanceActivity.start(this, eventId, instanceId)
-        startActivity(EventInstanceDetailsActivity.getLaunchIntent(this, eventId, instanceId))
-    }
-
     companion object {
         private const val ARG_EVENT_ID = "eventId"
+        private const val ARG_EVENT_INSTANCE_ID = "eventInstanceId"
 
-        fun getLaunchIntent(context: Context, eventId: String): Intent {
-            val intent = Intent(context, EventDetailsActivity::class.java)
+        fun getLaunchIntent(context: Context, eventId: String, instanceId: String): Intent {
+            val intent = Intent(context, EventInstanceDetailsActivity::class.java)
             intent.putExtra(ARG_EVENT_ID, eventId)
+            intent.putExtra(ARG_EVENT_INSTANCE_ID, instanceId)
             return intent
         }
     }
 }
 
 @Composable
-fun EventDetailsScreen(viewModel: EventDetailsViewModel) {
+fun EventInstanceDetailsScreen(viewModel: EventInstanceDetailsViewModel) {
     val state = viewModel.state.collectAsStateWithLifecycle().value
     val scaffoldState = rememberScaffoldState()
-    Scaffold(scaffoldState = scaffoldState,
+    Scaffold(
+        scaffoldState = scaffoldState,
         topBar = {
             TopBar(
-                eventName = state.event?.name ?: "",
-                onEventNameChange = viewModel::changeName,
+                eventName = state.eventName,
                 onDiscardClick = viewModel::onDiscardButtonClicked,
                 onDelete = viewModel::onDeleteButtonClicked
             )
@@ -91,12 +83,12 @@ fun EventDetailsScreen(viewModel: EventDetailsViewModel) {
             if (state.isLoading) {
                 LoadingView()
             } else {
-                EventDetailsContent(
-                    eventInstances = state.eventInstances,
-                    onEventInstanceClick = viewModel::onEventInstanceClicked
+                EventInstanceDetailsContent(
+                    instance = state.eventInstance!!,
+                    onDateChange = viewModel::changeDate,
+                    onTimeChange = viewModel::changeTime
                 )
             }
         }
     }
 }
-

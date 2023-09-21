@@ -10,6 +10,8 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.capitalize
+import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.michasoft.thelasttime.model.EventInstance
@@ -44,14 +46,14 @@ fun EventInstanceItem(instance: EventInstance, onClick: (String) -> Unit) {
     ) {
         val periodText = if (instance.timestamp.isBeforeNow) {
             val period = Period(instance.timestamp, DateTime.now())
-            period.toString(periodFormatter) + " ago"
+            period.toString(periodFormatter).ifBlank { "moments" } + " ago"
         } else {
             val period = Period(DateTime.now(), instance.timestamp)
-            period.toString(periodFormatter) + " until"
+            period.toString(periodFormatter).ifBlank { "moments" } + " until"
         }
         Text(text = periodText, modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 8.dp))
         Text(
-            text = instance.timestamp.toString("EEE, dd MMM yyyy HH:mm"),
+            text = instance.timestamp.toString("EEE, dd MMM yyyy HH:mm").capitalize(Locale.current),
             modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 8.dp),
             color = MaterialTheme.colors.onSurface.copy(alpha = 0.6f),
             fontSize = 14.sp
