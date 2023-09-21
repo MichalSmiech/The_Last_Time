@@ -1,21 +1,16 @@
 package com.michasoft.thelasttime.di
 
 import android.content.Context
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreSettings
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import com.michasoft.thelasttime.model.dataSource.*
-import com.michasoft.thelasttime.model.repo.*
-import com.michasoft.thelasttime.model.storage.AppDatabase
-import com.michasoft.thelasttime.model.storage.UserDatabase
-import com.michasoft.thelasttime.util.BackupConfig
+import com.michasoft.thelasttime.dataSource.IUserDataSource
+import com.michasoft.thelasttime.dataSource.RoomUserDataSource
+import com.michasoft.thelasttime.repo.UserRepository
+import com.michasoft.thelasttime.storage.UserDatabase
 import dagger.Module
 import dagger.Provides
-import javax.inject.Named
 import javax.inject.Singleton
 
 /**

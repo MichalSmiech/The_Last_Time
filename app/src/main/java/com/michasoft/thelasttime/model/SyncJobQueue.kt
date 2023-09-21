@@ -1,6 +1,6 @@
 package com.michasoft.thelasttime.model
 
-import com.michasoft.thelasttime.model.dataSource.SyncJobDataSource
+import com.michasoft.thelasttime.dataSource.SyncJobDataSource
 import com.michasoft.thelasttime.model.syncJob.SyncJob
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock

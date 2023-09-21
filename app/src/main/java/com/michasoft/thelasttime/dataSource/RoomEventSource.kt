@@ -1,22 +1,22 @@
-package com.michasoft.thelasttime.model.dataSource
+package com.michasoft.thelasttime.dataSource
 
 import androidx.room.withTransaction
-import com.michasoft.thelasttime.model.EventInstance
 import com.michasoft.thelasttime.model.Event
+import com.michasoft.thelasttime.model.EventInstance
 import com.michasoft.thelasttime.model.EventInstanceField
 import com.michasoft.thelasttime.model.EventInstanceField.Type
 import com.michasoft.thelasttime.model.EventInstanceSchema
 import com.michasoft.thelasttime.model.eventInstanceField.DoubleField
 import com.michasoft.thelasttime.model.eventInstanceField.IntField
 import com.michasoft.thelasttime.model.eventInstanceField.TextField
-import com.michasoft.thelasttime.model.storage.AppDatabase
-import com.michasoft.thelasttime.model.storage.dao.EventDao
-import com.michasoft.thelasttime.model.storage.entity.EventEntity
-import com.michasoft.thelasttime.model.storage.entity.EventInstanceEntity
-import com.michasoft.thelasttime.model.storage.entity.EventInstanceFieldSchemaEntity
-import com.michasoft.thelasttime.model.storage.entity.eventInstanceField.EventInstanceDoubleFieldEntity
-import com.michasoft.thelasttime.model.storage.entity.eventInstanceField.EventInstanceIntFieldEntity
-import com.michasoft.thelasttime.model.storage.entity.eventInstanceField.EventInstanceTextFieldEntity
+import com.michasoft.thelasttime.storage.AppDatabase
+import com.michasoft.thelasttime.storage.dao.EventDao
+import com.michasoft.thelasttime.storage.entity.EventEntity
+import com.michasoft.thelasttime.storage.entity.EventInstanceEntity
+import com.michasoft.thelasttime.storage.entity.EventInstanceFieldSchemaEntity
+import com.michasoft.thelasttime.storage.entity.eventInstanceField.EventInstanceDoubleFieldEntity
+import com.michasoft.thelasttime.storage.entity.eventInstanceField.EventInstanceIntFieldEntity
+import com.michasoft.thelasttime.storage.entity.eventInstanceField.EventInstanceTextFieldEntity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import org.joda.time.DateTime
@@ -24,7 +24,8 @@ import org.joda.time.DateTime
 /**
  * Created by mśmiech on 05.09.2021.
  */
-class RoomEventSource(private val appDatabase: AppDatabase, private val eventDao: EventDao): ILocalEventSource {
+class RoomEventSource(private val appDatabase: AppDatabase, private val eventDao: EventDao) :
+    ILocalEventSource {
     override suspend fun getEvent(eventId: String): Event? {
         val eventEntity = eventDao.getEvent(eventId) ?: return null
         val eventInstanceSchema = getEventInstanceSchema(eventId)

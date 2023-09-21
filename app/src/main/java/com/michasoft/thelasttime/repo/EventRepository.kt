@@ -1,11 +1,11 @@
-package com.michasoft.thelasttime.model.repo
+package com.michasoft.thelasttime.repo
 
+import com.michasoft.thelasttime.dataSource.ILocalEventSource
+import com.michasoft.thelasttime.dataSource.IRemoteEventSource
 import com.michasoft.thelasttime.model.Event
 import com.michasoft.thelasttime.model.EventInstance
 import com.michasoft.thelasttime.model.SyncJobQueue
 import com.michasoft.thelasttime.model.SyncJobQueueCoordinator
-import com.michasoft.thelasttime.model.dataSource.ILocalEventSource
-import com.michasoft.thelasttime.model.dataSource.IRemoteEventSource
 import com.michasoft.thelasttime.model.syncJob.EventSyncJob
 import com.michasoft.thelasttime.model.syncJob.SyncJob
 import com.michasoft.thelasttime.util.BackupConfig

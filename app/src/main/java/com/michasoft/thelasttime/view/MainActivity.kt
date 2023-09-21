@@ -10,9 +10,9 @@ import com.michasoft.thelasttime.model.Event
 import com.michasoft.thelasttime.model.EventInstanceField
 import com.michasoft.thelasttime.model.EventInstanceFieldSchema
 import com.michasoft.thelasttime.model.EventInstanceSchema
-import com.michasoft.thelasttime.model.repo.EventRepository
-import com.michasoft.thelasttime.model.repo.IBackupRepository
-import com.michasoft.thelasttime.model.repo.UserSessionRepository
+import com.michasoft.thelasttime.repo.EventRepository
+import com.michasoft.thelasttime.repo.IBackupRepository
+import com.michasoft.thelasttime.repo.UserSessionRepository
 import com.michasoft.thelasttime.util.BackupConfig
 import com.michasoft.thelasttime.util.IdGenerator
 import kotlinx.coroutines.CoroutineScope

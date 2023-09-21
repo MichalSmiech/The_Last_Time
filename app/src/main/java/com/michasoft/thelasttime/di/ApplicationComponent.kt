@@ -1,8 +1,7 @@
 package com.michasoft.thelasttime.di
 
 import android.content.Context
-import com.michasoft.thelasttime.LastTimeApplication
-import com.michasoft.thelasttime.model.repo.UserRepository
+import com.michasoft.thelasttime.repo.UserRepository
 import com.michasoft.thelasttime.view.LoginActivity
 import dagger.BindsInstance
 import dagger.Component

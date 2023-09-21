@@ -1,4 +1,4 @@
-package com.michasoft.thelasttime.model.dataSource
+package com.michasoft.thelasttime.dataSource
 
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentSnapshot
@@ -115,7 +115,8 @@ class FirestoreEventSource(private val firestore: FirebaseFirestore, private val
     private suspend fun deleteAllEventInstanceSchemasWith(eventId: String) {
         Timber.d("Deleting all event instance schemas (eventId=$eventId)...")
         val baseQuery = eventCollectionRef.document(eventId).collection(
-            EVENT_INSTANCE_FIELD_SCHEMAS_COLLECTION_NAME).limit(500)
+            EVENT_INSTANCE_FIELD_SCHEMAS_COLLECTION_NAME
+        ).limit(500)
         var hasNext = true
         while (hasNext) {
             val querySnapshot = baseQuery.get().await()
@@ -220,7 +221,8 @@ class FirestoreEventSource(private val firestore: FirebaseFirestore, private val
     private suspend fun deleteAllEventInstancesWith(eventId: String) {
         Timber.d("Deleting all event instances (eventId=$eventId)...")
         val baseQuery = eventCollectionRef.document(eventId).collection(
-            EVENT_INSTANCES_COLLECTION_NAME).limit(500)
+            EVENT_INSTANCES_COLLECTION_NAME
+        ).limit(500)
         var hasNext = true
         while (hasNext) {
             val querySnapshot = baseQuery.get().await()

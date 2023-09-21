@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.michasoft.thelasttime.model.Event
 import com.michasoft.thelasttime.model.EventInstanceSchema
-import com.michasoft.thelasttime.model.repo.EventRepository
+import com.michasoft.thelasttime.repo.EventRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext

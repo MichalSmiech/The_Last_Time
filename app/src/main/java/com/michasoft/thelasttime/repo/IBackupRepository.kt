@@ -1,4 +1,4 @@
-package com.michasoft.thelasttime.model.repo
+package com.michasoft.thelasttime.repo
 
 /**
  * Created by mśmiech on 08.11.2021.

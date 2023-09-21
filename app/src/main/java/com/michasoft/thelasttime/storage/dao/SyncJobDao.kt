@@ -1,10 +1,10 @@
-package com.michasoft.thelasttime.model.storage.dao
+package com.michasoft.thelasttime.storage.dao
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
-import com.michasoft.thelasttime.model.storage.entity.SyncJobEntity
 import com.michasoft.thelasttime.model.syncJob.SyncJob
+import com.michasoft.thelasttime.storage.entity.SyncJobEntity
 
 /**
  * Created by mśmiech on 21.09.2023.

@@ -1,8 +1,8 @@
 package com.michasoft.thelasttime.model.syncJob
 
+import com.michasoft.thelasttime.dataSource.ILocalEventSource
+import com.michasoft.thelasttime.dataSource.IRemoteEventSource
 import com.michasoft.thelasttime.di.UserSessionComponent
-import com.michasoft.thelasttime.model.dataSource.ILocalEventSource
-import com.michasoft.thelasttime.model.dataSource.IRemoteEventSource
 import com.michasoft.thelasttime.util.IdGenerator
 import javax.inject.Inject
 

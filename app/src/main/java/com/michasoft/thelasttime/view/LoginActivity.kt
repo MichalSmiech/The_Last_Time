@@ -1,24 +1,20 @@
 package com.michasoft.thelasttime.view
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.firebase.ui.auth.AuthUI
-import com.firebase.ui.auth.ErrorCodes
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
-import com.firebase.ui.auth.ui.email.EmailLinkErrorRecoveryActivity
-import com.firebase.ui.auth.viewmodel.RequestCodes
-import com.firebase.ui.auth.viewmodel.RequestCodes.EMAIL_LINK_CROSS_DEVICE_LINKING_FLOW
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.michasoft.thelasttime.LastTimeApplication
 import com.michasoft.thelasttime.R
 import com.michasoft.thelasttime.databinding.ActivityLoginBinding
 import com.michasoft.thelasttime.model.User
-import com.michasoft.thelasttime.model.repo.UserRepository
+import com.michasoft.thelasttime.repo.UserRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

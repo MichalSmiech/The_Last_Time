@@ -1,10 +1,9 @@
-package com.michasoft.thelasttime.model.storage.dao
+package com.michasoft.thelasttime.storage.dao
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
-import com.michasoft.thelasttime.model.User
-import com.michasoft.thelasttime.model.storage.entity.UserEntity
+import com.michasoft.thelasttime.storage.entity.UserEntity
 
 /**
  * Created by mśmiech on 02.05.2022.

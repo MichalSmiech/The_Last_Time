@@ -3,7 +3,7 @@ package com.michasoft.thelasttime.viewModel
 import androidx.lifecycle.*
 import com.michasoft.thelasttime.model.Event
 import com.michasoft.thelasttime.model.EventInstance
-import com.michasoft.thelasttime.model.repo.EventRepository
+import com.michasoft.thelasttime.repo.EventRepository
 import com.michasoft.thelasttime.util.FlowEvent
 import com.michasoft.thelasttime.util.ShowDeleteConfirmationDialog
 import kotlinx.coroutines.launch

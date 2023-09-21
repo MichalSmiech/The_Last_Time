@@ -1,13 +1,12 @@
-package com.michasoft.thelasttime.model.storage.dao
+package com.michasoft.thelasttime.storage.dao
 
-import androidx.lifecycle.LiveData
 import androidx.room.*
-import com.michasoft.thelasttime.model.storage.entity.EventEntity
-import com.michasoft.thelasttime.model.storage.entity.EventInstanceEntity
-import com.michasoft.thelasttime.model.storage.entity.EventInstanceFieldSchemaEntity
-import com.michasoft.thelasttime.model.storage.entity.eventInstanceField.EventInstanceDoubleFieldEntity
-import com.michasoft.thelasttime.model.storage.entity.eventInstanceField.EventInstanceIntFieldEntity
-import com.michasoft.thelasttime.model.storage.entity.eventInstanceField.EventInstanceTextFieldEntity
+import com.michasoft.thelasttime.storage.entity.EventEntity
+import com.michasoft.thelasttime.storage.entity.EventInstanceEntity
+import com.michasoft.thelasttime.storage.entity.EventInstanceFieldSchemaEntity
+import com.michasoft.thelasttime.storage.entity.eventInstanceField.EventInstanceDoubleFieldEntity
+import com.michasoft.thelasttime.storage.entity.eventInstanceField.EventInstanceIntFieldEntity
+import com.michasoft.thelasttime.storage.entity.eventInstanceField.EventInstanceTextFieldEntity
 import org.joda.time.DateTime
 
 /**

@@ -1,4 +1,4 @@
-package com.michasoft.thelasttime.model.storage.entity
+package com.michasoft.thelasttime.storage.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

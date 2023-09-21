@@ -1,10 +1,10 @@
-package com.michasoft.thelasttime.model.repo
+package com.michasoft.thelasttime.repo
 
 import com.michasoft.thelasttime.model.User
 import com.michasoft.thelasttime.util.IClosable
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
-import java.util.*
+import java.util.LinkedList
 
 /**
  * Created by mśmiech on 29.04.2022.

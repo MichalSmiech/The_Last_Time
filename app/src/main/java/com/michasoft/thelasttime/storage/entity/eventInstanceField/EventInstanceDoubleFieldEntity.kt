@@ -1,4 +1,4 @@
-package com.michasoft.thelasttime.model.storage.entity.eventInstanceField
+package com.michasoft.thelasttime.storage.entity.eventInstanceField
 
 import androidx.room.Entity
 import com.michasoft.thelasttime.model.EventInstanceFieldSchema

@@ -1,12 +1,9 @@
-package com.michasoft.thelasttime.model.repo
+package com.michasoft.thelasttime.repo
 
+import com.michasoft.thelasttime.dataSource.ILocalEventSource
+import com.michasoft.thelasttime.dataSource.IRemoteEventSource
 import com.michasoft.thelasttime.model.EventInstance
-import com.michasoft.thelasttime.model.dataSource.ILocalEventSource
-import com.michasoft.thelasttime.model.dataSource.IRemoteEventSource
-import com.michasoft.thelasttime.util.BackupConfig
 import kotlinx.coroutines.flow.buffer
-import kotlinx.coroutines.flow.collect
-import java.util.*
 
 /**
  * Created by mśmiech on 08.11.2021.

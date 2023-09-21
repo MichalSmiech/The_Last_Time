@@ -1,4 +1,4 @@
-package com.michasoft.thelasttime.model.storage
+package com.michasoft.thelasttime.storage
 
 import android.content.Context
 import androidx.room.Database
@@ -6,13 +6,13 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.michasoft.thelasttime.model.User
-import com.michasoft.thelasttime.model.storage.dao.EventDao
-import com.michasoft.thelasttime.model.storage.entity.EventInstanceEntity
-import com.michasoft.thelasttime.model.storage.entity.EventEntity
-import com.michasoft.thelasttime.model.storage.entity.EventInstanceFieldSchemaEntity
-import com.michasoft.thelasttime.model.storage.entity.eventInstanceField.EventInstanceDoubleFieldEntity
-import com.michasoft.thelasttime.model.storage.entity.eventInstanceField.EventInstanceIntFieldEntity
-import com.michasoft.thelasttime.model.storage.entity.eventInstanceField.EventInstanceTextFieldEntity
+import com.michasoft.thelasttime.storage.dao.EventDao
+import com.michasoft.thelasttime.storage.entity.EventEntity
+import com.michasoft.thelasttime.storage.entity.EventInstanceEntity
+import com.michasoft.thelasttime.storage.entity.EventInstanceFieldSchemaEntity
+import com.michasoft.thelasttime.storage.entity.eventInstanceField.EventInstanceDoubleFieldEntity
+import com.michasoft.thelasttime.storage.entity.eventInstanceField.EventInstanceIntFieldEntity
+import com.michasoft.thelasttime.storage.entity.eventInstanceField.EventInstanceTextFieldEntity
 import com.michasoft.thelasttime.util.RoomConverters
 
 /**

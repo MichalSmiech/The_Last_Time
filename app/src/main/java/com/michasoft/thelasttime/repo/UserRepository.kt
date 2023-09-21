@@ -1,12 +1,11 @@
-package com.michasoft.thelasttime.model.repo
+package com.michasoft.thelasttime.repo
 
 import android.content.Context
 import com.firebase.ui.auth.AuthUI
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import com.michasoft.thelasttime.dataSource.IUserDataSource
 import com.michasoft.thelasttime.model.User
-import com.michasoft.thelasttime.model.dataSource.IUserDataSource
-import com.michasoft.thelasttime.model.dataSource.RoomUserDataSource
 
 /**
  * Created by mśmiech on 29.04.2022.

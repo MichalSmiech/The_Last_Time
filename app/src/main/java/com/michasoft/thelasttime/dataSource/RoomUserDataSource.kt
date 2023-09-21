@@ -1,8 +1,8 @@
-package com.michasoft.thelasttime.model.dataSource
+package com.michasoft.thelasttime.dataSource
 
 import com.michasoft.thelasttime.model.User
-import com.michasoft.thelasttime.model.storage.dao.UserDao
-import com.michasoft.thelasttime.model.storage.entity.UserEntity
+import com.michasoft.thelasttime.storage.dao.UserDao
+import com.michasoft.thelasttime.storage.entity.UserEntity
 
 /**
  * Created by mśmiech on 02.05.2022.

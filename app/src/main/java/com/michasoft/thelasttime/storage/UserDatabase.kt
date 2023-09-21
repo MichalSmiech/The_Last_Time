@@ -1,13 +1,13 @@
-package com.michasoft.thelasttime.model.storage
+package com.michasoft.thelasttime.storage
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.michasoft.thelasttime.model.storage.dao.SyncJobDao
-import com.michasoft.thelasttime.model.storage.dao.UserDao
-import com.michasoft.thelasttime.model.storage.entity.SyncJobEntity
-import com.michasoft.thelasttime.model.storage.entity.UserEntity
+import com.michasoft.thelasttime.storage.dao.SyncJobDao
+import com.michasoft.thelasttime.storage.dao.UserDao
+import com.michasoft.thelasttime.storage.entity.SyncJobEntity
+import com.michasoft.thelasttime.storage.entity.UserEntity
 
 /**
  * Created by mśmiech on 02.05.2022.

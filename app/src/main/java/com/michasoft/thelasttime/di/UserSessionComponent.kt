@@ -1,8 +1,8 @@
 package com.michasoft.thelasttime.di
 
 import com.michasoft.thelasttime.model.User
-import com.michasoft.thelasttime.model.repo.UserSessionRepository
 import com.michasoft.thelasttime.model.syncJob.EventSyncJob
+import com.michasoft.thelasttime.repo.UserSessionRepository
 import com.michasoft.thelasttime.view.EditEventActivity
 import com.michasoft.thelasttime.view.EventActivity
 import com.michasoft.thelasttime.view.EventInstanceActivity
