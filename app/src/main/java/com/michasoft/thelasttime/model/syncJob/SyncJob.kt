@@ -43,6 +43,12 @@ abstract class SyncJob(
     protected abstract suspend fun delete(): State
 
     interface Factory {
-        fun create(): SyncJob
+        fun create(
+            id: String,
+            type: String,
+            action: SyncJob.Action,
+            state: SyncJob.State,
+            serializedData: String,
+        ): SyncJob
     }
 }

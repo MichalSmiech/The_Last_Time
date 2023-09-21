@@ -10,8 +10,10 @@ import com.michasoft.thelasttime.model.dataSource.FirestoreEventSource
 import com.michasoft.thelasttime.model.dataSource.ILocalEventSource
 import com.michasoft.thelasttime.model.dataSource.IRemoteEventSource
 import com.michasoft.thelasttime.model.dataSource.RoomEventSource
+import com.michasoft.thelasttime.model.dataSource.SyncJobDataSource
 import com.michasoft.thelasttime.model.repo.*
 import com.michasoft.thelasttime.model.storage.AppDatabase
+import com.michasoft.thelasttime.model.storage.UserDatabase
 import com.michasoft.thelasttime.util.BackupConfig
 import dagger.Module
 import dagger.Provides
@@ -101,8 +103,10 @@ class UserSessionModule {
 
     @Provides
     @UserSessionScope
-    fun provideSyncJobQueue(): SyncJobQueue {
-        return SyncJobQueue()
+    fun provideSyncJobQueue(
+        syncJobDataSource: SyncJobDataSource
+    ): SyncJobQueue {
+        return SyncJobQueue(syncJobDataSource)
     }
 
     @Provides
@@ -113,5 +117,11 @@ class UserSessionModule {
     ): SyncJobQueueCoordinator {
         return SyncJobQueueCoordinator(context, syncJobQueue)
     }
+
+    @Provides
+    @UserSessionScope
+    fun provideSyncJobDataSource(
+        userDatabase: UserDatabase
+    ) = SyncJobDataSource(userDatabase.syncJobDao)
 }
 

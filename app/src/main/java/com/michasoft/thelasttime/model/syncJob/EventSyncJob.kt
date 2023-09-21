@@ -16,7 +16,7 @@ class EventSyncJob(
     serializedData: String,
 ) : SyncJob(
     id,
-    "EventSyncJob",
+    TYPE,
     action,
     state,
     serializedData,
@@ -56,12 +56,27 @@ class EventSyncJob(
     }
 
     object Factory : SyncJob.Factory {
-        override fun create(): SyncJob {
-            TODO("Not yet implemented")
+        override fun create(
+            id: String,
+            type: String,
+            action: SyncJob.Action,
+            state: SyncJob.State,
+            serializedData: String,
+        ): EventSyncJob {
+            return EventSyncJob(
+                id,
+                action,
+                state,
+                serializedData,
+            )
         }
 
         fun create(eventId: String, action: Action): EventSyncJob {
             return EventSyncJob(IdGenerator.newId(), action, State.New, eventId)
         }
+    }
+
+    companion object {
+        const val TYPE = "EventSyncJob"
     }
 }
