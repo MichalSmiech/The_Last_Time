@@ -16,7 +16,7 @@ class EventViewHolder(
         set(value) {
             field = value
             value?.let {
-                binding.name = it.displayName
+                binding.name = it.name
                 binding.lastInstanceTimestamp = it.lastInstanceTimestamp?.toString() ?: ""
             }
         }

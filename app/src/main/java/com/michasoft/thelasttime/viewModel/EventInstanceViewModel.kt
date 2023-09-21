@@ -17,7 +17,7 @@ class EventInstanceViewModel(
     private var instanceId: String? = null
     private var originalEventInstance: EventInstance? = null
     private var event = MutableLiveData<Event>()
-    var eventName = event.map { it.displayName }
+    var eventName = event.map { it.name }
     val timestamp = MutableLiveData(DateTime.now())
     val timestampDateString = timestamp.map {
         return@map it.toString("E, dd MMM yyyy")

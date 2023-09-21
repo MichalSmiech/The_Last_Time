@@ -8,6 +8,7 @@ import androidx.databinding.DataBindingUtil
 import com.michasoft.thelasttime.LastTimeApplication
 import com.michasoft.thelasttime.R
 import com.michasoft.thelasttime.databinding.ActivityEventListBinding
+import com.michasoft.thelasttime.eventdetails.EventDetailsActivity
 import com.michasoft.thelasttime.util.IdGenerator
 import com.michasoft.thelasttime.view.bottomSheet.AddEventInstanceBottomSheet
 import com.michasoft.thelasttime.viewModel.EventListViewModel
@@ -32,7 +33,8 @@ class EventListActivity : UserSessionActivity() {
                     EditEventActivity.start(this, IdGenerator.newId())
                 }
                 is EventListViewModel.ShowEvent -> {
-                    EventActivity.start(this, it.eventTypeId)
+                    startActivity(EventDetailsActivity.getLaunchIntent(this, it.eventId))
+//                    EventActivity.start(this, it.eventId)
                 }
                 is EventListViewModel.ShowAddEventInstanceBottomSheet -> {
                     AddEventInstanceBottomSheet.show(supportFragmentManager, it.eventId)

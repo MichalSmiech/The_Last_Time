@@ -29,7 +29,7 @@ class EventViewModel(
         viewModelScope.launch {
             val event = eventRepository.getEvent(eventId)!!
             originalEvent = event
-            name.value = event.displayName
+            name.value = event.name
             instances.value = eventRepository.getEventInstances(eventId)
         }
     }
@@ -43,7 +43,7 @@ class EventViewModel(
     }
 
     private fun buildEvent(): Event {
-        return originalEvent!!.copy(displayName = name.value!!)
+        return originalEvent!!.copy(name = name.value!!)
     }
 
     suspend fun saveIfNeeded() {

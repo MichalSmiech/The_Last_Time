@@ -36,7 +36,7 @@ class EditEventViewModel(
                 )
                 eventRepository.insertEvent(newEvent)
             } else {
-                originalEvent.displayName = name.value!!
+                originalEvent.name = name.value!!
 //              TODO  eventRepository.updateEvent(originalEvent)
             }
             //TODO upewnić się czy trzeba to na MAIN?
@@ -51,7 +51,7 @@ class EditEventViewModel(
         viewModelScope.launch {
             val event = eventRepository.getEvent(eventId)
             originalEvent = event
-            name.value = event?.displayName ?: ""
+            name.value = event?.name ?: ""
         }
     }
 

@@ -1,5 +1,6 @@
 package com.michasoft.thelasttime.di
 
+import com.michasoft.thelasttime.eventdetails.EventDetailsViewModel
 import com.michasoft.thelasttime.model.User
 import com.michasoft.thelasttime.model.syncJob.EventInstanceSyncJob
 import com.michasoft.thelasttime.model.syncJob.EventSyncJob
@@ -37,5 +38,6 @@ interface UserSessionComponent {
     fun inject(bottomSheet: AddEventInstanceBottomSheet)
     fun inject(eventSyncJob: EventSyncJob)
     fun inject(eventInstanceSyncJob: EventInstanceSyncJob)
+    fun inject(factory: EventDetailsViewModel.Factory)
 
 }

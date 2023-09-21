@@ -13,12 +13,13 @@ import org.joda.time.DateTime
 class EventEntity(
     @PrimaryKey
     var id: String,
-    val displayName: String,
+    val name: String,
     val createTimestamp: DateTime
 ) {
-    constructor(event: Event): this(event.id, event.displayName, event.createTimestamp)
+    constructor(event: Event) : this(event.id, event.name, event.createTimestamp)
 
-    fun toModel(eventInstanceSchema: EventInstanceSchema) = Event(id, displayName, createTimestamp, eventInstanceSchema)
+    fun toModel(eventInstanceSchema: EventInstanceSchema) =
+        Event(id, name, createTimestamp, eventInstanceSchema)
 
     companion object {
         const val TABLE_NAME = "Events"

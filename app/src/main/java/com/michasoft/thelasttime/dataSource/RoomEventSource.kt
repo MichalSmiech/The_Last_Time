@@ -230,8 +230,8 @@ class RoomEventSource(private val appDatabase: AppDatabase, private val eventDao
     override suspend fun updateEvent(event: Event) {
         appDatabase.withTransaction {
             val oldEvent = getEvent(event.id)
-            if(event.displayName != oldEvent!!.displayName) {
-                eventDao.updateEventDisplayName(event.id, event.displayName)
+            if (event.name != oldEvent!!.name) {
+                eventDao.updateEventName(event.id, event.name)
             }
             //TODO compare scheme and update if needed
         }

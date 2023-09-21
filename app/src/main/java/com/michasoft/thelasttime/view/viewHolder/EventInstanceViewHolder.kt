@@ -40,8 +40,11 @@ class EventInstanceViewHolder(
 
     companion object {
         val periodFormatter: PeriodFormatter = PeriodFormatterBuilder()
-            .appendDays()
-            .appendSuffix(" day", " days")
+            .appendYears().appendSuffix(" year", " years")
+            .appendSeparator(", ")
+            .appendMonths().appendSuffix(" month", " months")
+            .appendSeparator(", ")
+            .appendDays().appendSuffix(" day", " days")
             .appendSeparator(", ")
             .appendHours().appendSuffix(" hour", " hours")
             .appendSeparator(", ")

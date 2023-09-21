@@ -45,8 +45,8 @@ class EventListViewModel(
     }
 
     class CreateNewEvent : FlowEvent()
-    class ShowEvent(val eventTypeId: String) : FlowEvent()
-    class ShowAddEventInstanceBottomSheet(val eventId: String): FlowEvent()
+    class ShowEvent(val eventId: String) : FlowEvent()
+    class ShowAddEventInstanceBottomSheet(val eventId: String) : FlowEvent()
 
     @Suppress("UNCHECKED_CAST")
     class Factory @Inject constructor(

@@ -7,7 +7,7 @@ import org.joda.time.DateTime
  */
 data class Event(
     var id: String,
-    var displayName: String,
+    var name: String,
     val createTimestamp: DateTime,
     val eventInstanceSchema: EventInstanceSchema
 ) {
