@@ -29,7 +29,8 @@ class EventInstanceDetailsViewModel(
         EventInstanceDetailsState(
             isLoading = true,
             eventName = "",
-            eventInstance = null
+            eventInstance = null,
+            isDeleteConfirmationDialogShowing = false
         )
     )
 
@@ -82,7 +83,18 @@ class EventInstanceDetailsViewModel(
     }
 
     fun onDeleteButtonClicked() {
-        //TODO("Not yet implemented")
+        state.update { it.copy(isDeleteConfirmationDialogShowing = true) }
+    }
+
+    fun deleteConfirmationDialogDismissed() {
+        state.update { it.copy(isDeleteConfirmationDialogShowing = false) }
+    }
+
+    fun deleteEventInstance() {
+        viewModelScope.launch {
+            eventRepository.deleteEventInstance(eventId, instanceId)
+            _actions.emit(EventInstanceDetailsAction.Finish)
+        }
     }
 
     class Factory(private val eventId: String, private val instanceId: String) :

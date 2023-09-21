@@ -8,5 +8,6 @@ import com.michasoft.thelasttime.model.EventInstance
 data class EventInstanceDetailsState(
     val isLoading: Boolean,
     val eventName: String,
-    val eventInstance: EventInstance?
+    val eventInstance: EventInstance?,
+    val isDeleteConfirmationDialogShowing: Boolean
 )

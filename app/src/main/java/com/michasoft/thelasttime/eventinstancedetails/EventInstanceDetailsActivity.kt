@@ -15,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import com.michasoft.thelasttime.view.DeleteConfirmationDialog
 import com.michasoft.thelasttime.view.LoadingView
 import com.michasoft.thelasttime.view.theme.LastTimeTheme
 import kotlinx.coroutines.flow.launchIn
@@ -88,6 +89,12 @@ fun EventInstanceDetailsScreen(viewModel: EventInstanceDetailsViewModel) {
                     onDateChange = viewModel::changeDate,
                     onTimeChange = viewModel::changeTime
                 )
+                if (state.isDeleteConfirmationDialogShowing) {
+                    DeleteConfirmationDialog(
+                        onDismissDialog = viewModel::deleteConfirmationDialogDismissed,
+                        onConfirmClicked = viewModel::deleteEventInstance
+                    )
+                }
             }
         }
     }

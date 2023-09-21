@@ -29,7 +29,8 @@ class EventDetailsViewModel(
         EventDetailsState(
             isLoading = true,
             event = null,
-            eventInstances = emptyList()
+            eventInstances = emptyList(),
+            isDeleteConfirmationDialogShowing = false
         )
     )
     private val eventNameChanges = MutableSharedFlow<String>()
@@ -81,7 +82,18 @@ class EventDetailsViewModel(
     }
 
     fun onDeleteButtonClicked() {
-        //TODO("Not yet implemented")
+        state.update { it.copy(isDeleteConfirmationDialogShowing = true) }
+    }
+
+    fun deleteConfirmationDialogDismissed() {
+        state.update { it.copy(isDeleteConfirmationDialogShowing = false) }
+    }
+
+    fun deleteEvent() {
+        viewModelScope.launch {
+            eventRepository.deleteEvent(eventId)
+            _actions.emit(EventDetailsAction.Finish)
+        }
     }
 
     class Factory(private val eventId: String) : ViewModelProvider.Factory {
