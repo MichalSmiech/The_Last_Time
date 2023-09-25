@@ -10,6 +10,9 @@
         android:supportsRtl="true"
         android:theme="@style/LastTimeTheme">
         <activity
+            android:name=".eventlist.EventListActivity"
+            android:exported="false" />
+        <activity
             android:name=".eventinstancedetails.EventInstanceDetailsActivity"
             android:exported="false" />
         <activity

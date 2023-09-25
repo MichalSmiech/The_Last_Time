@@ -101,7 +101,13 @@ class MainActivity : UserSessionActivity() {
 
 
     fun eventList(view: View) {
-        EventListActivity.start(this)
+        startActivity(
+            Intent(
+                this,
+                com.michasoft.thelasttime.eventlist.EventListActivity::class.java
+            )
+        )
+//        EventListActivity.start(this)
     }
 
     fun logout(view: View) {
