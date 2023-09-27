@@ -9,6 +9,8 @@ import com.michasoft.thelasttime.userSessionComponent
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -27,6 +29,25 @@ class EventListViewModel(
             events = emptyList()
         )
     )
+    val eventInstanceAddViewModel = EventInstanceAddViewModel(
+        onSave = { eventInstance ->
+            viewModelScope.launch {
+                _actions.emit(EventListAction.HideEventInstanceAddBottomSheet)
+                eventRepository.insertEventInstance(eventInstance)
+            }
+        }
+    )
+
+    init {
+        eventRepository.eventsChanged.onEach {
+            val events = eventRepository.getEventsWithLastInstanceTimestamp()
+            state.update {
+                it.copy(
+                    events = events
+                )
+            }
+        }.launchIn(viewModelScope)
+    }
 
     private suspend fun setupEvents() {
         val events = eventRepository.getEventsWithLastInstanceTimestamp()
@@ -51,7 +72,11 @@ class EventListViewModel(
     }
 
     fun onInstanceAdded(eventId: String) {
-        //TODO("Not yet implemented")
+        viewModelScope.launch {
+            val eventInstance = eventRepository.createEventInstance(eventId)
+            eventInstanceAddViewModel.setup(eventInstance)
+            _actions.emit(EventListAction.ShowEventInstanceAddBottomSheet)
+        }
     }
 
     class Factory : ViewModelProvider.Factory {

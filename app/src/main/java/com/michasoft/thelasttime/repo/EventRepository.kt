@@ -10,6 +10,8 @@ import com.michasoft.thelasttime.model.syncJob.EventSyncJob
 import com.michasoft.thelasttime.model.syncJob.SyncJob
 import com.michasoft.thelasttime.util.BackupConfig
 import com.michasoft.thelasttime.util.EventInstanceFactory
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
 
 /**
  * Created by mśmiech on 01.11.2021.
@@ -20,6 +22,9 @@ class EventRepository(
     private val syncJobQueue: SyncJobQueue,
     private val syncJobQueueCoordinator: SyncJobQueueCoordinator
 ) {
+    private val _eventsChanged: MutableSharedFlow<Unit> = MutableSharedFlow()
+    val eventsChanged: SharedFlow<Unit> = _eventsChanged
+
     suspend fun insertEvent(event: Event) {
         localSource.insertEvent(event)
         if (backupConfig.isAutoBackup()) {
@@ -27,6 +32,7 @@ class EventRepository(
             syncJobQueue.add(syncJob)
             syncJobQueueCoordinator.triggerSync()
         }
+        _eventsChanged.emit(Unit)
     }
 
     suspend fun getEvent(eventId: String): Event? {
@@ -45,6 +51,7 @@ class EventRepository(
             syncJobQueue.add(syncJob)
             syncJobQueueCoordinator.triggerSync()
         }
+        _eventsChanged.emit(Unit)
     }
 
     suspend fun getEventsWithLastInstanceTimestamp(): ArrayList<Event> {
@@ -63,6 +70,7 @@ class EventRepository(
             syncJobQueue.add(syncJob)
             syncJobQueueCoordinator.triggerSync()
         }
+        _eventsChanged.emit(Unit)
     }
 
     suspend fun updateEventInstance(instance: EventInstance) {
@@ -76,6 +84,7 @@ class EventRepository(
             syncJobQueue.add(syncJob)
             syncJobQueueCoordinator.triggerSync()
         }
+        _eventsChanged.emit(Unit)
     }
 
     suspend fun deleteEvent(eventId: String) {
@@ -85,6 +94,7 @@ class EventRepository(
             syncJobQueue.add(syncJob)
             syncJobQueueCoordinator.triggerSync()
         }
+        _eventsChanged.emit(Unit)
     }
 
     suspend fun insertEventInstance(instance: EventInstance) {
@@ -98,6 +108,7 @@ class EventRepository(
             syncJobQueue.add(syncJob)
             syncJobQueueCoordinator.triggerSync()
         }
+        _eventsChanged.emit(Unit)
     }
 
     suspend fun getEventInstance(eventId: String, instanceId: String): EventInstance? {
