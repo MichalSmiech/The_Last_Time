@@ -74,7 +74,8 @@ class EventListViewModel(
     fun onInstanceAdded(eventId: String) {
         viewModelScope.launch {
             val eventInstance = eventRepository.createEventInstance(eventId)
-            eventInstanceAddViewModel.setup(eventInstance)
+            val event = eventRepository.getEvent(eventId)
+            eventInstanceAddViewModel.setup(eventInstance, event?.name ?: "")
             _actions.emit(EventListAction.ShowEventInstanceAddBottomSheet)
         }
     }

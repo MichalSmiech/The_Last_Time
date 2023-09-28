@@ -41,7 +41,7 @@ fun EventInstanceItem(instance: EventInstance, onClick: (String) -> Unit) {
             .clickable { onClick(instance.id) }
             .fillMaxWidth()
     ) {
-        val periodText = instance.timestamp.periodText()
+        val periodText = instance.timestamp.periodText(lastTwo = true)
         Text(text = periodText, modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 8.dp))
         Text(
             text = instance.timestamp.toString("EEE, dd MMM yyyy HH:mm").capitalize(Locale.current),

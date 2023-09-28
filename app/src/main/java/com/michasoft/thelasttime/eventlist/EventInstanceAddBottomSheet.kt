@@ -24,26 +24,32 @@ fun EventInstanceAddBottomSheet(viewModel: EventInstanceAddViewModel) {
     if (state.instance == null) {
         return
     }
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.Bottom,
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-        Column {
-            EditableDate(
-                date = state.instance.timestamp.toLocalDate(),
-                onDateChange = viewModel::changeDate
-            )
-            EditableTime(
-                time = state.instance.timestamp.toLocalTime(),
-                onTimeChange = viewModel::changeTime
-            )
-        }
-        TextButton(
-            modifier = Modifier.padding(8.dp),
-            onClick = viewModel::onSaveButtonClicked
+    Column(modifier = Modifier.padding(bottom = 8.dp)) {
+        Text(
+            text = state.eventName,
+            modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 8.dp)
+        )
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.Bottom,
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Text(text = "ADD")
+            Column {
+                EditableDate(
+                    date = state.instance.timestamp.toLocalDate(),
+                    onDateChange = viewModel::changeDate
+                )
+                EditableTime(
+                    time = state.instance.timestamp.toLocalTime(),
+                    onTimeChange = viewModel::changeTime
+                )
+            }
+            TextButton(
+                modifier = Modifier.padding(16.dp, 0.dp),
+                onClick = viewModel::onSaveButtonClicked
+            ) {
+                Text(text = "ADD")
+            }
         }
     }
 }

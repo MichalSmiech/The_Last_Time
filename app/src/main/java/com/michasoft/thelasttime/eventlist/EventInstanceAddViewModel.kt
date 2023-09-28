@@ -12,13 +12,17 @@ import org.joda.time.LocalTime
 class EventInstanceAddViewModel(private val onSave: (EventInstance) -> Unit) {
     val state = MutableStateFlow(
         EventInstanceAddState(
-            instance = null
+            instance = null,
+            eventName = ""
         )
     )
 
-    fun setup(instance: EventInstance) {
+    fun setup(instance: EventInstance, eventName: String) {
         state.update {
-            it.copy(instance = instance)
+            it.copy(
+                instance = instance,
+                eventName = eventName
+            )
         }
     }
 
