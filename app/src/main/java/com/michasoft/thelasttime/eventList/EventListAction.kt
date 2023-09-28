@@ -7,4 +7,5 @@ sealed class EventListAction {
     class NavigateToEventDetails(val eventId: String) : EventListAction()
     object ShowEventInstanceAddBottomSheet : EventListAction()
     object HideEventInstanceAddBottomSheet : EventListAction()
+    object NavigateToEventAdd : EventListAction()
 }

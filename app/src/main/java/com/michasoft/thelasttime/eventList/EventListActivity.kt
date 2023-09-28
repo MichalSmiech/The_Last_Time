@@ -1,5 +1,6 @@
 package com.michasoft.thelasttime.eventList
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
@@ -8,12 +9,17 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.FabPosition
+import androidx.compose.material.FloatingActionButton
+import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.ModalBottomSheetLayout
 import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
@@ -22,6 +28,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import com.michasoft.thelasttime.eventAdd.EventAddActivity
 import com.michasoft.thelasttime.eventDetails.EventDetailsActivity
 import com.michasoft.thelasttime.eventInstanceAdd.EventInstanceAddBottomSheet
 import com.michasoft.thelasttime.view.LoadingView
@@ -53,6 +60,7 @@ class EventListActivity : AppCompatActivity() {
                         is EventListAction.NavigateToEventDetails -> launchEventDetailsActivity(
                             it.eventId
                         )
+
                         is EventListAction.ShowEventInstanceAddBottomSheet -> {
                             coroutineScope.launch {
                                 bottomSheetState.show()
@@ -63,6 +71,10 @@ class EventListActivity : AppCompatActivity() {
                             coroutineScope.launch {
                                 bottomSheetState.hide()
                             }
+                        }
+
+                        is EventListAction.NavigateToEventAdd -> {
+                            launchEventAddActivity()
                         }
                     }
                 }.launchIn(lifecycleScope)
@@ -77,6 +89,10 @@ class EventListActivity : AppCompatActivity() {
 
     private fun launchEventDetailsActivity(eventId: String) {
         startActivity(EventDetailsActivity.getLaunchIntent(this, eventId))
+    }
+
+    private fun launchEventAddActivity() {
+        startActivity(Intent(this, EventAddActivity::class.java))
     }
 
     override fun onStart() {
@@ -97,7 +113,16 @@ fun EventListScreen(viewModel: EventListViewModel, bottomSheetState: ModalBottom
         }) {
         val scaffoldState = rememberScaffoldState()
         Scaffold(
-            scaffoldState = scaffoldState
+            scaffoldState = scaffoldState,
+            floatingActionButton = {
+                FloatingActionButton(onClick = { viewModel.onEventAdd() }) {
+                    Icon(
+                        imageVector = Icons.Default.Add,
+                        contentDescription = "add event instance",
+                    )
+                }
+            },
+            floatingActionButtonPosition = FabPosition.End
         ) {
             Surface(
                 modifier = Modifier

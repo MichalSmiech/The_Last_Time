@@ -1,5 +1,6 @@
 package com.michasoft.thelasttime.di
 
+import com.michasoft.thelasttime.eventAdd.EventAddViewModel
 import com.michasoft.thelasttime.eventDetails.EventDetailsViewModel
 import com.michasoft.thelasttime.eventInstanceDetails.EventInstanceDetailsViewModel
 import com.michasoft.thelasttime.eventList.EventListViewModel
@@ -43,5 +44,6 @@ interface UserSessionComponent {
     fun inject(factory: EventDetailsViewModel.Factory)
     fun inject(factory: EventInstanceDetailsViewModel.Factory)
     fun inject(factory: EventListViewModel.Factory)
+    fun inject(factory: EventAddViewModel.Factory)
 
 }

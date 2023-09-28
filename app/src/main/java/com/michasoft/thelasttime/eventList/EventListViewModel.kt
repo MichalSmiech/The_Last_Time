@@ -81,6 +81,12 @@ class EventListViewModel(
         }
     }
 
+    fun onEventAdd() {
+        viewModelScope.launch {
+            _actions.emit(EventListAction.NavigateToEventAdd)
+        }
+    }
+
     class Factory : ViewModelProvider.Factory {
         @Inject
         lateinit var eventRepository: EventRepository
