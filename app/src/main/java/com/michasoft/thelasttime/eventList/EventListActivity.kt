@@ -1,6 +1,7 @@
 package com.michasoft.thelasttime.eventList
 
 import android.os.Bundle
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -45,7 +46,7 @@ class EventListActivity : AppCompatActivity() {
             LastTimeTheme {
                 EventListScreen(viewModel, bottomSheetState)
             }
-            val scope = rememberCoroutineScope()
+            val coroutineScope = rememberCoroutineScope()
             LaunchedEffect(Unit) {
                 viewModel.actions.onEach {
                     when (it) {
@@ -53,18 +54,23 @@ class EventListActivity : AppCompatActivity() {
                             it.eventId
                         )
                         is EventListAction.ShowEventInstanceAddBottomSheet -> {
-                            scope.launch {
+                            coroutineScope.launch {
                                 bottomSheetState.show()
                             }
                         }
 
                         is EventListAction.HideEventInstanceAddBottomSheet -> {
-                            scope.launch {
+                            coroutineScope.launch {
                                 bottomSheetState.hide()
                             }
                         }
                     }
                 }.launchIn(lifecycleScope)
+            }
+            BackHandler(enabled = bottomSheetState.isVisible) {
+                coroutineScope.launch {
+                    bottomSheetState.hide()
+                }
             }
         }
     }
