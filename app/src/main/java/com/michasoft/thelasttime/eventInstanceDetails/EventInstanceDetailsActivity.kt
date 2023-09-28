@@ -1,4 +1,4 @@
-package com.michasoft.thelasttime.eventinstancedetails
+package com.michasoft.thelasttime.eventInstanceDetails
 
 import android.content.Context
 import android.content.Intent

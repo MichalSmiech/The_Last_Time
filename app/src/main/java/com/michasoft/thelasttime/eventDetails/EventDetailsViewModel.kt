@@ -1,4 +1,4 @@
-package com.michasoft.thelasttime.eventinstancedetails
+package com.michasoft.thelasttime.eventDetails
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -9,76 +9,75 @@ import com.michasoft.thelasttime.userSessionComponent
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import org.joda.time.LocalDate
-import org.joda.time.LocalTime
 import javax.inject.Inject
 
 /**
- * Created by mśmiech on 22.09.2023.
+ * Created by mśmiech on 21.09.2023.
  */
-class EventInstanceDetailsViewModel(
+class EventDetailsViewModel(
     private val eventId: String,
-    private val instanceId: String,
     private val eventRepository: EventRepository
 ) : ViewModel() {
-    private val _actions: MutableSharedFlow<EventInstanceDetailsAction> = MutableSharedFlow()
-    val actions: SharedFlow<EventInstanceDetailsAction> = _actions
+    private val _actions: MutableSharedFlow<EventDetailsAction> = MutableSharedFlow()
+    val actions: SharedFlow<EventDetailsAction> = _actions
     val state = MutableStateFlow(
-        EventInstanceDetailsState(
+        EventDetailsState(
             isLoading = true,
-            eventName = "",
-            eventInstance = null,
+            event = null,
+            eventInstances = emptyList(),
             isDeleteConfirmationDialogShowing = false
         )
     )
+    private val eventNameChanges = MutableSharedFlow<String>()
 
     init {
-        viewModelScope.launch {
-            setupData()
-        }
+        eventNameChanges.debounce(500).onEach {
+            val event = eventRepository.getEvent(eventId)!!
+            eventRepository.updateEvent(event.copy(name = it))
+        }.launchIn(viewModelScope)
     }
 
-    private suspend fun setupData() {
+    private suspend fun setupEvent(eventId: String) {
         val event = eventRepository.getEvent(eventId)!!
-        val eventInstance = eventRepository.getEventInstance(eventId, instanceId)
+        val eventInstances = eventRepository.getEventInstances(eventId)
         state.update {
             it.copy(
                 isLoading = false,
-                eventName = event.name,
-                eventInstance = eventInstance
+                event = event,
+                eventInstances = eventInstances
             )
+        }
+    }
+
+    fun changeName(name: String) {
+        state.update {
+            it.copy(event = it.event!!.copy(name = name))
+        }
+        viewModelScope.launch {
+            eventNameChanges.emit(name)
         }
     }
 
     fun onDiscardButtonClicked() {
         viewModelScope.launch {
-            _actions.emit(EventInstanceDetailsAction.Finish)
+            _actions.emit(EventDetailsAction.Finish)
         }
     }
 
-    fun changeDate(date: LocalDate) {
-        val instance = state.value.eventInstance!!.let {
-            it.copy(timestamp = it.timestamp.withDate(date))
-        }
-        state.update {
-            it.copy(eventInstance = instance)
-        }
+    fun onEventInstanceClicked(eventInstanceId: String) {
         viewModelScope.launch {
-            eventRepository.updateEventInstance(instance)
+            _actions.emit(EventDetailsAction.NavigateToEventInstanceDetails(eventInstanceId))
         }
     }
 
-    fun changeTime(time: LocalTime) {
-        val instance = state.value.eventInstance!!.let {
-            it.copy(timestamp = it.timestamp.withTime(time))
-        }
-        state.update {
-            it.copy(eventInstance = instance)
-        }
+    fun onStart() {
         viewModelScope.launch {
-            eventRepository.updateEventInstance(instance)
+            setupEvent(eventId)
         }
     }
 
@@ -90,15 +89,14 @@ class EventInstanceDetailsViewModel(
         state.update { it.copy(isDeleteConfirmationDialogShowing = false) }
     }
 
-    fun deleteEventInstance() {
+    fun deleteEvent() {
         viewModelScope.launch {
-            eventRepository.deleteEventInstance(eventId, instanceId)
-            _actions.emit(EventInstanceDetailsAction.Finish)
+            eventRepository.deleteEvent(eventId)
+            _actions.emit(EventDetailsAction.Finish)
         }
     }
 
-    class Factory(private val eventId: String, private val instanceId: String) :
-        ViewModelProvider.Factory {
+    class Factory(private val eventId: String) : ViewModelProvider.Factory {
         @Inject
         lateinit var eventRepository: EventRepository
 
@@ -110,9 +108,8 @@ class EventInstanceDetailsViewModel(
             val application =
                 checkNotNull(extras[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY])
             application.userSessionComponent().inject(this)
-            return EventInstanceDetailsViewModel(
+            return EventDetailsViewModel(
                 eventId,
-                instanceId,
                 eventRepository,
             ) as T
         }

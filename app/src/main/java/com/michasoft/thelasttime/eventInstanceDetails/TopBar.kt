@@ -1,11 +1,11 @@
-package com.michasoft.thelasttime.eventdetails
+package com.michasoft.thelasttime.eventInstanceDetails
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
-import androidx.compose.material.LocalTextStyle
+import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.DeleteOutline
@@ -15,7 +15,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.michasoft.thelasttime.view.NoShapeTextField
 
 /**
  * Created by mśmiech on 21.09.2023.
@@ -24,7 +23,6 @@ import com.michasoft.thelasttime.view.NoShapeTextField
 @Composable
 fun TopBar(
     eventName: String,
-    onEventNameChange: (String) -> Unit,
     onDiscardClick: () -> Unit,
     onDelete: () -> Unit
 ) {
@@ -33,12 +31,11 @@ fun TopBar(
         verticalAlignment = Alignment.CenterVertically
     ) {
         DiscardButton(onClick = onDiscardClick)
-        NoShapeTextField(
+        Text(
+            text = eventName,
             modifier = Modifier.weight(1f),
-            singleLine = true,
-            value = eventName,
-            onValueChange = onEventNameChange,
-            textStyle = LocalTextStyle.current.copy(fontSize = 20.sp)
+            maxLines = 1,
+            fontSize = 20.sp
         )
         DeleteButton(onClick = onDelete)
     }
@@ -77,5 +74,5 @@ fun DeleteButton(
 @Preview(showBackground = true)
 @Composable
 fun PreviewTopBar() {
-    TopBar(eventName = "Podlewanie", onEventNameChange = {}, onDiscardClick = {}, onDelete = {})
+    TopBar(eventName = "Podlewanie", onDiscardClick = {}, onDelete = {})
 }

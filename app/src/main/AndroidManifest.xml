@@ -10,13 +10,13 @@
         android:supportsRtl="true"
         android:theme="@style/LastTimeTheme">
         <activity
-            android:name=".eventlist.EventListActivity"
+            android:name=".eventList.EventListActivity"
             android:exported="false" />
         <activity
-            android:name=".eventinstancedetails.EventInstanceDetailsActivity"
+            android:name=".eventInstanceDetails.EventInstanceDetailsActivity"
             android:exported="false" />
         <activity
-            android:name=".eventdetails.EventDetailsActivity"
+            android:name=".eventDetails.EventDetailsActivity"
             android:exported="false" />
         <activity
             android:name=".view.LoginActivity"

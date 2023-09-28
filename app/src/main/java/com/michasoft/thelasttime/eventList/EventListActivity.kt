@@ -1,4 +1,4 @@
-package com.michasoft.thelasttime.eventlist
+package com.michasoft.thelasttime.eventList
 
 import android.os.Bundle
 import androidx.activity.compose.setContent
@@ -21,7 +21,8 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
-import com.michasoft.thelasttime.eventdetails.EventDetailsActivity
+import com.michasoft.thelasttime.eventDetails.EventDetailsActivity
+import com.michasoft.thelasttime.eventInstanceAdd.EventInstanceAddBottomSheet
 import com.michasoft.thelasttime.view.LoadingView
 import com.michasoft.thelasttime.view.theme.LastTimeTheme
 import kotlinx.coroutines.flow.launchIn

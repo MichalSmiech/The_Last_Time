@@ -1,4 +1,4 @@
-package com.michasoft.thelasttime.eventinstancedetails
+package com.michasoft.thelasttime.eventInstanceDetails
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable

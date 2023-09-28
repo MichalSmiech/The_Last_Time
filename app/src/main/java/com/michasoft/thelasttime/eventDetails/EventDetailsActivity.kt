@@ -1,4 +1,4 @@
-package com.michasoft.thelasttime.eventdetails
+package com.michasoft.thelasttime.eventDetails
 
 import android.content.Context
 import android.content.Intent
@@ -15,7 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
-import com.michasoft.thelasttime.eventinstancedetails.EventInstanceDetailsActivity
+import com.michasoft.thelasttime.eventInstanceDetails.EventInstanceDetailsActivity
 import com.michasoft.thelasttime.view.DeleteConfirmationDialog
 import com.michasoft.thelasttime.view.LoadingView
 import com.michasoft.thelasttime.view.theme.LastTimeTheme

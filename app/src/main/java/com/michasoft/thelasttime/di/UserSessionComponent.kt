@@ -1,8 +1,8 @@
 package com.michasoft.thelasttime.di
 
-import com.michasoft.thelasttime.eventdetails.EventDetailsViewModel
-import com.michasoft.thelasttime.eventinstancedetails.EventInstanceDetailsViewModel
-import com.michasoft.thelasttime.eventlist.EventListViewModel
+import com.michasoft.thelasttime.eventDetails.EventDetailsViewModel
+import com.michasoft.thelasttime.eventInstanceDetails.EventInstanceDetailsViewModel
+import com.michasoft.thelasttime.eventList.EventListViewModel
 import com.michasoft.thelasttime.model.User
 import com.michasoft.thelasttime.model.syncJob.EventInstanceSyncJob
 import com.michasoft.thelasttime.model.syncJob.EventSyncJob

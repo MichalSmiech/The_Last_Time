@@ -1,4 +1,4 @@
-package com.michasoft.thelasttime.eventdetails
+package com.michasoft.thelasttime.eventDetails
 
 /**
  * Created by mśmiech on 21.09.2023.

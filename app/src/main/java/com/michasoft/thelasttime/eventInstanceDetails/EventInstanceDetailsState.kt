@@ -1,4 +1,4 @@
-package com.michasoft.thelasttime.eventinstancedetails
+package com.michasoft.thelasttime.eventInstanceDetails
 
 import com.michasoft.thelasttime.model.EventInstance
 

@@ -104,7 +104,7 @@ class MainActivity : UserSessionActivity() {
         startActivity(
             Intent(
                 this,
-                com.michasoft.thelasttime.eventlist.EventListActivity::class.java
+                com.michasoft.thelasttime.eventList.EventListActivity::class.java
             )
         )
 //        EventListActivity.start(this)

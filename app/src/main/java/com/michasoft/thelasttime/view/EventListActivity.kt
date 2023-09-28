@@ -8,7 +8,7 @@ import androidx.databinding.DataBindingUtil
 import com.michasoft.thelasttime.LastTimeApplication
 import com.michasoft.thelasttime.R
 import com.michasoft.thelasttime.databinding.ActivityEventListBinding
-import com.michasoft.thelasttime.eventdetails.EventDetailsActivity
+import com.michasoft.thelasttime.eventDetails.EventDetailsActivity
 import com.michasoft.thelasttime.util.IdGenerator
 import com.michasoft.thelasttime.view.bottomSheet.AddEventInstanceBottomSheet
 import com.michasoft.thelasttime.viewModel.EventListViewModel

@@ -1,4 +1,4 @@
-package com.michasoft.thelasttime.eventlist
+package com.michasoft.thelasttime.eventList
 
 import com.michasoft.thelasttime.model.Event
 

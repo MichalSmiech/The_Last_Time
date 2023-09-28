@@ -1,4 +1,4 @@
-package com.michasoft.thelasttime.eventlist
+package com.michasoft.thelasttime.eventList
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize

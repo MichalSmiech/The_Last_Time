@@ -1,4 +1,4 @@
-package com.michasoft.thelasttime.eventdetails
+package com.michasoft.thelasttime.eventDetails
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column

@@ -1,4 +1,4 @@
-package com.michasoft.thelasttime.eventlist
+package com.michasoft.thelasttime.eventInstanceAdd
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

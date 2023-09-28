@@ -1,4 +1,4 @@
-package com.michasoft.thelasttime.eventlist
+package com.michasoft.thelasttime.eventInstanceAdd
 
 import com.michasoft.thelasttime.model.EventInstance
 import kotlinx.coroutines.flow.MutableStateFlow
