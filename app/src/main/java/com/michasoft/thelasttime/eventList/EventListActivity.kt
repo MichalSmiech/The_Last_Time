@@ -52,7 +52,6 @@ class EventListActivity : AppCompatActivity() {
                         is EventListAction.NavigateToEventDetails -> launchEventDetailsActivity(
                             it.eventId
                         )
-
                         is EventListAction.ShowEventInstanceAddBottomSheet -> {
                             scope.launch {
                                 bottomSheetState.show()

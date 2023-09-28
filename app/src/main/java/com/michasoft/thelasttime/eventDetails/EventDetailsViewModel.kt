@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
+import com.michasoft.thelasttime.eventInstanceAdd.EventInstanceAddViewModel
 import com.michasoft.thelasttime.repo.EventRepository
 import com.michasoft.thelasttime.userSessionComponent
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -34,11 +35,23 @@ class EventDetailsViewModel(
         )
     )
     private val eventNameChanges = MutableSharedFlow<String>()
+    val eventInstanceAddViewModel = EventInstanceAddViewModel(
+        onSave = { eventInstance ->
+            viewModelScope.launch {
+                _actions.emit(EventDetailsAction.HideEventInstanceAddBottomSheet)
+                eventRepository.insertEventInstance(eventInstance)
+            }
+        }
+    )
 
     init {
         eventNameChanges.debounce(500).onEach {
             val event = eventRepository.getEvent(eventId)!!
             eventRepository.updateEvent(event.copy(name = it))
+        }.launchIn(viewModelScope)
+
+        eventRepository.eventsChanged.onEach {
+            setupEvent(eventId)
         }.launchIn(viewModelScope)
     }
 
@@ -93,6 +106,15 @@ class EventDetailsViewModel(
         viewModelScope.launch {
             eventRepository.deleteEvent(eventId)
             _actions.emit(EventDetailsAction.Finish)
+        }
+    }
+
+    fun onInstanceAdded() {
+        viewModelScope.launch {
+            val eventInstance = eventRepository.createEventInstance(eventId)
+            val event = eventRepository.getEvent(eventId)
+            eventInstanceAddViewModel.setup(eventInstance, event?.name ?: "")
+            _actions.emit(EventDetailsAction.ShowEventInstanceAddBottomSheet)
         }
     }
 
