@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.michasoft.thelasttime.eventInstanceAdd.EventInstanceAddViewModel
+import com.michasoft.thelasttime.model.SyncJobQueue
 import com.michasoft.thelasttime.repo.EventRepository
 import com.michasoft.thelasttime.userSessionComponent
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -20,14 +21,16 @@ import javax.inject.Inject
  * Created by mśmiech on 25.09.2023.
  */
 class EventListViewModel(
-    private val eventRepository: EventRepository
+    private val eventRepository: EventRepository,
+    private val syncJobQueue: SyncJobQueue
 ) : ViewModel() {
     private val _actions: MutableSharedFlow<EventListAction> = MutableSharedFlow()
     val actions: SharedFlow<EventListAction> = _actions
     val state = MutableStateFlow(
         EventListState(
             isLoading = true,
-            events = emptyList()
+            events = emptyList(),
+            isErrorSync = false
         )
     )
     val eventInstanceAddViewModel = EventInstanceAddViewModel(
@@ -46,6 +49,12 @@ class EventListViewModel(
                 it.copy(
                     events = events
                 )
+            }
+        }.launchIn(viewModelScope)
+        syncJobQueue.changed.onEach {
+            val error = syncJobQueue.isError()
+            if (state.value.isErrorSync != error) {
+                state.update { it.copy(isErrorSync = error) }
             }
         }.launchIn(viewModelScope)
     }
@@ -91,6 +100,9 @@ class EventListViewModel(
         @Inject
         lateinit var eventRepository: EventRepository
 
+        @Inject
+        lateinit var syncJobQueue: SyncJobQueue
+
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(
             modelClass: Class<T>,
@@ -101,6 +113,7 @@ class EventListViewModel(
             application.userSessionComponent().inject(this)
             return EventListViewModel(
                 eventRepository,
+                syncJobQueue
             ) as T
         }
     }

@@ -8,14 +8,15 @@
 
         <item name="toolbarStyle">@style/LastTimeTheme.Toolbar</item>
         <item name="appBarLayoutStyle">@style/LastTimeTheme.AppBarLayout</item>
+        <item name="android:statusBarColor">?colorSurface</item>
     </style>
 
     <style name="LastTimeTheme.Toolbar" parent="Widget.MaterialComponents.Toolbar.Surface">
     </style>
 
     <style name="LastTimeTheme.AppBarLayout" parent="Widget.MaterialComponents.AppBarLayout.Surface">
-    </style>
 
+    </style>
 
 
 </resources>

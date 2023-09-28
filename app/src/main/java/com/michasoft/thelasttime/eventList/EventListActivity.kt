@@ -115,14 +115,12 @@ fun EventListScreen(viewModel: EventListViewModel, bottomSheetState: ModalBottom
         Scaffold(
             scaffoldState = scaffoldState,
             floatingActionButton = {
-                FloatingActionButton(onClick = { viewModel.onEventAdd() }) {
-                    Icon(
-                        imageVector = Icons.Default.Add,
-                        contentDescription = "add event instance",
-                    )
-                }
+                AddEventInstanceButton(onClick = { viewModel.onEventAdd() })
             },
-            floatingActionButtonPosition = FabPosition.End
+            floatingActionButtonPosition = FabPosition.End,
+            topBar = {
+                TopBar(state.isErrorSync)
+            }
         ) {
             Surface(
                 modifier = Modifier
@@ -140,5 +138,15 @@ fun EventListScreen(viewModel: EventListViewModel, bottomSheetState: ModalBottom
                 }
             }
         }
+    }
+}
+
+@Composable
+fun AddEventInstanceButton(onClick: () -> Unit) {
+    FloatingActionButton(onClick = onClick) {
+        Icon(
+            imageVector = Icons.Default.Add,
+            contentDescription = "add event instance",
+        )
     }
 }

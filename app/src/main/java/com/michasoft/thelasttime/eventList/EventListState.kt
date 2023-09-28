@@ -7,5 +7,6 @@ import com.michasoft.thelasttime.model.Event
  */
 data class EventListState(
     val isLoading: Boolean,
-    val events: List<Event>
+    val events: List<Event>,
+    val isErrorSync: Boolean
 )
