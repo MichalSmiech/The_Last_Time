@@ -42,7 +42,7 @@ class EventInstanceDetailsViewModel(
 
     private suspend fun setupData() {
         val event = eventRepository.getEvent(eventId)!!
-        val eventInstance = eventRepository.getEventInstance(eventId, instanceId)
+        val eventInstance = eventRepository.getEventInstance(eventId, instanceId) ?: return
         state.update {
             it.copy(
                 isLoading = false,
