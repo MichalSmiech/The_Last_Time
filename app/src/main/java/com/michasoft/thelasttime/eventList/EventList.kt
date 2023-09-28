@@ -45,7 +45,7 @@ fun EventItem(event: Event, onClick: (String) -> Unit, onInstanceAdd: (String) -
     Row(
         modifier = Modifier
             .clickable { onClick(event.id) }
-            .padding(top = 4.dp, bottom = 4.dp)
+            .padding(top = 4.dp, bottom = 4.dp, start = 16.dp, end = 8.dp)
             .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -55,11 +55,11 @@ fun EventItem(event: Event, onClick: (String) -> Unit, onInstanceAdd: (String) -
             val periodText = event.lastInstanceTimestamp?.periodText(lastTwo = true) ?: ""
             Text(
                 text = event.name,
-                modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 8.dp)
+                modifier = Modifier.padding(end = 16.dp, top = 8.dp)
             )
             Text(
                 text = periodText,
-                modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 8.dp),
+                modifier = Modifier.padding(end = 16.dp, bottom = 8.dp),
                 color = MaterialTheme.colors.onSurface.copy(alpha = 0.6f),
                 fontSize = 14.sp
             )
