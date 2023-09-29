@@ -13,6 +13,7 @@ import com.google.firebase.ktx.Firebase
 import com.michasoft.thelasttime.LastTimeApplication
 import com.michasoft.thelasttime.R
 import com.michasoft.thelasttime.databinding.ActivityLoginBinding
+import com.michasoft.thelasttime.eventList.EventListActivity
 import com.michasoft.thelasttime.model.User
 import com.michasoft.thelasttime.repo.UserRepository
 import kotlinx.coroutines.CoroutineScope
@@ -88,7 +89,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun routeFurther() {
-        startActivity(Intent(this, MainActivity::class.java))
+        startActivity(Intent(this, EventListActivity::class.java))
         finish()
     }
 

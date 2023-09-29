@@ -32,6 +32,7 @@ import com.michasoft.thelasttime.eventAdd.EventAddActivity
 import com.michasoft.thelasttime.eventDetails.EventDetailsActivity
 import com.michasoft.thelasttime.eventInstanceAdd.EventInstanceAddBottomSheet
 import com.michasoft.thelasttime.view.LoadingView
+import com.michasoft.thelasttime.view.MainActivity
 import com.michasoft.thelasttime.view.theme.LastTimeTheme
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -76,6 +77,14 @@ class EventListActivity : AppCompatActivity() {
                         is EventListAction.NavigateToEventAdd -> {
                             launchEventAddActivity()
                         }
+
+                        is EventListAction.NavigateToSettings -> {
+                            //TODO
+                        }
+
+                        is EventListAction.NavigateToDebug -> {
+                            launchEventMainActivity()
+                        }
                     }
                 }.launchIn(lifecycleScope)
             }
@@ -93,6 +102,10 @@ class EventListActivity : AppCompatActivity() {
 
     private fun launchEventAddActivity() {
         startActivity(Intent(this, EventAddActivity::class.java))
+    }
+
+    private fun launchEventMainActivity() {
+        startActivity(Intent(this, MainActivity::class.java))
     }
 
     override fun onStart() {
@@ -119,7 +132,11 @@ fun EventListScreen(viewModel: EventListViewModel, bottomSheetState: ModalBottom
             },
             floatingActionButtonPosition = FabPosition.End,
             topBar = {
-                TopBar(state.isErrorSync)
+                TopBar(state.isErrorSync, scaffoldState)
+            },
+            drawerScrimColor = MaterialTheme.colors.surface.copy(alpha = 0.60f),
+            drawerContent = {
+                DrawerContent(onMenuItemClick = { viewModel.menuItemClicked(it) })
             }
         ) {
             Surface(

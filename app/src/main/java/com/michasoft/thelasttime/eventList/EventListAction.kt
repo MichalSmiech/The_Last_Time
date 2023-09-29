@@ -8,4 +8,6 @@ sealed class EventListAction {
     object ShowEventInstanceAddBottomSheet : EventListAction()
     object HideEventInstanceAddBottomSheet : EventListAction()
     object NavigateToEventAdd : EventListAction()
+    object NavigateToSettings : EventListAction()
+    object NavigateToDebug : EventListAction()
 }

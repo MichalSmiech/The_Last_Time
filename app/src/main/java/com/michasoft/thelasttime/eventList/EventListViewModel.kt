@@ -96,6 +96,15 @@ class EventListViewModel(
         }
     }
 
+    fun menuItemClicked(item: MenuItemType) {
+        viewModelScope.launch {
+            when (item) {
+                MenuItemType.SETTINGS -> _actions.emit(EventListAction.NavigateToSettings)
+                MenuItemType.DEBUG -> _actions.emit(EventListAction.NavigateToDebug)
+            }
+        }
+    }
+
     class Factory : ViewModelProvider.Factory {
         @Inject
         lateinit var eventRepository: EventRepository
