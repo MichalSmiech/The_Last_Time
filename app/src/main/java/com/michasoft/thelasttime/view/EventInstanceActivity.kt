@@ -4,32 +4,30 @@ import android.app.DatePickerDialog
 import android.app.Dialog
 import android.app.TimePickerDialog
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.format.DateFormat
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.DatePicker
 import android.widget.TimePicker
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
+import com.michasoft.thelasttime.LastTimeApplication
 import com.michasoft.thelasttime.R
 import com.michasoft.thelasttime.databinding.ActivityEventInstanceBinding
-import com.michasoft.thelasttime.viewModel.EventInstanceViewModel
-import org.joda.time.DateTime
-import org.joda.time.DateTimeFieldType
-import javax.inject.Inject
-import android.view.Menu
-import android.view.MenuItem
-import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
-import com.michasoft.thelasttime.LastTimeApplication
 import com.michasoft.thelasttime.util.ShowDeleteConfirmationDialog
 import com.michasoft.thelasttime.viewModel.CommonViewModel
+import com.michasoft.thelasttime.viewModel.EventInstanceViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import org.joda.time.DateTime
+import org.joda.time.DateTimeFieldType
+import javax.inject.Inject
 
 
 class EventInstanceActivity : UserSessionActivity() {
@@ -72,7 +70,7 @@ class EventInstanceActivity : UserSessionActivity() {
         CoroutineScope(Dispatchers.IO).launch {
             viewModel.saveIfNeeded()
         }
-        finish()
+        finishAfterTransition()
         return true
     }
 
@@ -97,7 +95,7 @@ class EventInstanceActivity : UserSessionActivity() {
                     TimePickerFragment().show(supportFragmentManager, TimePickerFragment.TAG)
                 }
                 is CommonViewModel.Finish -> {
-                    finish()
+                    finishAfterTransition()
                 }
                 is ShowDeleteConfirmationDialog -> {
                     AlertDialog.Builder(this)

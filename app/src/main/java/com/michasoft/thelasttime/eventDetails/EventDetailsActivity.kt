@@ -27,6 +27,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.core.app.ActivityOptionsCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.michasoft.thelasttime.eventInstanceAdd.EventInstanceAddBottomSheet
@@ -62,7 +63,7 @@ class EventDetailsActivity : AppCompatActivity() {
             LaunchedEffect(Unit) {
                 viewModel.actions.onEach {
                     when (it) {
-                        is EventDetailsAction.Finish -> finish()
+                        is EventDetailsAction.Finish -> finishAfterTransition()
                         is EventDetailsAction.NavigateToEventInstanceDetails -> launchEventInstanceDetailsActivity(
                             it.instanceId
                         )
@@ -96,7 +97,10 @@ class EventDetailsActivity : AppCompatActivity() {
 
     private fun launchEventInstanceDetailsActivity(instanceId: String) {
 //        EventInstanceActivity.start(this, eventId, instanceId)
-        startActivity(EventInstanceDetailsActivity.getLaunchIntent(this, eventId, instanceId))
+        startActivity(
+            EventInstanceDetailsActivity.getLaunchIntent(this, eventId, instanceId),
+            ActivityOptionsCompat.makeSceneTransitionAnimation(this).toBundle()
+        )
     }
 
     companion object {

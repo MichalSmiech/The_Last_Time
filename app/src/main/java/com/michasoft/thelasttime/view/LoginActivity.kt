@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityOptionsCompat
 import androidx.databinding.DataBindingUtil
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
@@ -89,14 +90,20 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun routeFurther() {
-        startActivity(Intent(this, EventListActivity::class.java))
-        finish()
+        startActivity(
+            Intent(this, EventListActivity::class.java),
+            ActivityOptionsCompat.makeSceneTransitionAnimation(this).toBundle()
+        )
+        finishAfterTransition()
     }
 
     companion object {
         fun start(activity: AppCompatActivity) {
             val intent = Intent(activity, LoginActivity::class.java)
-            activity.startActivity(intent)
+            activity.startActivity(
+                intent,
+                ActivityOptionsCompat.makeSceneTransitionAnimation(activity).toBundle()
+            )
         }
     }
 }

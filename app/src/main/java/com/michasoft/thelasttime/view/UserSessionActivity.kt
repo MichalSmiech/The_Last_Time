@@ -12,7 +12,7 @@ abstract class UserSessionActivity: AppCompatActivity() {
         super.onCreate(savedInstanceState)
         if((application as LastTimeApplication).userSessionComponent == null) {
             LoginActivity.start(this)
-            finish()
+            finishAfterTransition()
         }
         onActivityCreate(savedInstanceState)
     }

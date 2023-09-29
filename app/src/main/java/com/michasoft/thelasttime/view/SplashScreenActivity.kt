@@ -1,8 +1,9 @@
 package com.michasoft.thelasttime.view
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityOptionsCompat
 import androidx.lifecycle.lifecycleScope
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
@@ -36,8 +37,11 @@ class SplashScreenActivity : AppCompatActivity() {
                 Intent(this@SplashScreenActivity, LoginActivity::class.java)
             }
             splashScreenMinDuration.await()
-            startActivity(intent)
-            finish()
+            startActivity(intent,
+                ActivityOptionsCompat.makeSceneTransitionAnimation(this@SplashScreenActivity)
+                    .toBundle()
+            )
+            finishAfterTransition()
         }
     }
 

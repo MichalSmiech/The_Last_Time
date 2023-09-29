@@ -44,7 +44,7 @@ class EventInstanceDetailsActivity : AppCompatActivity() {
 
         viewModel.actions.onEach {
             when (it) {
-                is EventInstanceDetailsAction.Finish -> finish()
+                is EventInstanceDetailsAction.Finish -> finishAfterTransition()
             }
         }.launchIn(lifecycleScope)
     }

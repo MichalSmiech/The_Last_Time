@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import androidx.core.app.ActivityOptionsCompat
 import com.michasoft.thelasttime.LastTimeApplication
 import com.michasoft.thelasttime.R
 import com.michasoft.thelasttime.model.Event
@@ -105,7 +106,7 @@ class MainActivity : UserSessionActivity() {
             Intent(
                 this,
                 com.michasoft.thelasttime.eventList.EventListActivity::class.java
-            )
+            ), ActivityOptionsCompat.makeSceneTransitionAnimation(this).toBundle()
         )
 //        EventListActivity.start(this)
     }
@@ -115,8 +116,8 @@ class MainActivity : UserSessionActivity() {
             userSessionRepository.logout()
         }
         Intent(this, LoginActivity::class.java).also {
-            startActivity(it)
+            startActivity(it, ActivityOptionsCompat.makeSceneTransitionAnimation(this).toBundle())
         }
-        finish()
+        finishAfterTransition()
     }
 }

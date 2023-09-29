@@ -1,12 +1,10 @@
 package com.michasoft.thelasttime.view
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.observe
 import com.michasoft.thelasttime.LastTimeApplication
 import com.michasoft.thelasttime.R
 import com.michasoft.thelasttime.databinding.ActivityEditEventBinding
@@ -33,7 +31,7 @@ class EditEventActivity : UserSessionActivity() {
         viewModel.flowEventBus.observe(this) {
             when(it) {
                 is CommonViewModel.Finish -> {
-                    finish()
+                    finishAfterTransition()
                 }
             }
         }

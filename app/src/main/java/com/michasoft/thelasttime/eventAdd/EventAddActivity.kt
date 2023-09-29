@@ -11,6 +11,7 @@ import androidx.compose.material.Surface
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.core.app.ActivityOptionsCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.michasoft.thelasttime.eventDetails.EventDetailsActivity
@@ -32,9 +33,9 @@ class EventAddActivity : AppCompatActivity() {
         }
         viewModel.actions.onEach {
             when (it) {
-                is EventAddAction.Finish -> finish()
+                is EventAddAction.Finish -> finishAfterTransition()
                 is EventAddAction.FinishAndNavigateToEventDetails -> {
-                    finish()
+                    finishAfterTransition()
                     launchEventDetailsActivity(it.eventId)
                 }
             }
@@ -42,7 +43,10 @@ class EventAddActivity : AppCompatActivity() {
     }
 
     private fun launchEventDetailsActivity(eventId: String) {
-        startActivity(EventDetailsActivity.getLaunchIntent(this, eventId))
+        startActivity(
+            EventDetailsActivity.getLaunchIntent(this, eventId),
+            ActivityOptionsCompat.makeSceneTransitionAnimation(this).toBundle()
+        )
     }
 }
 

@@ -1,13 +1,12 @@
 package com.michasoft.thelasttime.view
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.michasoft.thelasttime.LastTimeApplication
 import com.michasoft.thelasttime.R
@@ -58,7 +57,7 @@ class EventActivity : UserSessionActivity() {
         CoroutineScope(Dispatchers.IO).launch {
             viewModel.saveIfNeeded()
         }
-        finish()
+        finishAfterTransition()
         return true
     }
 
@@ -76,7 +75,7 @@ class EventActivity : UserSessionActivity() {
         viewModel.flowEventBus.observe(this) {
             when(it) {
                 is CommonViewModel.Finish -> {
-                    finish()
+                    finishAfterTransition()
                 }
                 is EventViewModel.ShowEventInstance -> {
                     EventInstanceActivity.start(this, it.eventId, it.instanceId)

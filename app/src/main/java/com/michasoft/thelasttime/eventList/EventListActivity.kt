@@ -26,6 +26,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.core.app.ActivityOptionsCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.michasoft.thelasttime.eventAdd.EventAddActivity
@@ -97,15 +98,24 @@ class EventListActivity : AppCompatActivity() {
     }
 
     private fun launchEventDetailsActivity(eventId: String) {
-        startActivity(EventDetailsActivity.getLaunchIntent(this, eventId))
+        startActivity(
+            EventDetailsActivity.getLaunchIntent(this, eventId),
+            ActivityOptionsCompat.makeSceneTransitionAnimation(this).toBundle()
+        )
     }
 
     private fun launchEventAddActivity() {
-        startActivity(Intent(this, EventAddActivity::class.java))
+        startActivity(
+            Intent(this, EventAddActivity::class.java),
+            ActivityOptionsCompat.makeSceneTransitionAnimation(this).toBundle()
+        )
     }
 
     private fun launchEventMainActivity() {
-        startActivity(Intent(this, MainActivity::class.java))
+        startActivity(
+            Intent(this, MainActivity::class.java),
+            ActivityOptionsCompat.makeSceneTransitionAnimation(this).toBundle()
+        )
     }
 
     override fun onStart() {
