@@ -6,8 +6,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.capitalize
@@ -46,7 +46,7 @@ fun EventInstanceItem(instance: EventInstance, onClick: (String) -> Unit) {
         Text(
             text = instance.timestamp.toString("EEE, dd MMM yyyy HH:mm").capitalize(Locale.current),
             modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 8.dp),
-            color = MaterialTheme.colors.onSurface.copy(alpha = 0.6f),
+            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
             fontSize = 14.sp
         )
     }

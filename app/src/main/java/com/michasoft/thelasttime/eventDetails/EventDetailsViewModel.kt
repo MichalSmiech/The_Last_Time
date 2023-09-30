@@ -31,7 +31,8 @@ class EventDetailsViewModel(
             isLoading = true,
             event = null,
             eventInstances = emptyList(),
-            isDeleteConfirmationDialogShowing = false
+            isDeleteConfirmationDialogShowing = false,
+            isBottomSheetShowing = false
         )
     )
     private val eventNameChanges = MutableSharedFlow<String>()
@@ -114,8 +115,12 @@ class EventDetailsViewModel(
             val eventInstance = eventRepository.createEventInstance(eventId)
             val event = eventRepository.getEvent(eventId)
             eventInstanceAddViewModel.setup(eventInstance, event?.name ?: "")
-            _actions.emit(EventDetailsAction.ShowEventInstanceAddBottomSheet)
+            state.update { it.copy(isBottomSheetShowing = true) }
         }
+    }
+
+    fun onBottomSheetHidden() {
+        state.update { it.copy(isBottomSheetShowing = false) }
     }
 
     class Factory(private val eventId: String) : ViewModelProvider.Factory {

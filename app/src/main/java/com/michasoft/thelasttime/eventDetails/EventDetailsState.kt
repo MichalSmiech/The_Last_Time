@@ -10,5 +10,6 @@ data class EventDetailsState(
     val isLoading: Boolean,
     val event: Event?,
     val eventInstances: List<EventInstance>,
-    val isDeleteConfirmationDialogShowing: Boolean
+    val isDeleteConfirmationDialogShowing: Boolean,
+    val isBottomSheetShowing: Boolean
 )

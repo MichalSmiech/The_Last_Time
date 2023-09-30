@@ -9,20 +9,18 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.FabPosition
-import androidx.compose.material.FloatingActionButton
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.ModalBottomSheetLayout
-import androidx.compose.material.ModalBottomSheetState
-import androidx.compose.material.ModalBottomSheetValue
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Surface
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.rememberModalBottomSheetState
-import androidx.compose.material.rememberScaffoldState
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FabPosition
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SheetState
+import androidx.compose.material3.Surface
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
@@ -34,7 +32,7 @@ import com.michasoft.thelasttime.eventInstanceAdd.EventInstanceAddBottomSheet
 import com.michasoft.thelasttime.eventInstanceDetails.EventInstanceDetailsActivity
 import com.michasoft.thelasttime.view.DeleteConfirmationDialog
 import com.michasoft.thelasttime.view.LoadingView
-import com.michasoft.thelasttime.view.theme.LastTimeTheme
+import com.michasoft.thelasttime.view.theme.LastTimeTheme3
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -47,16 +45,15 @@ class EventDetailsActivity : AppCompatActivity() {
         )
     })
 
-    @OptIn(ExperimentalMaterialApi::class)
+    @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         eventId = intent.getStringExtra(ARG_EVENT_ID) ?: throw IllegalStateException("No event id")
         setContent {
             val bottomSheetState = rememberModalBottomSheetState(
-                initialValue = ModalBottomSheetValue.Hidden,
-                skipHalfExpanded = true,
+                skipPartiallyExpanded = true
             )
-            LastTimeTheme {
+            LastTimeTheme3(window = window) {
                 EventDetailsScreen(viewModel, bottomSheetState)
             }
             val coroutineScope = rememberCoroutineScope()
@@ -68,15 +65,13 @@ class EventDetailsActivity : AppCompatActivity() {
                             it.instanceId
                         )
 
-                        is EventDetailsAction.ShowEventInstanceAddBottomSheet -> {
-                            coroutineScope.launch {
-                                bottomSheetState.show()
-                            }
-                        }
-
                         is EventDetailsAction.HideEventInstanceAddBottomSheet -> {
                             coroutineScope.launch {
                                 bottomSheetState.hide()
+                            }.invokeOnCompletion {
+                                if (!bottomSheetState.isVisible) {
+                                    viewModel.onBottomSheetHidden()
+                                }
                             }
                         }
                     }
@@ -114,55 +109,59 @@ class EventDetailsActivity : AppCompatActivity() {
     }
 }
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EventDetailsScreen(viewModel: EventDetailsViewModel, bottomSheetState: ModalBottomSheetState) {
+fun EventDetailsScreen(
+    viewModel: EventDetailsViewModel,
+    bottomSheetState: SheetState,
+) {
     val state = viewModel.state.collectAsStateWithLifecycle().value
-    ModalBottomSheetLayout(
-        sheetState = bottomSheetState,
-        scrimColor = MaterialTheme.colors.surface.copy(alpha = 0.60f),
-        sheetContent = {
-            EventInstanceAddBottomSheet(viewModel.eventInstanceAddViewModel)
-        }) {
-        val scaffoldState = rememberScaffoldState()
-        Scaffold(
-            scaffoldState = scaffoldState,
-            topBar = {
-                TopBar(
-                    eventName = state.event?.name ?: "",
-                    onEventNameChange = viewModel::changeName,
-                    onDiscardClick = viewModel::onDiscardButtonClicked,
-                    onDelete = viewModel::onDeleteButtonClicked
+    Scaffold(
+        topBar = {
+            TopBar(
+                eventName = state.event?.name ?: "",
+                onEventNameChange = viewModel::changeName,
+                onDiscardClick = viewModel::onDiscardButtonClicked,
+                onDelete = viewModel::onDeleteButtonClicked
+            )
+        },
+        floatingActionButton = {
+            FloatingActionButton(onClick = { viewModel.onInstanceAdded() }) {
+                Icon(
+                    imageVector = Icons.Default.Add,
+                    contentDescription = "add event instance",
                 )
-            },
-            floatingActionButton = {
-                FloatingActionButton(onClick = { viewModel.onInstanceAdded() }) {
-                    Icon(
-                        imageVector = Icons.Default.Add,
-                        contentDescription = "add event instance",
+            }
+        },
+        floatingActionButtonPosition = FabPosition.End
+    ) {
+        Surface(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(it)
+        ) {
+            if (state.isLoading) {
+                LoadingView()
+            } else {
+                EventDetailsContent(
+                    eventInstances = state.eventInstances,
+                    onEventInstanceClick = viewModel::onEventInstanceClicked
+                )
+                if (state.isDeleteConfirmationDialogShowing) {
+                    DeleteConfirmationDialog(
+                        onDismissDialog = viewModel::deleteConfirmationDialogDismissed,
+                        onConfirmClicked = viewModel::deleteEvent
                     )
                 }
-            },
-            floatingActionButtonPosition = FabPosition.End
-        ) {
-            Surface(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(it)
-            ) {
-                if (state.isLoading) {
-                    LoadingView()
-                } else {
-                    EventDetailsContent(
-                        eventInstances = state.eventInstances,
-                        onEventInstanceClick = viewModel::onEventInstanceClicked
-                    )
-                    if (state.isDeleteConfirmationDialogShowing) {
-                        DeleteConfirmationDialog(
-                            onDismissDialog = viewModel::deleteConfirmationDialogDismissed,
-                            onConfirmClicked = viewModel::deleteEvent
-                        )
+                if (state.isBottomSheetShowing) {
+                    ModalBottomSheet(
+                        sheetState = bottomSheetState,
+                        scrimColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.60f),
+                        onDismissRequest = { viewModel.onBottomSheetHidden() }
+                    ) {
+                        EventInstanceAddBottomSheet(viewModel.eventInstanceAddViewModel)
                     }
+
                 }
             }
         }

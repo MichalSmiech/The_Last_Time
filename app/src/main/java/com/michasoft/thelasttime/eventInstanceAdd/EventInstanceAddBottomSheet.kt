@@ -27,7 +27,7 @@ fun EventInstanceAddBottomSheet(viewModel: EventInstanceAddViewModel) {
     Column(modifier = Modifier.padding(bottom = 8.dp)) {
         Text(
             text = state.eventName,
-            modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 8.dp)
+            modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 8.dp)
         )
         Row(
             modifier = Modifier.fillMaxWidth(),

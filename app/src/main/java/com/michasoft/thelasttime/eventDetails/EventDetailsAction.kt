@@ -6,6 +6,5 @@ package com.michasoft.thelasttime.eventDetails
 sealed class EventDetailsAction {
     object Finish : EventDetailsAction()
     class NavigateToEventInstanceDetails(val instanceId: String) : EventDetailsAction()
-    object ShowEventInstanceAddBottomSheet : EventDetailsAction()
     object HideEventInstanceAddBottomSheet : EventDetailsAction()
 }
