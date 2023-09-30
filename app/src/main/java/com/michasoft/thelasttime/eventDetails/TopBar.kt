@@ -1,5 +1,6 @@
 package com.michasoft.thelasttime.eventDetails
 
+import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -16,6 +17,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.michasoft.thelasttime.view.NoShapeTextField
+import com.michasoft.thelasttime.view.theme.LastTimeTheme3
 
 /**
  * Created by mśmiech on 21.09.2023.
@@ -74,8 +76,10 @@ fun DeleteButton(
     }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES)
 @Composable
 fun PreviewTopBar() {
-    TopBar(eventName = "Podlewanie", onEventNameChange = {}, onDiscardClick = {}, onDelete = {})
+    LastTimeTheme3 {
+        TopBar(eventName = "Podlewanie", onEventNameChange = {}, onDiscardClick = {}, onDelete = {})
+    }
 }
