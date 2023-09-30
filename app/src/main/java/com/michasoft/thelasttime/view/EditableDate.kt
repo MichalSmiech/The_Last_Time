@@ -5,10 +5,10 @@ import android.content.Context
 import android.widget.DatePicker
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
-import androidx.compose.material.TextButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccessTime
 import androidx.compose.runtime.Composable
@@ -40,7 +40,7 @@ fun EditableDate(date: LocalDate, onDateChange: (LocalDate) -> Unit) {
         TextButton(onClick = { datePicker.show() }) {
             Text(
                 text = date.toString(dateFormatter).capitalize(Locale.current),
-                color = MaterialTheme.colors.onSurface
+                color = MaterialTheme.colorScheme.onSurface
             )
         }
     }
