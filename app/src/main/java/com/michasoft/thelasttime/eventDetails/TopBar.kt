@@ -17,7 +17,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.michasoft.thelasttime.view.NoShapeTextField
-import com.michasoft.thelasttime.view.theme.LastTimeTheme3
+import com.michasoft.thelasttime.view.theme.LastTimeTheme
 
 /**
  * Created by mśmiech on 21.09.2023.
@@ -79,7 +79,7 @@ fun DeleteButton(
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES)
 @Composable
 fun PreviewTopBar() {
-    LastTimeTheme3 {
+    LastTimeTheme {
         TopBar(eventName = "Podlewanie", onEventNameChange = {}, onDiscardClick = {}, onDelete = {})
     }
 }

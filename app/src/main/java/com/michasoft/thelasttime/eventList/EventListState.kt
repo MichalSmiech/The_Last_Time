@@ -8,5 +8,6 @@ import com.michasoft.thelasttime.model.Event
 data class EventListState(
     val isLoading: Boolean,
     val events: List<Event>,
-    val isErrorSync: Boolean
+    val isErrorSync: Boolean,
+    val isBottomSheetShowing: Boolean
 )

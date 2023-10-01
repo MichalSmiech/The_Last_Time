@@ -8,17 +8,15 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.toArgb
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.michasoft.thelasttime.view.DeleteConfirmationDialog
 import com.michasoft.thelasttime.view.LoadingView
-import com.michasoft.thelasttime.view.theme.LastTimeTheme3
+import com.michasoft.thelasttime.view.theme.LastTimeTheme
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
@@ -38,7 +36,7 @@ class EventInstanceDetailsActivity : AppCompatActivity() {
         instanceId = intent.getStringExtra(ARG_EVENT_INSTANCE_ID)
             ?: throw IllegalStateException("No event instance id")
         setContent {
-            LastTimeTheme3(window = window) {
+            LastTimeTheme(window = window) {
                 EventInstanceDetailsScreen(viewModel)
             }
         }

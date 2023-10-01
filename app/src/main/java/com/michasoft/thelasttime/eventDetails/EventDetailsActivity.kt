@@ -32,7 +32,7 @@ import com.michasoft.thelasttime.eventInstanceAdd.EventInstanceAddBottomSheet
 import com.michasoft.thelasttime.eventInstanceDetails.EventInstanceDetailsActivity
 import com.michasoft.thelasttime.view.DeleteConfirmationDialog
 import com.michasoft.thelasttime.view.LoadingView
-import com.michasoft.thelasttime.view.theme.LastTimeTheme3
+import com.michasoft.thelasttime.view.theme.LastTimeTheme
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -53,7 +53,7 @@ class EventDetailsActivity : AppCompatActivity() {
             val bottomSheetState = rememberModalBottomSheetState(
                 skipPartiallyExpanded = true
             )
-            LastTimeTheme3(window = window) {
+            LastTimeTheme(window = window) {
                 EventDetailsScreen(viewModel, bottomSheetState)
             }
             val coroutineScope = rememberCoroutineScope()
@@ -161,7 +161,6 @@ fun EventDetailsScreen(
                     ) {
                         EventInstanceAddBottomSheet(viewModel.eventInstanceAddViewModel)
                     }
-
                 }
             }
         }

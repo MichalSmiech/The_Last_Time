@@ -30,7 +30,8 @@ class EventListViewModel(
         EventListState(
             isLoading = true,
             events = emptyList(),
-            isErrorSync = false
+            isErrorSync = false,
+            isBottomSheetShowing = false
         )
     )
     val eventInstanceAddViewModel = EventInstanceAddViewModel(
@@ -86,7 +87,7 @@ class EventListViewModel(
             val eventInstance = eventRepository.createEventInstance(eventId)
             val event = eventRepository.getEvent(eventId)
             eventInstanceAddViewModel.setup(eventInstance, event?.name ?: "")
-            _actions.emit(EventListAction.ShowEventInstanceAddBottomSheet)
+            state.update { it.copy(isBottomSheetShowing = true) }
         }
     }
 
@@ -103,6 +104,10 @@ class EventListViewModel(
                 MenuItemType.DEBUG -> _actions.emit(EventListAction.NavigateToDebug)
             }
         }
+    }
+
+    fun onBottomSheetHidden() {
+        state.update { it.copy(isBottomSheetShowing = false) }
     }
 
     class Factory : ViewModelProvider.Factory {
