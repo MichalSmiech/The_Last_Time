@@ -15,7 +15,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
@@ -130,7 +129,6 @@ fun EventListScreen(viewModel: EventListViewModel, bottomSheetState: SheetState)
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     ModalNavigationDrawer(
         drawerState = drawerState,
-        scrimColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.60f),
         drawerContent = {
             ModalDrawerSheet {
                 DrawerContent(onMenuItemClick = { viewModel.menuItemClicked(it) })
@@ -162,7 +160,6 @@ fun EventListScreen(viewModel: EventListViewModel, bottomSheetState: SheetState)
                     if (state.isBottomSheetShowing) {
                         ModalBottomSheet(
                             sheetState = bottomSheetState,
-                            scrimColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.60f),
                             onDismissRequest = { viewModel.onBottomSheetHidden() }
                         ) {
                             EventInstanceAddBottomSheet(viewModel.eventInstanceAddViewModel)

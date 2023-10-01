@@ -105,6 +105,7 @@ class EventListViewModel(
             when (item) {
                 MenuItemType.SETTINGS -> _actions.emit(EventListAction.NavigateToSettings)
                 MenuItemType.DEBUG -> _actions.emit(EventListAction.NavigateToDebug)
+                MenuItemType.EVENTS -> {}
             }
         }
     }

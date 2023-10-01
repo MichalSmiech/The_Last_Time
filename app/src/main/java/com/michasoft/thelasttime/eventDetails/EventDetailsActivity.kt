@@ -15,7 +15,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SheetState
@@ -156,7 +155,6 @@ fun EventDetailsScreen(
                 if (state.isBottomSheetShowing) {
                     ModalBottomSheet(
                         sheetState = bottomSheetState,
-                        scrimColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.60f),
                         onDismissRequest = { viewModel.onBottomSheetHidden() }
                     ) {
                         EventInstanceAddBottomSheet(viewModel.eventInstanceAddViewModel)
