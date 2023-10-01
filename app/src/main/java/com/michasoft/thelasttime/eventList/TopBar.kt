@@ -114,7 +114,7 @@ fun ProfileButton(
                 contentDescription = "profile icon",
                 modifier = Modifier
                     .clip(CircleShape)
-                    .size(34.dp),
+                    .size(30.dp),
                 placeholder = rememberVectorPainter(
                     image = Icons.Default.Person,
                     LocalContentColor.current
@@ -131,7 +131,8 @@ fun ProfileButton(
         } else {
             Icon(
                 imageVector = Icons.Default.Person,
-                contentDescription = "profile icon"
+                contentDescription = "profile icon",
+                modifier = Modifier.size(30.dp)
             )
         }
     }
