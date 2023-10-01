@@ -1,6 +1,7 @@
 package com.michasoft.thelasttime.model
 
-import java.util.*
+import android.net.Uri
+import java.util.UUID
 
 /**
  * Created by mśmiech on 29.04.2022.
@@ -8,7 +9,8 @@ import java.util.*
 class User(
     val id: String,
     var remoteId: String?,
-    val displayName: String
+    val displayName: String,
+    val photoUrl: Uri?
 ) {
     override fun equals(other: Any?): Boolean {
         if(other is User) {

@@ -1,5 +1,6 @@
 package com.michasoft.thelasttime.eventList
 
+import android.net.Uri
 import com.michasoft.thelasttime.model.Event
 
 /**
@@ -9,5 +10,6 @@ data class EventListState(
     val isLoading: Boolean,
     val events: List<Event>,
     val isErrorSync: Boolean,
-    val isBottomSheetShowing: Boolean
+    val isBottomSheetShowing: Boolean,
+    val userPhotoUrl: Uri?
 )

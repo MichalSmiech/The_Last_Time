@@ -1,8 +1,11 @@
 package com.michasoft.thelasttime.di
 
 import android.content.Context
+import android.net.Uri
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.ktx.Firebase
 import com.michasoft.thelasttime.dataSource.FirestoreEventSource
 import com.michasoft.thelasttime.dataSource.ILocalEventSource
 import com.michasoft.thelasttime.dataSource.IRemoteEventSource
@@ -124,5 +127,11 @@ class UserSessionModule {
     fun provideSyncJobDataSource(
         userDatabase: UserDatabase
     ) = SyncJobDataSource(userDatabase.syncJobDao)
+
+    @Provides
+    @Named("userPhotoUrl")
+    fun provideUserPhotoUrl(user: User): Uri? {
+        return Firebase.auth.currentUser?.photoUrl ?: user.photoUrl
+    }
 }
 

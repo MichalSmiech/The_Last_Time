@@ -1,5 +1,6 @@
 package com.michasoft.thelasttime.di
 
+import android.net.Uri
 import com.michasoft.thelasttime.eventAdd.EventAddViewModel
 import com.michasoft.thelasttime.eventDetails.EventDetailsViewModel
 import com.michasoft.thelasttime.eventInstanceDetails.EventInstanceDetailsViewModel
@@ -16,6 +17,7 @@ import com.michasoft.thelasttime.view.MainActivity
 import com.michasoft.thelasttime.view.bottomSheet.AddEventInstanceBottomSheet
 import dagger.BindsInstance
 import dagger.Subcomponent
+import javax.inject.Named
 
 /**
  * Created by mśmiech on 29.04.2022.
@@ -33,6 +35,8 @@ interface UserSessionComponent {
 
     fun getUser(): User
     fun getUserSessionRepository(): UserSessionRepository
+    @Named("userPhotoUrl")
+    fun getUserPhotoUrl(): Uri?
     fun inject(activity: MainActivity)
     fun inject(activity: EventListActivity)
     fun inject(activity: EventInstanceActivity)

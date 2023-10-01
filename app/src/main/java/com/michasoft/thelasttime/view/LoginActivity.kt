@@ -75,7 +75,12 @@ class LoginActivity : AppCompatActivity() {
         CoroutineScope(Dispatchers.IO).launch {
             var user = userRepository.getUserByRemoteId(authUser.uid)
             if(user == null) {
-                user = User(User.generateId(), authUser.uid, authUser.displayName ?: authUser.email!!)
+                user = User(
+                    User.generateId(),
+                    authUser.uid,
+                    authUser.displayName ?: authUser.email!!,
+                    authUser.photoUrl
+                )
                 userRepository.insertUser(user)
             }
             val succeed = userRepository.signIn(user)

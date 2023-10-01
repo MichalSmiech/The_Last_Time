@@ -143,7 +143,7 @@ fun EventListScreen(viewModel: EventListViewModel, bottomSheetState: SheetState)
             },
             floatingActionButtonPosition = FabPosition.End,
             topBar = {
-                TopBar(state.isErrorSync, drawerState)
+                TopBar(state.isErrorSync, drawerState, state.userPhotoUrl)
             }
         ) {
             Surface(

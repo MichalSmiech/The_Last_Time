@@ -1,5 +1,6 @@
 package com.michasoft.thelasttime.eventList
 
+import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -22,7 +23,8 @@ import javax.inject.Inject
  */
 class EventListViewModel(
     private val eventRepository: EventRepository,
-    private val syncJobQueue: SyncJobQueue
+    private val syncJobQueue: SyncJobQueue,
+    private val userPhotoUrl: Uri?
 ) : ViewModel() {
     private val _actions: MutableSharedFlow<EventListAction> = MutableSharedFlow()
     val actions: SharedFlow<EventListAction> = _actions
@@ -31,7 +33,8 @@ class EventListViewModel(
             isLoading = true,
             events = emptyList(),
             isErrorSync = false,
-            isBottomSheetShowing = false
+            isBottomSheetShowing = false,
+            userPhotoUrl = userPhotoUrl
         )
     )
     val eventInstanceAddViewModel = EventInstanceAddViewModel(
@@ -127,7 +130,8 @@ class EventListViewModel(
             application.userSessionComponent().inject(this)
             return EventListViewModel(
                 eventRepository,
-                syncJobQueue
+                syncJobQueue,
+                application.userSessionComponent().getUserPhotoUrl()
             ) as T
         }
     }
