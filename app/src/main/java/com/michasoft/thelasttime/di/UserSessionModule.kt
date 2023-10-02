@@ -19,7 +19,6 @@ import com.michasoft.thelasttime.repo.EventRepository
 import com.michasoft.thelasttime.repo.UserRepository
 import com.michasoft.thelasttime.repo.UserSessionRepository
 import com.michasoft.thelasttime.storage.AppDatabase
-import com.michasoft.thelasttime.storage.UserDatabase
 import com.michasoft.thelasttime.util.BackupConfig
 import dagger.Module
 import dagger.Provides
@@ -125,8 +124,8 @@ class UserSessionModule {
     @Provides
     @UserSessionScope
     fun provideSyncJobDataSource(
-        userDatabase: UserDatabase
-    ) = SyncJobDataSource(userDatabase.syncJobDao)
+        appDatabase: AppDatabase
+    ) = SyncJobDataSource(appDatabase.syncJobDao)
 
     @Provides
     @Named("userPhotoUrl")
