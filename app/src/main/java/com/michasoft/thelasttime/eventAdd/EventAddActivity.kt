@@ -3,7 +3,6 @@ package com.michasoft.thelasttime.eventAdd
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -14,17 +13,17 @@ import androidx.core.app.ActivityOptionsCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.michasoft.thelasttime.eventDetails.EventDetailsActivity
+import com.michasoft.thelasttime.view.UserSessionActivity
 import com.michasoft.thelasttime.view.theme.LastTimeTheme
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
-class EventAddActivity : AppCompatActivity() {
+class EventAddActivity : UserSessionActivity() {
     private val viewModel by viewModels<EventAddViewModel>(factoryProducer = {
         EventAddViewModel.Factory()
     })
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onActivityCreate(savedInstanceState: Bundle?) {
         setContent {
             LastTimeTheme(window = window) {
                 EventAddScreen(viewModel)

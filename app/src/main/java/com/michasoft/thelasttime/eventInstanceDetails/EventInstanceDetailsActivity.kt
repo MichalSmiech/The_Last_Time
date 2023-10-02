@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -16,11 +15,12 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.michasoft.thelasttime.view.DeleteConfirmationDialog
 import com.michasoft.thelasttime.view.LoadingView
+import com.michasoft.thelasttime.view.UserSessionActivity
 import com.michasoft.thelasttime.view.theme.LastTimeTheme
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
-class EventInstanceDetailsActivity : AppCompatActivity() {
+class EventInstanceDetailsActivity : UserSessionActivity() {
     private lateinit var eventId: String
     private lateinit var instanceId: String
     private val viewModel by viewModels<EventInstanceDetailsViewModel>(factoryProducer = {
@@ -30,8 +30,7 @@ class EventInstanceDetailsActivity : AppCompatActivity() {
         )
     })
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onActivityCreate(savedInstanceState: Bundle?) {
         eventId = intent.getStringExtra(ARG_EVENT_ID) ?: throw IllegalStateException("No event id")
         instanceId = intent.getStringExtra(ARG_EVENT_INSTANCE_ID)
             ?: throw IllegalStateException("No event instance id")

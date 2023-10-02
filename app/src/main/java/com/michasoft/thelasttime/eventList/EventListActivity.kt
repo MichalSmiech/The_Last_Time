@@ -5,7 +5,6 @@ import android.os.Bundle
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -35,19 +34,19 @@ import com.michasoft.thelasttime.eventDetails.EventDetailsActivity
 import com.michasoft.thelasttime.eventInstanceAdd.EventInstanceAddBottomSheet
 import com.michasoft.thelasttime.view.LoadingView
 import com.michasoft.thelasttime.view.MainActivity
+import com.michasoft.thelasttime.view.UserSessionActivity
 import com.michasoft.thelasttime.view.theme.LastTimeTheme
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
-class EventListActivity : AppCompatActivity() {
+class EventListActivity : UserSessionActivity() {
     private val viewModel by viewModels<EventListViewModel>(factoryProducer = {
         EventListViewModel.Factory()
     })
 
     @OptIn(ExperimentalMaterial3Api::class)
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onActivityCreate(savedInstanceState: Bundle?) {
         setContent {
             val bottomSheetState = rememberModalBottomSheetState(
                 skipPartiallyExpanded = true,

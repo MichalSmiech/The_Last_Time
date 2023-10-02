@@ -10,11 +10,12 @@ import com.michasoft.thelasttime.LastTimeApplication
 abstract class UserSessionActivity: AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if((application as LastTimeApplication).userSessionComponent == null) {
+        if ((application as LastTimeApplication).userSessionComponent == null) {
             LoginActivity.start(this)
             finishAfterTransition()
+        } else {
+            onActivityCreate(savedInstanceState)
         }
-        onActivityCreate(savedInstanceState)
     }
 
     abstract fun onActivityCreate(savedInstanceState: Bundle?)

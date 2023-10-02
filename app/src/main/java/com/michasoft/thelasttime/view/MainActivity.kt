@@ -108,7 +108,6 @@ class MainActivity : UserSessionActivity() {
                 com.michasoft.thelasttime.eventList.EventListActivity::class.java
             ), ActivityOptionsCompat.makeSceneTransitionAnimation(this).toBundle()
         )
-//        EventListActivity.start(this)
     }
 
     fun logout(view: View) {

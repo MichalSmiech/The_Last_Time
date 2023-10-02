@@ -6,7 +6,6 @@ import android.os.Bundle
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -31,12 +30,13 @@ import com.michasoft.thelasttime.eventInstanceAdd.EventInstanceAddBottomSheet
 import com.michasoft.thelasttime.eventInstanceDetails.EventInstanceDetailsActivity
 import com.michasoft.thelasttime.view.DeleteConfirmationDialog
 import com.michasoft.thelasttime.view.LoadingView
+import com.michasoft.thelasttime.view.UserSessionActivity
 import com.michasoft.thelasttime.view.theme.LastTimeTheme
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
-class EventDetailsActivity : AppCompatActivity() {
+class EventDetailsActivity : UserSessionActivity() {
     private lateinit var eventId: String
     private val viewModel by viewModels<EventDetailsViewModel>(factoryProducer = {
         EventDetailsViewModel.Factory(
@@ -45,8 +45,7 @@ class EventDetailsActivity : AppCompatActivity() {
     })
 
     @OptIn(ExperimentalMaterial3Api::class)
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onActivityCreate(savedInstanceState: Bundle?) {
         eventId = intent.getStringExtra(ARG_EVENT_ID) ?: throw IllegalStateException("No event id")
         setContent {
             val bottomSheetState = rememberModalBottomSheetState(
