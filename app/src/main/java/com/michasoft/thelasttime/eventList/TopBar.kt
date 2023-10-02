@@ -4,6 +4,7 @@ import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.net.Uri
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -53,13 +54,20 @@ fun TopBar(
         color = MaterialTheme.colorScheme.surfaceColorAtElevation(6.dp),
         onClick = {},
     ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.height(48.dp)
+        ) {
             MenuButton(onClick = {
                 scope.launch {
                     drawerState.open()
                 }
             })
-            Text(text = "Search events", modifier = Modifier.weight(1f))
+            Text(
+                text = "Search events",
+                modifier = Modifier.weight(1f),
+                style = MaterialTheme.typography.bodyLarge
+            )
             if (isErrorSync) {
                 ErrorSyncButton({})
             }
@@ -74,7 +82,7 @@ fun MenuButton(
 ) {
     IconButton(
         onClick = onClick,
-        modifier = Modifier.padding(8.dp, 2.dp)
+        modifier = Modifier.padding(horizontal = 2.dp)
     ) {
         Icon(
             imageVector = Icons.Default.Menu,
@@ -89,7 +97,7 @@ fun ErrorSyncButton(
 ) {
     IconButton(
         onClick = onClick,
-        modifier = Modifier.padding(top = 2.dp, bottom = 2.dp, start = 8.dp)
+        modifier = Modifier.padding(start = 2.dp)
     ) {
         Icon(
             imageVector = Icons.Default.ErrorOutline,
@@ -106,7 +114,7 @@ fun ProfileButton(
 ) {
     IconButton(
         onClick = onClick,
-        modifier = Modifier.padding(top = 2.dp, bottom = 2.dp, end = 4.dp)
+        modifier = Modifier.padding(end = 2.dp)
     ) {
         if (userPhotoUrl != null) {
             AsyncImage(

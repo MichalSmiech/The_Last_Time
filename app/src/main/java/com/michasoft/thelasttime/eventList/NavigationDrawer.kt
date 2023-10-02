@@ -67,7 +67,7 @@ private fun MenuItem(
         modifier = Modifier
             .padding(12.dp, 0.dp)
             .fillMaxWidth()
-            .height(56.dp)
+            .height(48.dp)
     ) {
         Box(
             contentAlignment = Alignment.CenterStart,
