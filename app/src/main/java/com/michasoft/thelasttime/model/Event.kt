@@ -12,4 +12,5 @@ data class Event(
     val eventInstanceSchema: EventInstanceSchema
 ) {
     var lastInstanceTimestamp: DateTime? = null
+    var labels: List<Label> = emptyList()
 }

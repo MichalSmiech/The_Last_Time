@@ -54,10 +54,18 @@ class EventRepository(
         _eventsChanged.emit(Unit)
     }
 
-    suspend fun getEventsWithLastInstanceTimestamp(): ArrayList<Event> {
+    suspend fun getEvents(
+        withLastInstanceTimestamp: Boolean = false,
+        withLabels: Boolean = false
+    ): ArrayList<Event> {
         val events = getEvents()
         events.forEach { event ->
-            event.lastInstanceTimestamp = localSource.getLastInstanceTimestamp(event.id)
+            if (withLastInstanceTimestamp) {
+                event.lastInstanceTimestamp = localSource.getLastInstanceTimestamp(event.id)
+            }
+            if (withLabels) {
+                event.labels = localSource.getEventLabels(event.id)
+            }
         }
         return events
     }

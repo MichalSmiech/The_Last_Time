@@ -11,6 +11,8 @@ import com.michasoft.thelasttime.storage.dao.SyncJobDao
 import com.michasoft.thelasttime.storage.entity.EventEntity
 import com.michasoft.thelasttime.storage.entity.EventInstanceEntity
 import com.michasoft.thelasttime.storage.entity.EventInstanceFieldSchemaEntity
+import com.michasoft.thelasttime.storage.entity.EventLabelEntity
+import com.michasoft.thelasttime.storage.entity.LabelEntity
 import com.michasoft.thelasttime.storage.entity.SyncJobEntity
 import com.michasoft.thelasttime.storage.entity.eventInstanceField.EventInstanceDoubleFieldEntity
 import com.michasoft.thelasttime.storage.entity.eventInstanceField.EventInstanceIntFieldEntity
@@ -27,7 +29,9 @@ import com.michasoft.thelasttime.util.RoomConverters
     EventInstanceDoubleFieldEntity::class,
     EventInstanceIntFieldEntity::class,
     EventInstanceTextFieldEntity::class,
-    SyncJobEntity::class
+    SyncJobEntity::class,
+    LabelEntity::class,
+    EventLabelEntity::class,
 ], version = 1, exportSchema = false)
 @TypeConverters(RoomConverters::class)
 abstract class AppDatabase : RoomDatabase() {

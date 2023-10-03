@@ -6,6 +6,7 @@ import com.michasoft.thelasttime.model.EventInstance
 import com.michasoft.thelasttime.model.EventInstanceField
 import com.michasoft.thelasttime.model.EventInstanceField.Type
 import com.michasoft.thelasttime.model.EventInstanceSchema
+import com.michasoft.thelasttime.model.Label
 import com.michasoft.thelasttime.model.eventInstanceField.DoubleField
 import com.michasoft.thelasttime.model.eventInstanceField.IntField
 import com.michasoft.thelasttime.model.eventInstanceField.TextField
@@ -14,6 +15,8 @@ import com.michasoft.thelasttime.storage.dao.EventDao
 import com.michasoft.thelasttime.storage.entity.EventEntity
 import com.michasoft.thelasttime.storage.entity.EventInstanceEntity
 import com.michasoft.thelasttime.storage.entity.EventInstanceFieldSchemaEntity
+import com.michasoft.thelasttime.storage.entity.EventLabelEntity
+import com.michasoft.thelasttime.storage.entity.LabelEntity
 import com.michasoft.thelasttime.storage.entity.eventInstanceField.EventInstanceDoubleFieldEntity
 import com.michasoft.thelasttime.storage.entity.eventInstanceField.EventInstanceIntFieldEntity
 import com.michasoft.thelasttime.storage.entity.eventInstanceField.EventInstanceTextFieldEntity
@@ -39,6 +42,7 @@ class RoomEventSource(private val appDatabase: AppDatabase, private val eventDao
         }
         eventDao.deleteEventInstanceFieldSchemasWithEventId(eventId)
         eventDao.deleteEvent(eventId)
+        eventDao.deleteEventAllLabels(eventId)
     }
 
     override suspend fun getEventInstanceSchema(eventId: String): EventInstanceSchema {
@@ -60,28 +64,31 @@ class RoomEventSource(private val appDatabase: AppDatabase, private val eventDao
         val eventInstanceEntity = eventDao.getEventInstance(instanceId) ?: return null
         val eventInstanceFields = ArrayList<EventInstanceField>(instanceSchema.fieldSchemas.size)
         instanceSchema.fieldSchemas.forEach { fieldSchema ->
-            when(fieldSchema.type) {
+            when (fieldSchema.type) {
                 Type.TextField -> {
                     val eventInstanceTextFieldEntity =
                         eventDao.getEventInstanceTextField(eventInstanceEntity.id, fieldSchema.id)
-                    if(eventInstanceTextFieldEntity != null) {
+                    if (eventInstanceTextFieldEntity != null) {
                         eventInstanceFields.add(eventInstanceTextFieldEntity.toModel(fieldSchema))
                     }
                 }
+
                 Type.IntField -> {
                     val eventInstanceIntFieldEntity =
                         eventDao.getEventInstanceIntField(eventInstanceEntity.id, fieldSchema.id)
-                    if(eventInstanceIntFieldEntity != null) {
+                    if (eventInstanceIntFieldEntity != null) {
                         eventInstanceFields.add(eventInstanceIntFieldEntity.toModel(fieldSchema))
                     }
                 }
+
                 Type.DoubleField -> {
                     val eventInstanceDoubleFieldEntity =
                         eventDao.getEventInstanceDoubleField(eventInstanceEntity.id, fieldSchema.id)
-                        if(eventInstanceDoubleFieldEntity != null) {
-                            eventInstanceFields.add(eventInstanceDoubleFieldEntity.toModel(fieldSchema))
-                        }
+                    if (eventInstanceDoubleFieldEntity != null) {
+                        eventInstanceFields.add(eventInstanceDoubleFieldEntity.toModel(fieldSchema))
+                    }
                 }
+
                 else -> {
                     throw NotImplementedError()
                 }
@@ -107,12 +114,15 @@ class RoomEventSource(private val appDatabase: AppDatabase, private val eventDao
                 Type.TextField -> {
                     eventDao.deleteEventInstanceTextFieldsWithInstanceId(instanceId)
                 }
+
                 Type.IntField -> {
                     eventDao.deleteEventInstanceIntFieldsWithInstanceId(instanceId)
                 }
+
                 Type.DoubleField -> {
                     eventDao.deleteEventInstanceDoubleFieldsWithInstanceId(instanceId)
                 }
+
                 else -> {
                     throw NotImplementedError()
                 }
@@ -124,28 +134,39 @@ class RoomEventSource(private val appDatabase: AppDatabase, private val eventDao
     override suspend fun insertEvent(event: Event) {
         eventDao.insertEvent(EventEntity(event))
         event.eventInstanceSchema.fieldSchemas.forEach { fieldSchema ->
-            eventDao.insertEventInstanceFieldSchema(EventInstanceFieldSchemaEntity(event.id, fieldSchema))
+            eventDao.insertEventInstanceFieldSchema(
+                EventInstanceFieldSchemaEntity(
+                    event.id,
+                    fieldSchema
+                )
+            )
         }
     }
 
-    override suspend fun deleteAllEvents() {
+    private suspend fun deleteAllEvents() {
         eventDao.deleteAllEventInstances()
         eventDao.deleteAllEventInstanceDoubleFields()
         eventDao.deleteAllEventInstanceIntFields()
         eventDao.deleteAllEventInstanceTextFields()
         eventDao.deleteAllEventInstanceFieldSchemas()
         eventDao.deleteAllEvents()
+        eventDao.deleteAllEventLabels()
+    }
+
+    private suspend fun deleteAllLabels() {
+        eventDao.deleteAllLabel()
     }
 
     override suspend fun clear() {
         deleteAllEvents()
+        deleteAllLabels()
     }
 
     override suspend fun getAllEvents(): Flow<Event> = flow {
         val offset = 0L
         val limit = 100L
         var hasNext = true
-        while(hasNext) {
+        while (hasNext) {
             val eventIds = eventDao.getEventIds(limit, offset)
             eventIds.forEach { eventId ->
                 val event = getEvent(eventId)!!
@@ -160,7 +181,7 @@ class RoomEventSource(private val appDatabase: AppDatabase, private val eventDao
         val offset = 0L
         val limit = 100L
         var hasNext = true
-        while(hasNext) {
+        while (hasNext) {
             val eventIds = eventDao.getEventIdsOrderByCreateTimestamp(limit, offset)
             eventIds.forEach { eventId ->
                 val event = getEvent(eventId)!!
@@ -177,8 +198,9 @@ class RoomEventSource(private val appDatabase: AppDatabase, private val eventDao
         var offset = 0L
         val limit = 100L
         var hasNext = true
-        while(hasNext) {
-            val instanceIds = eventDao.getEventInstanceIdsWithEventIdOrderByTimestamp(eventId, limit, offset)
+        while (hasNext) {
+            val instanceIds =
+                eventDao.getEventInstanceIdsWithEventIdOrderByTimestamp(eventId, limit, offset)
             instanceIds.forEach { instanceId ->
                 val instance = getEventInstance(eventInstanceSchema, instanceId)!!
                 instances.add(instance)
@@ -193,11 +215,14 @@ class RoomEventSource(private val appDatabase: AppDatabase, private val eventDao
         return eventDao.getLastInstanceTimestamp(eventId)
     }
 
-    override suspend fun getAllEventInstances(eventId: String, eventInstanceSchema: EventInstanceSchema): Flow<EventInstance> = flow {
+    override suspend fun getAllEventInstances(
+        eventId: String,
+        eventInstanceSchema: EventInstanceSchema
+    ): Flow<EventInstance> = flow {
         val offset = 0L
         val limit = 100L
         var hasNext = true
-        while(hasNext) {
+        while (hasNext) {
             val instanceIds = eventDao.getEventInstanceIds(limit, offset)
             instanceIds.forEach { instanceId ->
                 val instance = getEventInstance(eventInstanceSchema, instanceId)!!
@@ -210,16 +235,34 @@ class RoomEventSource(private val appDatabase: AppDatabase, private val eventDao
     override suspend fun insertEventInstance(instance: EventInstance) {
         eventDao.insertEventInstance(EventInstanceEntity(instance))
         instance.fields.forEach { field ->
-            when(field.type) {
+            when (field.type) {
                 Type.TextField -> {
-                    eventDao.insertEventInstanceTextField(EventInstanceTextFieldEntity(instance.id, field as TextField))
+                    eventDao.insertEventInstanceTextField(
+                        EventInstanceTextFieldEntity(
+                            instance.id,
+                            field as TextField
+                        )
+                    )
                 }
+
                 Type.IntField -> {
-                    eventDao.insertEventInstanceIntField(EventInstanceIntFieldEntity(instance.id, field as IntField))
+                    eventDao.insertEventInstanceIntField(
+                        EventInstanceIntFieldEntity(
+                            instance.id,
+                            field as IntField
+                        )
+                    )
                 }
+
                 Type.DoubleField -> {
-                    eventDao.insertEventInstanceDoubleField(EventInstanceDoubleFieldEntity(instance.id, field as DoubleField))
+                    eventDao.insertEventInstanceDoubleField(
+                        EventInstanceDoubleFieldEntity(
+                            instance.id,
+                            field as DoubleField
+                        )
+                    )
                 }
+
                 else -> {
                     throw NotImplementedError()
                 }
@@ -245,5 +288,32 @@ class RoomEventSource(private val appDatabase: AppDatabase, private val eventDao
             }
             //TODO compare other fields and update if needed
         }
+    }
+
+    override suspend fun insertLabel(label: Label) {
+        eventDao.insertLabel(LabelEntity(label))
+    }
+
+    override suspend fun updateLabelName(labelId: String, name: String) {
+        eventDao.updateLabelName(labelId, name)
+    }
+
+    override suspend fun deleteLabel(labelId: String) {
+        appDatabase.withTransaction {
+            eventDao.deleteAllEventLabels(labelId)
+            eventDao.deleteLabel(labelId)
+        }
+    }
+
+    override suspend fun insertEventLabel(eventId: String, labelId: String) {
+        eventDao.insertEventLabel(EventLabelEntity(eventId, labelId))
+    }
+
+    override suspend fun deleteEventLabel(eventId: String, labelId: String) {
+        eventDao.deleteEventLabel(eventId, labelId)
+    }
+
+    override suspend fun getEventLabels(eventId: String): List<Label> {
+        return eventDao.getEventLabels(eventId).map { it.toModel() }
     }
 }

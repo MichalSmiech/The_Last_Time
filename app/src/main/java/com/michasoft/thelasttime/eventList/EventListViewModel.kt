@@ -48,13 +48,9 @@ class EventListViewModel(
 
     init {
         eventRepository.eventsChanged.onEach {
-            val events = eventRepository.getEventsWithLastInstanceTimestamp()
-            state.update {
-                it.copy(
-                    events = events
-                )
-            }
+            refreshEvents()
         }.launchIn(viewModelScope)
+
         syncJobQueue.changed.onEach {
             val error = syncJobQueue.isError()
             if (state.value.isErrorSync != error) {
@@ -63,8 +59,8 @@ class EventListViewModel(
         }.launchIn(viewModelScope)
     }
 
-    private suspend fun setupEvents() {
-        val events = eventRepository.getEventsWithLastInstanceTimestamp()
+    private suspend fun refreshEvents() {
+        val events = eventRepository.getEvents(withLastInstanceTimestamp = true, withLabels = true)
         state.update {
             it.copy(
                 isLoading = false,
@@ -75,7 +71,7 @@ class EventListViewModel(
 
     fun onStart() {
         viewModelScope.launch {
-            setupEvents()
+            refreshEvents()
         }
     }
 
