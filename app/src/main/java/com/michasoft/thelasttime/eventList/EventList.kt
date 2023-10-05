@@ -1,6 +1,8 @@
 package com.michasoft.thelasttime.eventList
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -21,6 +23,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.michasoft.thelasttime.model.Event
@@ -57,32 +60,36 @@ fun EventItem(event: Event, onClick: (String) -> Unit, onInstanceAdd: (String) -
         verticalAlignment = Alignment.CenterVertically
     ) {
         Column(
-            modifier = Modifier.weight(1f)
+            modifier = Modifier
+                .weight(1f)
+                .padding(top = 8.dp, bottom = 8.dp)
         ) {
-            val periodText = event.lastInstanceTimestamp?.periodText(lastTwo = true) ?: ""
             Text(
                 text = event.name,
-                modifier = Modifier.padding(end = 16.dp, top = 8.dp)
             )
-            Text(
-                text = periodText,
-                modifier = Modifier.padding(end = 16.dp, bottom = 8.dp),
-                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
-                fontSize = 14.sp
-            )
+            val periodText = event.lastInstanceTimestamp?.periodText(lastTwo = true) ?: ""
+            if (periodText.isNotBlank()) {
+                Text(
+                    text = periodText,
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
+                    fontSize = 14.sp
+                )
+            }
             if (event.labels.isNotEmpty()) {
-                Labels(labels = event.labels)
+                Labels(modifier = Modifier.padding(top = 8.dp), labels = event.labels)
             }
         }
-        AddButton(onClick = { onInstanceAdd(event.id) })
+        AddButton(modifier = Modifier.padding(start = 16.dp), onClick = { onInstanceAdd(event.id) })
     }
 }
 
 @Composable
 fun AddButton(
+    modifier: Modifier,
     onClick: () -> Unit,
 ) {
     IconButton(
+        modifier = modifier,
         onClick = onClick,
     ) {
         Icon(
@@ -94,8 +101,8 @@ fun AddButton(
 }
 
 @Composable
-fun Labels(labels: List<Label>) {
-    Row {
+fun Labels(modifier: Modifier, labels: List<Label>) {
+    Row(modifier = modifier, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
         labels.forEach {
             LabelItem(label = it)
         }
@@ -107,12 +114,20 @@ fun Labels(labels: List<Label>) {
 fun LabelItem(label: Label) {
     Surface(
         shape = InputChipDefaults.shape,
+        color = MaterialTheme.colorScheme.surfaceVariant
     ) {
-        Text(
-            text = label.name,
-            modifier = Modifier
-                .padding(horizontal = 4.dp)
-                .defaultMinSize(minHeight = InputChipDefaults.Height)
-        )
+        Box(
+            modifier = Modifier.defaultMinSize(minHeight = 24.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = label.name,
+                modifier = Modifier
+                    .padding(horizontal = 8.dp),
+                style = MaterialTheme.typography.labelMedium,
+                fontWeight = FontWeight.Normal,
+                letterSpacing = 0.sp
+            )
+        }
     }
 }

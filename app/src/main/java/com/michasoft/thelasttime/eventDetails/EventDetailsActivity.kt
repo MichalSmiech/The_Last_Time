@@ -142,6 +142,7 @@ fun EventDetailsScreen(
                 LoadingView()
             } else {
                 EventDetailsContent(
+                    event = state.event!!,
                     eventInstances = state.eventInstances,
                     onEventInstanceClick = viewModel::onEventInstanceClicked
                 )
