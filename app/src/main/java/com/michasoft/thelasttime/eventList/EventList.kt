@@ -4,15 +4,19 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.InputChipDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -20,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.michasoft.thelasttime.model.Event
+import com.michasoft.thelasttime.model.Label
 import com.michasoft.thelasttime.util.periodText
 
 /**
@@ -65,6 +70,9 @@ fun EventItem(event: Event, onClick: (String) -> Unit, onInstanceAdd: (String) -
                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
                 fontSize = 14.sp
             )
+            if (event.labels.isNotEmpty()) {
+                Labels(labels = event.labels)
+            }
         }
         AddButton(onClick = { onInstanceAdd(event.id) })
     }
@@ -81,6 +89,30 @@ fun AddButton(
             imageVector = Icons.Default.Add,
             tint = MaterialTheme.colorScheme.primary,
             contentDescription = "add icon"
+        )
+    }
+}
+
+@Composable
+fun Labels(labels: List<Label>) {
+    Row {
+        labels.forEach {
+            LabelItem(label = it)
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun LabelItem(label: Label) {
+    Surface(
+        shape = InputChipDefaults.shape,
+    ) {
+        Text(
+            text = label.name,
+            modifier = Modifier
+                .padding(horizontal = 4.dp)
+                .defaultMinSize(minHeight = InputChipDefaults.Height)
         )
     }
 }
