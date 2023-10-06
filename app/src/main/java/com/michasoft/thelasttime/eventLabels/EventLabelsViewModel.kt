@@ -27,7 +27,9 @@ class EventLabelsViewModel(
     val state = MutableStateFlow(
         EventLabelsState(
             isLoading = true,
-            labelItems = emptyList()
+            labelItems = emptyList(),
+            newLabelName = "",
+            filterLabelName = ""
         )
     )
     private var eventLabels = emptySet<Label>()
@@ -57,12 +59,21 @@ class EventLabelsViewModel(
     }
 
     private fun refreshLabelItems() {
-        val labelItems = allLabels.map {
-            LabelItem(
-                label = it,
-                checked = eventLabels.contains(it)
-            )
-        }
+        val labelItems = allLabels
+            .filter {
+                if (state.value.filterLabelName.isNotBlank())
+                    it.name.contains(
+                        state.value.filterLabelName,
+                        ignoreCase = true
+                    )
+                else true
+            }
+            .map {
+                LabelItem(
+                    label = it,
+                    checked = eventLabels.contains(it)
+                )
+            }
         state.update {
             it.copy(
                 labelItems = labelItems,
@@ -78,6 +89,39 @@ class EventLabelsViewModel(
             eventLabels = eventLabels - label
         }
         refreshLabelItems()
+    }
+
+    fun addNewLabel(labelName: String) {
+        val label = Label("123", labelName)
+        allLabels = listOf(label) + allLabels
+        eventLabels += label
+        clearFilterLabelName()
+    }
+
+    private fun isLabelExistsWith(name: String): Boolean {
+        return allLabels.any { it.name == name }
+    }
+
+    fun changeFilterLabelName(filterLabelName: String) {
+        state.update { it.copy(filterLabelName = filterLabelName) }
+        if (isLabelExistsWith(filterLabelName)) {
+            clearNewLabelName()
+        } else {
+            changeNewLabelName(filterLabelName)
+        }
+        refreshLabelItems()
+    }
+
+    private fun changeNewLabelName(name: String) {
+        state.update { it.copy(newLabelName = name) }
+    }
+
+    private fun clearFilterLabelName() {
+        changeFilterLabelName("")
+    }
+
+    private fun clearNewLabelName() {
+        changeNewLabelName("")
     }
 
     class Factory(private val eventId: String) : ViewModelProvider.Factory {

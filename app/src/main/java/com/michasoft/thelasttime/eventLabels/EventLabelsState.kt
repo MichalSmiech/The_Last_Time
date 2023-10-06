@@ -7,5 +7,7 @@ import com.michasoft.thelasttime.eventLabels.model.LabelItem
  */
 data class EventLabelsState(
     val isLoading: Boolean,
-    val labelItems: List<LabelItem>
+    val labelItems: List<LabelItem>,
+    val newLabelName: String,
+    val filterLabelName: String
 )

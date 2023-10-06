@@ -67,6 +67,8 @@ fun EventLabelsScreen(viewModel: EventLabelsViewModel) {
         topBar = {
             TopBar(
                 onDiscardClick = viewModel::onDiscardButtonClicked,
+                filterLabelName = state.filterLabelName,
+                onFilterLabelNameChange = viewModel::changeFilterLabelName
             )
         }
     ) {
@@ -80,7 +82,9 @@ fun EventLabelsScreen(viewModel: EventLabelsViewModel) {
             } else {
                 EventLabelsContent(
                     labelItems = state.labelItems,
-                    onLabelItemCheckedChange = viewModel::changeLabelItemChecked
+                    onLabelItemCheckedChange = viewModel::changeLabelItemChecked,
+                    newLabelName = state.newLabelName,
+                    onNewLabelAdd = viewModel::addNewLabel
                 )
             }
         }

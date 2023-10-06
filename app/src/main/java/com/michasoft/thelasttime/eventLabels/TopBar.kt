@@ -18,7 +18,11 @@ import com.michasoft.thelasttime.view.NoShapeTextField
  * Created by mśmiech on 06.10.2023.
  */
 @Composable
-fun TopBar(onDiscardClick: () -> Unit) {
+fun TopBar(
+    onDiscardClick: () -> Unit,
+    filterLabelName: String,
+    onFilterLabelNameChange: (String) -> Unit
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -31,10 +35,9 @@ fun TopBar(onDiscardClick: () -> Unit) {
                 .weight(1f)
                 .padding(horizontal = 8.dp),
             singleLine = true,
-            value = "",
-            onValueChange = {},
+            value = filterLabelName,
+            onValueChange = onFilterLabelNameChange,
             placeholder = { Text(text = "Wpisz nazwę etykiety") }
-//            textStyle = LocalTextStyle.current.copy(fontSize = 20.sp)
         )
     }
 }
