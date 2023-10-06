@@ -1,6 +1,5 @@
 package com.michasoft.thelasttime.eventList
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -101,7 +100,7 @@ private fun MenuItem(
         ) {
             Text(
                 modifier = Modifier
-                    .padding(horizontal = 16.dp),
+                    .padding(horizontal = 20.dp),
                 text = type.description,
                 color = if (isActive) MaterialTheme.colorScheme.onSecondaryContainer else MaterialTheme.colorScheme.onSurface,
                 style = MaterialTheme.typography.labelLarge,
@@ -151,64 +150,85 @@ fun LabelList(labels: List<Label>, onLabelClick: (Label) -> Unit) {
         modifier = Modifier
     ) {
         items(labels) {
-            LabelItemUI(it, onLabelClick)
+            LabelItemUI(it, onLabelClick, false)
         }
     }
 }
 
 @Composable
-fun LabelItemUI(label: Label, onLabelClick: (Label) -> Unit) {
-    Row(
+fun LabelItemUI(label: Label, onLabelClick: (Label) -> Unit, isActive: Boolean) {
+    Surface(
+        onClick = { onLabelClick(label) },
+        shape = CircleShape,
+        color = if (isActive) MaterialTheme.colorScheme.secondaryContainer else MaterialTheme.colorScheme.surface,
         modifier = Modifier
-            .clickable { onLabelClick(label) }
+            .padding(horizontal = 12.dp)
             .fillMaxWidth()
-            .height(48.dp),
-        verticalAlignment = Alignment.CenterVertically
+            .height(48.dp)
     ) {
-        Box(
+        Row(
             modifier = Modifier
-                .padding(start = 8.dp)
-                .size(48.dp),
-            contentAlignment = Alignment.Center
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Icon(
-                imageVector = Icons.Outlined.Label,
-                contentDescription = "label icon"
+            Box(
+                modifier = Modifier
+                    .padding(start = 4.dp)
+                    .size(48.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    imageVector = Icons.Outlined.Label,
+                    contentDescription = "label icon"
+                )
+            }
+            Text(
+                modifier = Modifier
+                    .padding(horizontal = 0.dp)
+                    .weight(1f),
+                text = label.name,
+                color = if (isActive) MaterialTheme.colorScheme.onSecondaryContainer else MaterialTheme.colorScheme.onSurface,
+                style = MaterialTheme.typography.labelLarge,
+                fontWeight = if (isActive) FontWeight.Bold else MaterialTheme.typography.labelLarge.fontWeight,
             )
         }
-        Text(
-            modifier = Modifier
-                .padding(horizontal = 8.dp)
-                .weight(1f), text = label.name
-        )
     }
 }
 
 @Composable
 fun AddNewLabel(onClick: () -> Unit) {
-    Row(
+    Surface(
+        onClick = onClick,
+        shape = CircleShape,
         modifier = Modifier
-            .clickable { onClick() }
+            .padding(horizontal = 12.dp)
             .fillMaxWidth()
-            .height(48.dp),
-        verticalAlignment = Alignment.CenterVertically
+            .height(48.dp)
     ) {
-        Box(
+        Row(
             modifier = Modifier
-                .padding(start = 8.dp)
-                .size(48.dp),
-            contentAlignment = Alignment.Center
+                .fillMaxWidth()
+                .height(48.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Icon(
-                imageVector = Icons.Default.Add,
-                contentDescription = "create label icon"
+            Box(
+                modifier = Modifier
+                    .padding(start = 4.dp)
+                    .size(48.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Add,
+                    contentDescription = "create label icon"
+                )
+            }
+            Text(
+                modifier = Modifier
+                    .padding(horizontal = 4.dp)
+                    .weight(1f),
+                text = "Create new label",
+                style = MaterialTheme.typography.labelLarge,
             )
         }
-        Text(
-            modifier = Modifier
-                .padding(horizontal = 8.dp)
-                .weight(1f),
-            text = "Create new label"
-        )
     }
 }
