@@ -9,4 +9,5 @@ sealed class EventListAction {
     object NavigateToEventAdd : EventListAction()
     object NavigateToSettings : EventListAction()
     object NavigateToDebug : EventListAction()
+    object CloseDrawer : EventListAction()
 }

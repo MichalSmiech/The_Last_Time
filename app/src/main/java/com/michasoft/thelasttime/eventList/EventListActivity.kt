@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FabPosition
@@ -51,8 +52,9 @@ class EventListActivity : UserSessionActivity() {
             val bottomSheetState = rememberModalBottomSheetState(
                 skipPartiallyExpanded = true,
             )
+            val drawerState = rememberDrawerState(DrawerValue.Closed)
             LastTimeTheme(window = window) {
-                EventListScreen(viewModel, bottomSheetState)
+                EventListScreen(viewModel, bottomSheetState, drawerState)
             }
             val coroutineScope = rememberCoroutineScope()
             LaunchedEffect(Unit) {
@@ -81,7 +83,17 @@ class EventListActivity : UserSessionActivity() {
                         }
 
                         is EventListAction.NavigateToDebug -> {
-                            launchEventMainActivity()
+                            coroutineScope.launch {
+                                drawerState.close()
+                            }.invokeOnCompletion {
+                                launchEventMainActivity()
+                            }
+                        }
+
+                        is EventListAction.CloseDrawer -> {
+                            coroutineScope.launch {
+                                drawerState.close()
+                            }
                         }
                     }
                 }.launchIn(lifecycleScope)
@@ -123,9 +135,12 @@ class EventListActivity : UserSessionActivity() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EventListScreen(viewModel: EventListViewModel, bottomSheetState: SheetState) {
+fun EventListScreen(
+    viewModel: EventListViewModel,
+    bottomSheetState: SheetState,
+    drawerState: DrawerState
+) {
     val state = viewModel.state.collectAsStateWithLifecycle().value
-    val drawerState = rememberDrawerState(DrawerValue.Closed)
     ModalNavigationDrawer(
         drawerState = drawerState,
         drawerContent = {

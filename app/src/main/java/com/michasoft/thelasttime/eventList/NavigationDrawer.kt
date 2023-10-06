@@ -14,7 +14,10 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Label
+import androidx.compose.material.icons.outlined.LogoDev
+import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -24,6 +27,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.michasoft.thelasttime.model.Label
@@ -49,6 +53,12 @@ fun DrawerContent(
             onMenuItemClick = onMenuItemClick,
             isActive = true
         )
+        LabelsSection(
+            labels = labels,
+            onLabelClick = onLabelClick,
+            onLabelsEditClick = onLabelsEditClick,
+            onAddNewLabelClick = onAddNewLabelClick
+        )
         MenuItem(
             type = MenuItemType.SETTINGS,
             onMenuItemClick = onMenuItemClick
@@ -56,16 +66,6 @@ fun DrawerContent(
         MenuItem(
             type = MenuItemType.DEBUG,
             onMenuItemClick = onMenuItemClick
-        )
-        Divider(
-            color = MaterialTheme.colorScheme.secondaryContainer,
-            modifier = Modifier.padding(vertical = 8.dp)
-        )
-        LabelsSection(
-            labels = labels,
-            onLabelClick = onLabelClick,
-            onLabelsEditClick = onLabelsEditClick,
-            onAddNewLabelClick = onAddNewLabelClick
         )
     }
 }
@@ -95,26 +95,39 @@ private fun MenuItem(
             .fillMaxWidth()
             .height(48.dp)
     ) {
-        Box(
-            contentAlignment = Alignment.CenterStart,
+        Row(
+            modifier = Modifier
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
         ) {
+            Box(
+                modifier = Modifier
+                    .padding(start = 4.dp)
+                    .size(48.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    imageVector = type.icon,
+                    contentDescription = "menu item icon"
+                )
+            }
             Text(
                 modifier = Modifier
-                    .padding(horizontal = 20.dp),
+                    .padding(horizontal = 0.dp)
+                    .weight(1f),
                 text = type.description,
                 color = if (isActive) MaterialTheme.colorScheme.onSecondaryContainer else MaterialTheme.colorScheme.onSurface,
                 style = MaterialTheme.typography.labelLarge,
                 fontWeight = if (isActive) FontWeight.Bold else MaterialTheme.typography.labelLarge.fontWeight,
             )
         }
-
     }
 }
 
-enum class MenuItemType(val description: String) {
-    EVENTS("Events"),
-    SETTINGS("Settings"),
-    DEBUG("Debug"),
+enum class MenuItemType(val description: String, val icon: ImageVector) {
+    EVENTS("Events", Icons.Outlined.Home),
+    SETTINGS("Settings", Icons.Outlined.Settings),
+    DEBUG("Debug", Icons.Outlined.LogoDev),
 }
 
 @Composable
@@ -124,6 +137,14 @@ fun LabelsSection(
     onLabelsEditClick: () -> Unit,
     onAddNewLabelClick: () -> Unit
 ) {
+    if (labels.isEmpty()) {
+        AddNewLabel(onClick = onAddNewLabelClick)
+        return
+    }
+    Divider(
+        color = MaterialTheme.colorScheme.secondaryContainer,
+        modifier = Modifier.padding(vertical = 8.dp)
+    )
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -142,6 +163,10 @@ fun LabelsSection(
     }
     LabelList(labels = labels, onLabelClick = onLabelClick)
     AddNewLabel(onClick = onAddNewLabelClick)
+    Divider(
+        color = MaterialTheme.colorScheme.secondaryContainer,
+        modifier = Modifier.padding(vertical = 8.dp)
+    )
 }
 
 @Composable
