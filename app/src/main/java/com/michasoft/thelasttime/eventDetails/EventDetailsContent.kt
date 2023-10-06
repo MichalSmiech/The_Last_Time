@@ -27,13 +27,15 @@ import com.michasoft.thelasttime.model.Label
 fun EventDetailsContent(
     event: Event,
     eventInstances: List<EventInstance>,
-    onEventInstanceClick: (String) -> Unit
+    onEventInstanceClick: (String) -> Unit,
+    onLabelClick: () -> Unit
 ) {
     Column(modifier = Modifier.fillMaxSize()) {
         if (event.labels.isNotEmpty()) {
             Labels(
                 modifier = Modifier.padding(start = 16.dp, top = 8.dp, end = 16.dp),
-                labels = event.labels
+                labels = event.labels,
+                onLabelClick = onLabelClick
             )
         }
         EventInstanceList(eventInstances, onEventInstanceClick)
@@ -41,20 +43,21 @@ fun EventDetailsContent(
 }
 
 @Composable
-fun Labels(modifier: Modifier, labels: List<Label>) {
+fun Labels(modifier: Modifier, labels: List<Label>, onLabelClick: () -> Unit) {
     Row(modifier = modifier, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
         labels.forEach {
-            LabelItem(label = it)
+            LabelItem(label = it, onClick = onLabelClick)
         }
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LabelItem(label: Label) {
+fun LabelItem(label: Label, onClick: () -> Unit) {
     Surface(
         shape = InputChipDefaults.shape,
-        color = MaterialTheme.colorScheme.surfaceVariant
+        color = MaterialTheme.colorScheme.surfaceVariant,
+        onClick = onClick
     ) {
         Box(
             modifier = Modifier.defaultMinSize(minHeight = InputChipDefaults.Height),

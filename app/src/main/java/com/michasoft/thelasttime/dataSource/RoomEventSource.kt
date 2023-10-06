@@ -316,4 +316,8 @@ class RoomEventSource(private val appDatabase: AppDatabase, private val eventDao
     override suspend fun getEventLabels(eventId: String): List<Label> {
         return eventDao.getEventLabels(eventId).map { it.toModel() }
     }
+
+    override suspend fun getLabels(): List<Label> {
+        return eventDao.getLabels().map { it.toModel() }
+    }
 }

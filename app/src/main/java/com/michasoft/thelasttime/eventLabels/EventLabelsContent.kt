@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -67,7 +68,8 @@ fun LabelItemUI(labelItem: LabelItem, onCheckedChange: (Label, Boolean) -> Unit)
     Row(
         modifier = Modifier
             .clickable { onCheckedChange(labelItem.label, !labelItem.checked) }
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .height(56.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Box(
@@ -98,7 +100,8 @@ fun NewLabelItemUI(name: String, onNewLabelAdd: (String) -> Unit) {
     Row(
         modifier = Modifier
             .clickable { onNewLabelAdd(name) }
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .height(56.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Box(

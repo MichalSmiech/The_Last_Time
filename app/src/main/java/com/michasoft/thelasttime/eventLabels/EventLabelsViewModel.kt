@@ -8,6 +8,7 @@ import com.michasoft.thelasttime.eventLabels.model.LabelItem
 import com.michasoft.thelasttime.model.Label
 import com.michasoft.thelasttime.repo.EventRepository
 import com.michasoft.thelasttime.userSessionComponent
+import com.michasoft.thelasttime.util.IdGenerator
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -48,13 +49,8 @@ class EventLabelsViewModel(
     }
 
     private suspend fun refreshData() {
-        eventLabels = emptySet()
-        allLabels = listOf(
-            Label("1", "test"),
-            Label("1", "water"),
-            Label("1", "studia"),
-            Label("1", "fire"),
-        )
+        eventLabels = eventRepository.getEventLabels(eventId).toSet()
+        allLabels = eventRepository.getLabels()
         refreshLabelItems()
     }
 
@@ -85,17 +81,27 @@ class EventLabelsViewModel(
     fun changeLabelItemChecked(label: Label, checked: Boolean) {
         if (checked) {
             eventLabels = eventLabels + label
+            viewModelScope.launch {
+                eventRepository.insertEventLabel(eventId, label.id)
+            }
         } else {
             eventLabels = eventLabels - label
+            viewModelScope.launch {
+                eventRepository.deleteEventLabel(eventId, label.id)
+            }
         }
         refreshLabelItems()
     }
 
     fun addNewLabel(labelName: String) {
-        val label = Label("123", labelName)
+        val label = Label(IdGenerator.newId(), labelName)
         allLabels = listOf(label) + allLabels
         eventLabels += label
         clearFilterLabelName()
+        viewModelScope.launch {
+            eventRepository.insertLabel(label)
+            eventRepository.insertEventLabel(eventId, label.id)
+        }
     }
 
     private fun isLabelExistsWith(name: String): Boolean {

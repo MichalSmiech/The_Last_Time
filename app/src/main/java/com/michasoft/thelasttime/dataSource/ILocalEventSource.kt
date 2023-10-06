@@ -46,4 +46,5 @@ interface ILocalEventSource {
     suspend fun insertEventLabel(eventId: String, labelId: String)
     suspend fun deleteEventLabel(eventId: String, labelId: String)
     suspend fun getEventLabels(eventId: String): List<Label>
+    suspend fun getLabels(): List<Label>
 }

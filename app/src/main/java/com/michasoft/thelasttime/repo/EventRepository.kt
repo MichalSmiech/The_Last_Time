@@ -3,6 +3,7 @@ package com.michasoft.thelasttime.repo
 import com.michasoft.thelasttime.dataSource.ILocalEventSource
 import com.michasoft.thelasttime.model.Event
 import com.michasoft.thelasttime.model.EventInstance
+import com.michasoft.thelasttime.model.Label
 import com.michasoft.thelasttime.model.SyncJobQueue
 import com.michasoft.thelasttime.model.SyncJobQueueCoordinator
 import com.michasoft.thelasttime.model.syncJob.EventInstanceSyncJob
@@ -35,8 +36,12 @@ class EventRepository(
         _eventsChanged.emit(Unit)
     }
 
-    suspend fun getEvent(eventId: String): Event? {
-        return localSource.getEvent(eventId)
+    suspend fun getEvent(eventId: String, withLabels: Boolean = false): Event? {
+        return localSource.getEvent(eventId)?.also { event ->
+            if (withLabels) {
+                event.labels = localSource.getEventLabels(event.id)
+            }
+        }
     }
 
     suspend fun getEvents(): ArrayList<Event> {
@@ -130,5 +135,28 @@ class EventRepository(
 
     suspend fun getEventInstances(eventId: String): List<EventInstance> {
         return localSource.getAllEventInstancesAtOnce(eventId)
+    }
+
+    suspend fun getLabels(): List<Label> {
+        return localSource.getLabels()
+    }
+
+    suspend fun getEventLabels(eventId: String): List<Label> {
+        return localSource.getEventLabels(eventId)
+    }
+
+    suspend fun insertLabel(label: Label) {
+        localSource.insertLabel(label)
+        //TODO sync
+    }
+
+    suspend fun insertEventLabel(eventId: String, labelId: String) {
+        localSource.insertEventLabel(eventId, labelId)
+        //TODO sync
+    }
+
+    suspend fun deleteEventLabel(eventId: String, labelId: String) {
+        localSource.deleteEventLabel(eventId, labelId)
+        //TODO sync
     }
 }

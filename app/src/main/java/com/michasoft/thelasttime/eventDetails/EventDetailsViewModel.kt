@@ -57,7 +57,7 @@ class EventDetailsViewModel(
     }
 
     private suspend fun setupEvent(eventId: String) {
-        val event = eventRepository.getEvent(eventId) ?: return
+        val event = eventRepository.getEvent(eventId, withLabels = true) ?: return
         val eventInstances = eventRepository.getEventInstances(eventId)
         state.update {
             it.copy(
@@ -124,6 +124,12 @@ class EventDetailsViewModel(
     }
 
     fun onLabelsButtonClicked() {
+        viewModelScope.launch {
+            _actions.emit(EventDetailsAction.NavigateToEventLabels(eventId))
+        }
+    }
+
+    fun onLabelClicked() {
         viewModelScope.launch {
             _actions.emit(EventDetailsAction.NavigateToEventLabels(eventId))
         }
