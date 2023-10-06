@@ -123,6 +123,12 @@ class EventDetailsViewModel(
         state.update { it.copy(isBottomSheetShowing = false) }
     }
 
+    fun onLabelsButtonClicked() {
+        viewModelScope.launch {
+            _actions.emit(EventDetailsAction.NavigateToEventLabels(eventId))
+        }
+    }
+
     class Factory(private val eventId: String) : ViewModelProvider.Factory {
         @Inject
         lateinit var eventRepository: EventRepository

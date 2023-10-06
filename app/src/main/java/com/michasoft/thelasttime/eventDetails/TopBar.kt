@@ -1,12 +1,12 @@
 package com.michasoft.thelasttime.eventDetails
 
-import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.DeleteOutline
+import androidx.compose.material.icons.outlined.Label
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalTextStyle
@@ -28,21 +28,27 @@ fun TopBar(
     eventName: String,
     onEventNameChange: (String) -> Unit,
     onDiscardClick: () -> Unit,
-    onDelete: () -> Unit
+    onDeleteClick: () -> Unit,
+    onLabelsClick: () -> Unit
 ) {
     Row(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         DiscardButton(onClick = onDiscardClick)
         NoShapeTextField(
-            modifier = Modifier.weight(1f),
+            modifier = Modifier
+                .weight(1f)
+                .padding(horizontal = 8.dp),
             singleLine = true,
             value = eventName,
             onValueChange = onEventNameChange,
             textStyle = LocalTextStyle.current.copy(fontSize = 20.sp)
         )
-        DeleteButton(onClick = onDelete)
+        LabelsButton(onClick = onLabelsClick)
+        DeleteButton(onClick = onDeleteClick)
     }
 }
 
@@ -52,7 +58,7 @@ fun DiscardButton(
 ) {
     IconButton(
         onClick = onClick,
-        modifier = Modifier.padding(8.dp, 8.dp)
+        modifier = Modifier.padding(vertical = 8.dp)
     ) {
         Icon(
             imageVector = Icons.Default.Close,
@@ -67,7 +73,7 @@ fun DeleteButton(
 ) {
     IconButton(
         onClick = onClick,
-        modifier = Modifier.padding(8.dp, 8.dp)
+        modifier = Modifier.padding(vertical = 8.dp)
     ) {
         Icon(
             imageVector = Icons.Default.DeleteOutline,
@@ -76,10 +82,30 @@ fun DeleteButton(
     }
 }
 
-@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES)
+@Composable
+fun LabelsButton(
+    onClick: () -> Unit,
+) {
+    IconButton(
+        onClick = onClick,
+        modifier = Modifier.padding(vertical = 8.dp)
+    ) {
+        Icon(
+            imageVector = Icons.Outlined.Label,
+            contentDescription = "delete icon"
+        )
+    }
+}
+
+@Preview(showBackground = true)
 @Composable
 fun PreviewTopBar() {
     LastTimeTheme {
-        TopBar(eventName = "Podlewanie", onEventNameChange = {}, onDiscardClick = {}, onDelete = {})
+        TopBar(
+            eventName = "Podlewanie",
+            onEventNameChange = {},
+            onDiscardClick = {},
+            onDeleteClick = {},
+            onLabelsClick = {})
     }
 }

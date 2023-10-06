@@ -28,6 +28,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.michasoft.thelasttime.eventInstanceAdd.EventInstanceAddBottomSheet
 import com.michasoft.thelasttime.eventInstanceDetails.EventInstanceDetailsActivity
+import com.michasoft.thelasttime.eventLabels.EventLabelsActivity
 import com.michasoft.thelasttime.view.DeleteConfirmationDialog
 import com.michasoft.thelasttime.view.LoadingView
 import com.michasoft.thelasttime.view.UserSessionActivity
@@ -72,6 +73,12 @@ class EventDetailsActivity : UserSessionActivity() {
                                 }
                             }
                         }
+
+                        is EventDetailsAction.NavigateToEventLabels -> {
+                            launchEventLabelsActivity(
+                                it.eventId
+                            )
+                        }
                     }
                 }.launchIn(lifecycleScope)
             }
@@ -92,6 +99,13 @@ class EventDetailsActivity : UserSessionActivity() {
 //        EventInstanceActivity.start(this, eventId, instanceId)
         startActivity(
             EventInstanceDetailsActivity.getLaunchIntent(this, eventId, instanceId),
+            ActivityOptionsCompat.makeSceneTransitionAnimation(this).toBundle()
+        )
+    }
+
+    private fun launchEventLabelsActivity(eventId: String) {
+        startActivity(
+            EventLabelsActivity.getLaunchIntent(this, eventId),
             ActivityOptionsCompat.makeSceneTransitionAnimation(this).toBundle()
         )
     }
@@ -120,7 +134,8 @@ fun EventDetailsScreen(
                 eventName = state.event?.name ?: "",
                 onEventNameChange = viewModel::changeName,
                 onDiscardClick = viewModel::onDiscardButtonClicked,
-                onDelete = viewModel::onDeleteButtonClicked
+                onDeleteClick = viewModel::onDeleteButtonClicked,
+                onLabelsClick = viewModel::onLabelsButtonClicked
             )
         },
         floatingActionButton = {

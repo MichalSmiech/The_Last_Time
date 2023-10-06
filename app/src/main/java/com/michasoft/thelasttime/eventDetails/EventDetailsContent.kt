@@ -69,8 +69,3 @@ fun LabelItem(label: Label) {
         }
     }
 }
-
-val testLabels = listOf<Label>(
-    Label("a", "test"),
-    Label("a", "📖studia"),
-)
