@@ -120,7 +120,7 @@ fun NewLabelItemUI(name: String, onNewLabelAdd: (String) -> Unit) {
             modifier = Modifier
                 .padding(horizontal = 8.dp)
                 .weight(1f),
-            text = "Utwórz \"$name\""
+            text = "Create \"$name\""
         )
     }
 }

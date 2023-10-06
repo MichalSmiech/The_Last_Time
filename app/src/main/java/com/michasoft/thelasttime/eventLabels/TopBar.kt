@@ -37,7 +37,7 @@ fun TopBar(
             singleLine = true,
             value = filterLabelName,
             onValueChange = onFilterLabelNameChange,
-            placeholder = { Text(text = "Wpisz nazwę etykiety") }
+            placeholder = { Text(text = "Enter label name") }
         )
     }
 }
