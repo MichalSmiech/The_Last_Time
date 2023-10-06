@@ -96,7 +96,6 @@ class EventDetailsActivity : UserSessionActivity() {
     }
 
     private fun launchEventInstanceDetailsActivity(instanceId: String) {
-//        EventInstanceActivity.start(this, eventId, instanceId)
         startActivity(
             EventInstanceDetailsActivity.getLaunchIntent(this, eventId, instanceId),
             ActivityOptionsCompat.makeSceneTransitionAnimation(this).toBundle()

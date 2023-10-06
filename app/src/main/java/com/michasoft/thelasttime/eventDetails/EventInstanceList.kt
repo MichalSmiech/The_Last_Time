@@ -26,7 +26,7 @@ fun EventInstanceList(
     onEventInstanceClick: (String) -> Unit
 ) {
     LazyColumn(
-        modifier = Modifier.padding(0.dp, 8.dp),
+        modifier = Modifier.padding(vertical = 8.dp),
     ) {
         items(instances) {
             EventInstanceItem(it, onEventInstanceClick)

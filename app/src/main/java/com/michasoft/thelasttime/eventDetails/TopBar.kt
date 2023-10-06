@@ -17,7 +17,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.michasoft.thelasttime.view.NoShapeTextField
-import com.michasoft.thelasttime.view.theme.LastTimeTheme
 
 /**
  * Created by mśmiech on 21.09.2023.
@@ -92,7 +91,7 @@ fun LabelsButton(
     ) {
         Icon(
             imageVector = Icons.Outlined.Label,
-            contentDescription = "delete icon"
+            contentDescription = "labels icon"
         )
     }
 }
@@ -100,12 +99,10 @@ fun LabelsButton(
 @Preview(showBackground = true)
 @Composable
 fun PreviewTopBar() {
-    LastTimeTheme {
-        TopBar(
-            eventName = "Podlewanie",
-            onEventNameChange = {},
-            onDiscardClick = {},
-            onDeleteClick = {},
-            onLabelsClick = {})
-    }
+    TopBar(
+        eventName = "Podlewanie",
+        onEventNameChange = {},
+        onDiscardClick = {},
+        onDeleteClick = {},
+        onLabelsClick = {})
 }

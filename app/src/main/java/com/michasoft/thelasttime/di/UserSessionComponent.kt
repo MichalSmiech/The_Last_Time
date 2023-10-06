@@ -4,6 +4,7 @@ import android.net.Uri
 import com.michasoft.thelasttime.eventAdd.EventAddViewModel
 import com.michasoft.thelasttime.eventDetails.EventDetailsViewModel
 import com.michasoft.thelasttime.eventInstanceDetails.EventInstanceDetailsViewModel
+import com.michasoft.thelasttime.eventLabels.EventLabelsViewModel
 import com.michasoft.thelasttime.eventList.EventListViewModel
 import com.michasoft.thelasttime.model.User
 import com.michasoft.thelasttime.model.syncJob.EventInstanceSyncJob
@@ -39,5 +40,6 @@ interface UserSessionComponent {
     fun inject(factory: EventInstanceDetailsViewModel.Factory)
     fun inject(factory: EventListViewModel.Factory)
     fun inject(factory: EventAddViewModel.Factory)
+    fun inject(factory: EventLabelsViewModel.Factory)
 
 }
