@@ -34,7 +34,8 @@ class EventListViewModel(
             events = emptyList(),
             isErrorSync = false,
             isBottomSheetShowing = false,
-            userPhotoUrl = userPhotoUrl
+            userPhotoUrl = userPhotoUrl,
+            labels = emptyList()
         )
     )
     val eventInstanceAddViewModel = EventInstanceAddViewModel(
@@ -72,7 +73,13 @@ class EventListViewModel(
     fun onStart() {
         viewModelScope.launch {
             refreshEvents()
+            setupLabels()
         }
+    }
+
+    private suspend fun setupLabels() {
+        val labels = eventRepository.getLabels()
+        state.update { it.copy(labels = labels) }
     }
 
     fun onEventClicked(eventId: String) {

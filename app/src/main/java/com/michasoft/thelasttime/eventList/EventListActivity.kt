@@ -130,7 +130,13 @@ fun EventListScreen(viewModel: EventListViewModel, bottomSheetState: SheetState)
         drawerState = drawerState,
         drawerContent = {
             ModalDrawerSheet {
-                DrawerContent(onMenuItemClick = { viewModel.menuItemClicked(it) })
+                DrawerContent(
+                    onMenuItemClick = { viewModel.menuItemClicked(it) },
+                    labels = state.labels,
+                    onLabelClick = {},
+                    onLabelsEditClick = {},
+                    onAddNewLabelClick = {}
+                )
             }
         }
     ) {
