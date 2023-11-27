@@ -86,7 +86,8 @@ fun LabelItemUI(labelItem: LabelItem, onCheckedChange: (Label, Boolean) -> Unit)
         Text(
             modifier = Modifier
                 .padding(horizontal = 8.dp)
-                .weight(1f), text = labelItem.label.name
+                .weight(1f),
+            text = labelItem.label.name
         )
         Checkbox(
             modifier = Modifier.padding(end = 8.dp),

@@ -33,6 +33,7 @@ import androidx.lifecycle.lifecycleScope
 import com.michasoft.thelasttime.eventAdd.EventAddActivity
 import com.michasoft.thelasttime.eventDetails.EventDetailsActivity
 import com.michasoft.thelasttime.eventInstanceAdd.EventInstanceAddBottomSheet
+import com.michasoft.thelasttime.labelsEdit.LabelsEditActivity
 import com.michasoft.thelasttime.view.LoadingView
 import com.michasoft.thelasttime.view.MainActivity
 import com.michasoft.thelasttime.view.UserSessionActivity
@@ -86,8 +87,12 @@ class EventListActivity : UserSessionActivity() {
                             coroutineScope.launch {
                                 drawerState.close()
                             }.invokeOnCompletion {
-                                launchEventMainActivity()
+                                launchMainActivity()
                             }
+                        }
+
+                        is EventListAction.NavigateToLabelsEdit -> {
+                            launchLabelsEditActivity()
                         }
 
                         is EventListAction.CloseDrawer -> {
@@ -120,9 +125,16 @@ class EventListActivity : UserSessionActivity() {
         )
     }
 
-    private fun launchEventMainActivity() {
+    private fun launchMainActivity() {
         startActivity(
             Intent(this, MainActivity::class.java),
+            ActivityOptionsCompat.makeSceneTransitionAnimation(this).toBundle()
+        )
+    }
+
+    private fun launchLabelsEditActivity() {
+        startActivity(
+            Intent(this, LabelsEditActivity::class.java),
             ActivityOptionsCompat.makeSceneTransitionAnimation(this).toBundle()
         )
     }
@@ -149,7 +161,7 @@ fun EventListScreen(
                     onMenuItemClick = { viewModel.menuItemClicked(it) },
                     labels = state.labels,
                     onLabelClick = {},
-                    onLabelsEditClick = {},
+                    onLabelsEditClick = { viewModel.onLabelsEditClicked() },
                     onAddNewLabelClick = {}
                 )
             }

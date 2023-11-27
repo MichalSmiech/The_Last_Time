@@ -117,6 +117,12 @@ class EventListViewModel(
         state.update { it.copy(isBottomSheetShowing = false) }
     }
 
+    fun onLabelsEditClicked() {
+        viewModelScope.launch {
+            _actions.emit(EventListAction.NavigateToLabelsEdit)
+        }
+    }
+
     class Factory : ViewModelProvider.Factory {
         @Inject
         lateinit var eventRepository: EventRepository
