@@ -8,6 +8,14 @@ plugins {
 }
 
 android {
+    signingConfigs {
+        dev_release {
+            storeFile file('M:\\_dev\\android\\TheLastTime\\keystore.jks')
+            storePassword '123456'
+            keyAlias 'key0'
+            keyPassword '123456'
+        }
+    }
     namespace 'com.michasoft.thelasttime'
     compileSdk 34
 
@@ -28,6 +36,7 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.dev_release
         }
     }
     compileOptions {
