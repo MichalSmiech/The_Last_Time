@@ -1,5 +1,6 @@
 package com.michasoft.thelasttime.model
 
 data class Reminder(
-    val text: String
+    val event: Event,
+    val triggerMillis: Long = 0
 )

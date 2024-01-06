@@ -9,6 +9,7 @@ import com.michasoft.thelasttime.eventList.EventListViewModel
 import com.michasoft.thelasttime.model.User
 import com.michasoft.thelasttime.model.syncJob.EventInstanceSyncJob
 import com.michasoft.thelasttime.model.syncJob.EventSyncJob
+import com.michasoft.thelasttime.reminder.ShowReminderReceiver
 import com.michasoft.thelasttime.repo.UserSessionRepository
 import com.michasoft.thelasttime.view.MainActivity
 import dagger.BindsInstance
@@ -41,5 +42,6 @@ interface UserSessionComponent {
     fun inject(factory: EventListViewModel.Factory)
     fun inject(factory: EventAddViewModel.Factory)
     fun inject(factory: EventLabelsViewModel.Factory)
+    fun inject(showReminderReceiver: ShowReminderReceiver)
 
 }

@@ -15,8 +15,8 @@ class CreateReminderNotificationUseCase @Inject constructor(
     operator fun invoke(reminder: Reminder): Notification {
         return NotificationCompat.Builder(context, channelId)
             .setSmallIcon(R.drawable.baseline_schedule_24)
-            .setContentTitle(reminder.text)
-//            .setContentText(textContent)
+            .setContentTitle("Reminder")
+            .setContentText(reminder.event.name)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .build()
     }
