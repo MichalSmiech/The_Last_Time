@@ -17,6 +17,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Label
 import androidx.compose.material.icons.outlined.LogoDev
+import androidx.compose.material.icons.outlined.Logout
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
@@ -65,6 +66,14 @@ fun DrawerContent(
         )
         MenuItem(
             type = MenuItemType.DEBUG,
+            onMenuItemClick = onMenuItemClick
+        )
+        MenuItem(
+            type = MenuItemType.SETTINGS,
+            onMenuItemClick = onMenuItemClick
+        )
+        MenuItem(
+            type = MenuItemType.SIGNOUT,
             onMenuItemClick = onMenuItemClick
         )
     }
@@ -128,6 +137,7 @@ enum class MenuItemType(val description: String, val icon: ImageVector) {
     EVENTS("Events", Icons.Outlined.Home),
     SETTINGS("Settings", Icons.Outlined.Settings),
     DEBUG("Debug", Icons.Outlined.LogoDev),
+    SIGNOUT("Sign out", Icons.Outlined.Logout),
 }
 
 @Composable

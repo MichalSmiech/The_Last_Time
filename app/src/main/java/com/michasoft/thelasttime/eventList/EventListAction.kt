@@ -11,4 +11,5 @@ sealed class EventListAction {
     object NavigateToDebug : EventListAction()
     object NavigateToLabelsEdit : EventListAction()
     object CloseDrawer : EventListAction()
+    object SignOut : EventListAction()
 }

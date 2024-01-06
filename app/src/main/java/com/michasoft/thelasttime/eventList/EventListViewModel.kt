@@ -8,6 +8,7 @@ import androidx.lifecycle.viewmodel.CreationExtras
 import com.michasoft.thelasttime.eventInstanceAdd.EventInstanceAddViewModel
 import com.michasoft.thelasttime.model.SyncJobQueue
 import com.michasoft.thelasttime.repo.EventRepository
+import com.michasoft.thelasttime.repo.UserSessionRepository
 import com.michasoft.thelasttime.userSessionComponent
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -24,7 +25,8 @@ import javax.inject.Inject
 class EventListViewModel(
     private val eventRepository: EventRepository,
     private val syncJobQueue: SyncJobQueue,
-    private val userPhotoUrl: Uri?
+    private val userPhotoUrl: Uri?,
+    private val userSessionRepository: UserSessionRepository
 ) : ViewModel() {
     private val _actions: MutableSharedFlow<EventListAction> = MutableSharedFlow()
     val actions: SharedFlow<EventListAction> = _actions
@@ -109,6 +111,7 @@ class EventListViewModel(
                 MenuItemType.SETTINGS -> _actions.emit(EventListAction.NavigateToSettings)
                 MenuItemType.DEBUG -> _actions.emit(EventListAction.NavigateToDebug)
                 MenuItemType.EVENTS -> _actions.emit(EventListAction.CloseDrawer)
+                MenuItemType.SIGNOUT -> _actions.emit(EventListAction.SignOut)
             }
         }
     }
@@ -123,12 +126,19 @@ class EventListViewModel(
         }
     }
 
+    suspend fun singOut() {
+        userSessionRepository.logout()
+    }
+
     class Factory : ViewModelProvider.Factory {
         @Inject
         lateinit var eventRepository: EventRepository
 
         @Inject
         lateinit var syncJobQueue: SyncJobQueue
+
+        @Inject
+        lateinit var userSessionRepository: UserSessionRepository
 
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(
@@ -141,7 +151,8 @@ class EventListViewModel(
             return EventListViewModel(
                 eventRepository,
                 syncJobQueue,
-                application.userSessionComponent().getUserPhotoUrl()
+                application.userSessionComponent().getUserPhotoUrl(),
+                userSessionRepository
             ) as T
         }
     }

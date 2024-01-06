@@ -35,12 +35,14 @@ import com.michasoft.thelasttime.eventDetails.EventDetailsActivity
 import com.michasoft.thelasttime.eventInstanceAdd.EventInstanceAddBottomSheet
 import com.michasoft.thelasttime.labelsEdit.LabelsEditActivity
 import com.michasoft.thelasttime.view.LoadingView
+import com.michasoft.thelasttime.view.LoginActivity
 import com.michasoft.thelasttime.view.MainActivity
 import com.michasoft.thelasttime.view.UserSessionActivity
 import com.michasoft.thelasttime.view.theme.LastTimeTheme
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 class EventListActivity : UserSessionActivity() {
     private val viewModel by viewModels<EventListViewModel>(factoryProducer = {
@@ -99,6 +101,19 @@ class EventListActivity : UserSessionActivity() {
                             coroutineScope.launch {
                                 drawerState.close()
                             }
+                        }
+
+                        is EventListAction.SignOut -> {
+                            runBlocking {
+                                viewModel.singOut()
+                            }
+                            Intent(this@EventListActivity, LoginActivity::class.java).also {
+                                startActivity(it,
+                                    ActivityOptionsCompat.makeSceneTransitionAnimation(this@EventListActivity)
+                                        .toBundle()
+                                )
+                            }
+                            finishAfterTransition()
                         }
                     }
                 }.launchIn(lifecycleScope)
