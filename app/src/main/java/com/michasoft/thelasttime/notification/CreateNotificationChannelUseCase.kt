@@ -4,8 +4,9 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.content.Context.NOTIFICATION_SERVICE
+import javax.inject.Inject
 
-class CreateNotificationChannelUseCase(
+class CreateNotificationChannelUseCase @Inject constructor(
     private val context: Context
 ) {
 

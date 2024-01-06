@@ -11,6 +11,11 @@ import com.michasoft.thelasttime.model.Event
 import com.michasoft.thelasttime.model.EventInstanceField
 import com.michasoft.thelasttime.model.EventInstanceFieldSchema
 import com.michasoft.thelasttime.model.EventInstanceSchema
+import com.michasoft.thelasttime.model.Reminder
+import com.michasoft.thelasttime.notification.CreateNotificationChannelUseCase
+import com.michasoft.thelasttime.notification.CreateReminderNotificationUseCase
+import com.michasoft.thelasttime.notification.NotificationChannels.reminderChannelData
+import com.michasoft.thelasttime.notification.ShowNotificationUseCase
 import com.michasoft.thelasttime.repo.BackupRepository
 import com.michasoft.thelasttime.repo.EventRepository
 import com.michasoft.thelasttime.repo.UserSessionRepository
@@ -34,12 +39,23 @@ class MainActivity : UserSessionActivity() {
     @Inject
     lateinit var backupConfig: BackupConfig
 
-    @Inject lateinit var userSessionRepository: UserSessionRepository
+    @Inject
+    lateinit var userSessionRepository: UserSessionRepository
+
+    @Inject
+    lateinit var createNotificationChannelUseCase: CreateNotificationChannelUseCase
+
+    @Inject
+    lateinit var showNotificationUseCase: ShowNotificationUseCase
+
+    @Inject
+    lateinit var createReminderNotificationUseCase: CreateReminderNotificationUseCase
 
     override fun onActivityCreate(savedInstanceState: Bundle?) {
         (application as LastTimeApplication).userSessionComponent!!.inject(this)
         setContentView(R.layout.activity_main)
-        val switch1 = findViewById<com.google.android.material.switchmaterial.SwitchMaterial>(R.id.switch1)
+        val switch1 =
+            findViewById<com.google.android.material.switchmaterial.SwitchMaterial>(R.id.switch1)
         CoroutineScope(Dispatchers.IO).launch {
             val autoBackup = backupConfig.isAutoBackup()
             withContext(Dispatchers.Main) {
@@ -118,5 +134,24 @@ class MainActivity : UserSessionActivity() {
             startActivity(it, ActivityOptionsCompat.makeSceneTransitionAnimation(this).toBundle())
         }
         finishAfterTransition()
+    }
+
+    fun createChannelNotification(view: View) {
+        val channelData = reminderChannelData
+        createNotificationChannelUseCase.invoke(channelData)
+    }
+
+    fun showNotification(view: View) {
+        val notificationId = 1
+        val reminder = Reminder("test")
+        val notification = createReminderNotificationUseCase(reminder)
+        CoroutineScope(Dispatchers.Main).launch {
+            showNotificationUseCase.invoke(
+                notification,
+                notificationId,
+                lifecycle,
+                activityResultRegistry
+            )
+        }
     }
 }
