@@ -1,7 +1,10 @@
 package com.michasoft.thelasttime.eventInstanceDetails
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import com.michasoft.thelasttime.model.EventInstance
 import com.michasoft.thelasttime.view.EditableDate
 import com.michasoft.thelasttime.view.EditableTime
@@ -19,7 +22,15 @@ fun EventInstanceDetailsContent(
     onTimeChange: (LocalTime) -> Unit
 ) {
     Column {
-        EditableDate(date = instance.timestamp.toLocalDate(), onDateChange = onDateChange)
-        EditableTime(time = instance.timestamp.toLocalTime(), onTimeChange = onTimeChange)
+        EditableDate(
+            modifier = Modifier.padding(start = 13.dp),
+            date = instance.timestamp.toLocalDate(),
+            onDateChange = onDateChange
+        )
+        EditableTime(
+            modifier = Modifier.padding(start = 13.dp),
+            time = instance.timestamp.toLocalTime(),
+            onTimeChange = onTimeChange
+        )
     }
 }

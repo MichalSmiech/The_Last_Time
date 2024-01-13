@@ -32,7 +32,8 @@ class EventDetailsViewModel(
             event = null,
             eventInstances = emptyList(),
             isDeleteConfirmationDialogShowing = false,
-            isBottomSheetShowing = false
+            isBottomSheetShowing = false,
+            isAddReminderDialogShowing = false
         )
     )
     private val eventNameChanges = MutableSharedFlow<String>()
@@ -133,6 +134,14 @@ class EventDetailsViewModel(
         viewModelScope.launch {
             _actions.emit(EventDetailsAction.NavigateToEventLabels(eventId))
         }
+    }
+
+    fun onReminderButtonClicked() {
+        state.update { it.copy(isAddReminderDialogShowing = true) }
+    }
+
+    fun onAddReminderDialogHide() {
+        state.update { it.copy(isAddReminderDialogShowing = false) }
     }
 
     class Factory(private val eventId: String) : ViewModelProvider.Factory {

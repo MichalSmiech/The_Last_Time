@@ -4,6 +4,7 @@ import android.app.TimePickerDialog
 import android.content.Context
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -20,14 +21,24 @@ import org.joda.time.format.DateTimeFormat
  * Created by mśmiech on 25.09.2023.
  */
 @Composable
-fun EditableTime(time: LocalTime, onTimeChange: (LocalTime) -> Unit) {
+fun EditableTime(
+    modifier: Modifier = Modifier,
+    time: LocalTime,
+    onTimeChange: (LocalTime) -> Unit
+) {
     val startTimePicker = createTimePicker(LocalContext.current, time) {
         onTimeChange(it)
     }
     Row(
+        modifier = modifier,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Spacer(modifier = Modifier.width(50.dp))
+        Spacer(
+            modifier = Modifier
+                .width(24.dp)
+                .padding(vertical = 13.dp)
+        )
+        Spacer(modifier = Modifier.width(13.dp))
         TextButton(
             onClick = { startTimePicker.show() }
         ) {

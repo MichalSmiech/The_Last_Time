@@ -36,10 +36,12 @@ fun EventInstanceAddBottomSheet(viewModel: EventInstanceAddViewModel) {
         ) {
             Column {
                 EditableDate(
+                    modifier = Modifier.padding(start = 13.dp),
                     date = state.instance.timestamp.toLocalDate(),
                     onDateChange = viewModel::changeDate
                 )
                 EditableTime(
+                    modifier = Modifier.padding(start = 13.dp),
                     time = state.instance.timestamp.toLocalTime(),
                     onTimeChange = viewModel::changeTime
                 )

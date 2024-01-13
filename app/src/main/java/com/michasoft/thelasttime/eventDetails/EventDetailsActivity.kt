@@ -134,7 +134,8 @@ fun EventDetailsScreen(
                 onEventNameChange = viewModel::changeName,
                 onDiscardClick = viewModel::onDiscardButtonClicked,
                 onDeleteClick = viewModel::onDeleteButtonClicked,
-                onLabelsClick = viewModel::onLabelsButtonClicked
+                onLabelsClick = viewModel::onLabelsButtonClicked,
+                onReminderClick = viewModel::onReminderButtonClicked,
             )
         },
         floatingActionButton = {
@@ -175,8 +176,15 @@ fun EventDetailsScreen(
                         EventInstanceAddBottomSheet(viewModel.eventInstanceAddViewModel)
                     }
                 }
+                if (state.isAddReminderDialogShowing) {
+                    EditReminderDialog(
+                        onDismiss = {
+                            viewModel.onAddReminderDialogHide()
+                        },
+                        eventId = state.event.id
+                    )
+                }
             }
         }
     }
 }
-

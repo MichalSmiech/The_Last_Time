@@ -9,15 +9,17 @@ class RepeatedReminderEntity(
     @PrimaryKey
     var id: String,
     val eventId: String,
+    val periodText: String,
     val nextTriggerMillis: Long?
 ) {
     constructor(reminder: RepeatedReminder) : this(
         reminder.id,
         reminder.eventId,
+        reminder.periodText,
         reminder.nextTriggerMillis,
     )
 
-    fun toModel() = RepeatedReminder(id, eventId, nextTriggerMillis)
+    fun toModel() = RepeatedReminder(id, eventId, periodText, nextTriggerMillis)
 
     companion object {
         const val TABLE_NAME = "RepeatedReminders"

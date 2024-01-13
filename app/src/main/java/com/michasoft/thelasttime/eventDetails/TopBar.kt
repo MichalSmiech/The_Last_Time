@@ -6,11 +6,20 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.DeleteOutline
+import androidx.compose.material.icons.outlined.AddAlert
 import androidx.compose.material.icons.outlined.Label
+import androidx.compose.material.icons.outlined.MoreVert
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalTextStyle
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -28,8 +37,10 @@ fun TopBar(
     onEventNameChange: (String) -> Unit,
     onDiscardClick: () -> Unit,
     onDeleteClick: () -> Unit,
-    onLabelsClick: () -> Unit
+    onLabelsClick: () -> Unit,
+    onReminderClick: () -> Unit,
 ) {
+    var menuExpanded by remember { mutableStateOf(false) }
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -46,8 +57,51 @@ fun TopBar(
             onValueChange = onEventNameChange,
             textStyle = LocalTextStyle.current.copy(fontSize = 20.sp)
         )
-        LabelsButton(onClick = onLabelsClick)
-        DeleteButton(onClick = onDeleteClick)
+        ReminderButton(onClick = onReminderClick)
+        MoreButton(onClick = {
+            menuExpanded = !menuExpanded
+        })
+        DropdownMenu(
+            expanded = menuExpanded,
+            onDismissRequest = { menuExpanded = false },
+        ) {
+            DropdownMenuItem(
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Outlined.Label,
+                        contentDescription = "labels"
+                    )
+                },
+                text = {
+                    Text("Labels")
+                },
+                onClick = onLabelsClick,
+            )
+            DropdownMenuItem(
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Default.DeleteOutline,
+                        contentDescription = "delete"
+                    )
+                },
+                text = {
+                    Text("Delete")
+                },
+                onClick = onDeleteClick,
+            )
+            DropdownMenuItem(
+                text = {
+                    Text("Settings")
+                },
+                onClick = { /* TODO */ },
+            )
+            DropdownMenuItem(
+                text = {
+                    Text("About")
+                },
+                onClick = { /* TODO */ },
+            )
+        }
     }
 }
 
@@ -61,13 +115,13 @@ fun DiscardButton(
     ) {
         Icon(
             imageVector = Icons.Default.Close,
-            contentDescription = "discard icon"
+            contentDescription = "discard"
         )
     }
 }
 
 @Composable
-fun DeleteButton(
+fun ReminderButton(
     onClick: () -> Unit,
 ) {
     IconButton(
@@ -75,8 +129,8 @@ fun DeleteButton(
         modifier = Modifier.padding(vertical = 8.dp)
     ) {
         Icon(
-            imageVector = Icons.Default.DeleteOutline,
-            contentDescription = "delete icon"
+            imageVector = Icons.Outlined.AddAlert,
+            contentDescription = "add reminder"
         )
     }
 }
@@ -91,7 +145,22 @@ fun LabelsButton(
     ) {
         Icon(
             imageVector = Icons.Outlined.Label,
-            contentDescription = "labels icon"
+            contentDescription = "labels"
+        )
+    }
+}
+
+@Composable
+fun MoreButton(
+    onClick: () -> Unit,
+) {
+    IconButton(
+        onClick = onClick,
+        modifier = Modifier.padding(vertical = 8.dp)
+    ) {
+        Icon(
+            imageVector = Icons.Outlined.MoreVert,
+            contentDescription = "more"
         )
     }
 }
@@ -104,5 +173,6 @@ fun PreviewTopBar() {
         onEventNameChange = {},
         onDiscardClick = {},
         onDeleteClick = {},
-        onLabelsClick = {})
+        onLabelsClick = {},
+        onReminderClick = {})
 }

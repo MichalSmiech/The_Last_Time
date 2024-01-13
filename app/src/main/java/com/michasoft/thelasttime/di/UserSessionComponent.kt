@@ -2,6 +2,7 @@ package com.michasoft.thelasttime.di
 
 import android.net.Uri
 import com.michasoft.thelasttime.eventAdd.EventAddViewModel
+import com.michasoft.thelasttime.eventDetails.EditReminderViewModel
 import com.michasoft.thelasttime.eventDetails.EventDetailsViewModel
 import com.michasoft.thelasttime.eventInstanceDetails.EventInstanceDetailsViewModel
 import com.michasoft.thelasttime.eventLabels.EventLabelsViewModel
@@ -43,5 +44,6 @@ interface UserSessionComponent {
     fun inject(factory: EventAddViewModel.Factory)
     fun inject(factory: EventLabelsViewModel.Factory)
     fun inject(showReminderReceiver: ShowReminderReceiver)
+    fun inject(factory: EditReminderViewModel.Factory)
 
 }
