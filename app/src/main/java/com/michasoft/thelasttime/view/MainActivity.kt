@@ -11,7 +11,6 @@ import com.michasoft.thelasttime.model.Event
 import com.michasoft.thelasttime.model.EventInstanceField
 import com.michasoft.thelasttime.model.EventInstanceFieldSchema
 import com.michasoft.thelasttime.model.EventInstanceSchema
-import com.michasoft.thelasttime.model.Reminder
 import com.michasoft.thelasttime.notification.CheckPostNotificationPermissionUseCase
 import com.michasoft.thelasttime.notification.CreateNotificationChannelUseCase
 import com.michasoft.thelasttime.notification.CreateReminderNotificationUseCase
@@ -21,6 +20,7 @@ import com.michasoft.thelasttime.notification.ShowNotificationUseCase
 import com.michasoft.thelasttime.reminder.ScheduleReminderUseCase
 import com.michasoft.thelasttime.repo.BackupRepository
 import com.michasoft.thelasttime.repo.EventRepository
+import com.michasoft.thelasttime.repo.ReminderRepository
 import com.michasoft.thelasttime.repo.UserSessionRepository
 import com.michasoft.thelasttime.util.BackupConfig
 import com.michasoft.thelasttime.util.IdGenerator
@@ -31,7 +31,6 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import org.joda.time.DateTime
 import javax.inject.Inject
-import kotlin.time.Duration.Companion.seconds
 
 class MainActivity : UserSessionActivity() {
     @Inject
@@ -63,6 +62,9 @@ class MainActivity : UserSessionActivity() {
 
     @Inject
     lateinit var scheduleReminderUseCase: ScheduleReminderUseCase
+
+    @Inject
+    lateinit var reminderRepository: ReminderRepository
 
     override fun onActivityCreate(savedInstanceState: Bundle?) {
         (application as LastTimeApplication).userSessionComponent!!.inject(this)
@@ -167,22 +169,22 @@ class MainActivity : UserSessionActivity() {
 //            )
 //        }
         CoroutineScope(Dispatchers.Main).launch {
-            if (checkPostNotificationPermissionUseCase.invoke().not()) {
-                val granted =
-                    requestPostNotificationPermissionUseCase.execute(
-                        lifecycle,
-                        activityResultRegistry
-                    )
-                if (granted.not()) {
-                    return@launch
-                }
-            }
-            scheduleReminderUseCase.execute(
-                Reminder(
-                    eventRepository.getEvents().first(),
-                    10.seconds.inWholeMilliseconds
-                )
-            )
+//            if (checkPostNotificationPermissionUseCase.invoke().not()) {
+//                val granted =
+//                    requestPostNotificationPermissionUseCase.execute(
+//                        lifecycle,
+//                        activityResultRegistry
+//                    )
+//                if (granted.not()) {
+//                    return@launch
+//                }
         }
+//            scheduleReminderUseCase.execute(
+//                Reminder(
+//                    eventRepository.getEvents().first().id,
+//                    10.seconds.inWholeMilliseconds
+//                )
+//            )
+//        }
     }
 }

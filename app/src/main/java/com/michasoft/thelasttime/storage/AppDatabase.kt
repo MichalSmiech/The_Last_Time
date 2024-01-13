@@ -7,12 +7,15 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.michasoft.thelasttime.model.User
 import com.michasoft.thelasttime.storage.dao.EventDao
+import com.michasoft.thelasttime.storage.dao.ReminderDao
 import com.michasoft.thelasttime.storage.dao.SyncJobDao
 import com.michasoft.thelasttime.storage.entity.EventEntity
 import com.michasoft.thelasttime.storage.entity.EventInstanceEntity
 import com.michasoft.thelasttime.storage.entity.EventInstanceFieldSchemaEntity
 import com.michasoft.thelasttime.storage.entity.EventLabelEntity
 import com.michasoft.thelasttime.storage.entity.LabelEntity
+import com.michasoft.thelasttime.storage.entity.RepeatedReminderEntity
+import com.michasoft.thelasttime.storage.entity.SingleReminderEntity
 import com.michasoft.thelasttime.storage.entity.SyncJobEntity
 import com.michasoft.thelasttime.storage.entity.eventInstanceField.EventInstanceDoubleFieldEntity
 import com.michasoft.thelasttime.storage.entity.eventInstanceField.EventInstanceIntFieldEntity
@@ -32,11 +35,14 @@ import com.michasoft.thelasttime.util.RoomConverters
     SyncJobEntity::class,
     LabelEntity::class,
     EventLabelEntity::class,
+    SingleReminderEntity::class,
+    RepeatedReminderEntity::class,
 ], version = 1, exportSchema = false)
 @TypeConverters(RoomConverters::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract val eventDao: EventDao
     abstract val syncJobDao: SyncJobDao
+    abstract val reminderDao: ReminderDao
 
     companion object {
         fun build(context: Context, user: User) : AppDatabase {

@@ -132,5 +132,8 @@ class UserSessionModule {
     fun provideUserPhotoUrl(user: User): Uri? {
         return Firebase.auth.currentUser?.photoUrl ?: user.photoUrl
     }
+
+    @Provides
+    fun provideReminderDao(appDatabase: AppDatabase) = appDatabase.reminderDao
 }
 
