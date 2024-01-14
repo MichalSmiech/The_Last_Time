@@ -32,9 +32,6 @@ class RepeatedReminder(
                 return periodText
             }
             val nextTriggerDateTime = getNextTrigger(periodText, lastEventInstanceDateTime)
-            if (nextTriggerDateTime.year != DateTime.now().year) {
-                return nextTriggerDateTime.toString(labelFullDatetimeFormatter)
-            }
             return Reminder.createLabel(nextTriggerDateTime)
         }
 
@@ -42,7 +39,7 @@ class RepeatedReminder(
             if (periodText.isBlank()) {
                 throw IllegalArgumentException()
             }
-            var nextTrigger = DateTime.now()
+            var nextTrigger = startDateTime
             val usedTypes = mutableSetOf<String>()
             periodText.trim().split(regex = "\\s+".toRegex()).forEach {
                 val value = "\\d+".toRegex().find(it)!!.value.toInt()
