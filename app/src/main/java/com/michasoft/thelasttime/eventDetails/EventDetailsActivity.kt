@@ -21,7 +21,11 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.core.app.ActivityOptionsCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -52,8 +56,11 @@ class EventDetailsActivity : UserSessionActivity() {
             val bottomSheetState = rememberModalBottomSheetState(
                 skipPartiallyExpanded = true
             )
-            LastTimeTheme(window = window) {
-                EventDetailsScreen(viewModel, bottomSheetState)
+            var editReminderDialogShown by remember {
+                mutableStateOf(false)
+            }
+            var editReminderDialogInitialState by remember {
+                mutableStateOf<EditReminderDialogInitialState?>(null)
             }
             val coroutineScope = rememberCoroutineScope()
             LaunchedEffect(Unit) {
@@ -79,8 +86,27 @@ class EventDetailsActivity : UserSessionActivity() {
                                 it.eventId
                             )
                         }
+
+                        is EventDetailsAction.ShowEditReminderDialog -> {
+                            editReminderDialogInitialState =
+                                EditReminderDialogInitialState(it.eventId, it.reminderId)
+                            editReminderDialogShown = true
+                        }
                     }
                 }.launchIn(lifecycleScope)
+            }
+            LastTimeTheme(window = window) {
+                EventDetailsScreen(viewModel, bottomSheetState)
+                if (editReminderDialogShown) {
+                    editReminderDialogInitialState?.let {
+                        EditReminderDialog(
+                            onDismiss = {
+                                editReminderDialogShown = false
+                            },
+                            initialState = it
+                        )
+                    }
+                }
             }
             BackHandler(enabled = bottomSheetState.isVisible) {
                 coroutineScope.launch {
@@ -135,7 +161,7 @@ fun EventDetailsScreen(
                 onDiscardClick = viewModel::onDiscardButtonClicked,
                 onDeleteClick = viewModel::onDeleteButtonClicked,
                 onLabelsClick = viewModel::onLabelsButtonClicked,
-                onReminderClick = viewModel::onReminderButtonClicked,
+                onAddReminderClick = viewModel::onAddReminderButtonClicked,
             )
         },
         floatingActionButton = {
@@ -177,14 +203,6 @@ fun EventDetailsScreen(
                     ) {
                         EventInstanceAddBottomSheet(viewModel.eventInstanceAddViewModel)
                     }
-                }
-                if (state.isAddReminderDialogShowing) {
-                    EditReminderDialog(
-                        onDismiss = {
-                            viewModel.onAddReminderDialogHide()
-                        },
-                        eventId = state.event.id
-                    )
                 }
             }
         }

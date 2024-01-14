@@ -39,7 +39,7 @@ fun TopBar(
     onDiscardClick: () -> Unit,
     onDeleteClick: () -> Unit,
     onLabelsClick: () -> Unit,
-    onReminderClick: () -> Unit,
+    onAddReminderClick: () -> Unit,
 ) {
     var menuExpanded by remember { mutableStateOf(false) }
     Row(
@@ -58,7 +58,7 @@ fun TopBar(
             onValueChange = onEventNameChange,
             textStyle = LocalTextStyle.current.copy(fontSize = 20.sp)
         )
-        ReminderButton(onClick = onReminderClick)
+        AddReminderButton(onClick = onAddReminderClick)
         Box() {
             MoreButton(onClick = {
                 menuExpanded = !menuExpanded
@@ -77,7 +77,10 @@ fun TopBar(
                     text = {
                         Text("Labels")
                     },
-                    onClick = onLabelsClick,
+                    onClick = {
+                        menuExpanded = false
+                        onLabelsClick()
+                    },
                 )
                 DropdownMenuItem(
                     leadingIcon = {
@@ -89,7 +92,10 @@ fun TopBar(
                     text = {
                         Text("Delete")
                     },
-                    onClick = onDeleteClick,
+                    onClick = {
+                        menuExpanded = false
+                        onDeleteClick()
+                    },
                 )
             }
 
@@ -113,7 +119,7 @@ fun DiscardButton(
 }
 
 @Composable
-fun ReminderButton(
+fun AddReminderButton(
     onClick: () -> Unit,
 ) {
     IconButton(
@@ -166,5 +172,5 @@ fun PreviewTopBar() {
         onDiscardClick = {},
         onDeleteClick = {},
         onLabelsClick = {},
-        onReminderClick = {})
+        onAddReminderClick = {})
 }

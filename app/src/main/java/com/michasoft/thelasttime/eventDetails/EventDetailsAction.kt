@@ -8,4 +8,6 @@ sealed class EventDetailsAction {
     class NavigateToEventInstanceDetails(val instanceId: String) : EventDetailsAction()
     object HideEventInstanceAddBottomSheet : EventDetailsAction()
     class NavigateToEventLabels(val eventId: String) : EventDetailsAction()
+    class ShowEditReminderDialog(val eventId: String, val reminderId: String? = null) :
+        EventDetailsAction()
 }

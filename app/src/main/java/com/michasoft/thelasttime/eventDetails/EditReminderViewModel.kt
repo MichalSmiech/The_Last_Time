@@ -22,29 +22,37 @@ import org.joda.time.LocalTime
 import javax.inject.Inject
 
 class EditReminderViewModel(
-    private val eventId: String,
-    private val reminderId: String?,
+    private var eventId: String,
     private val reminderRepository: ReminderRepository
 ) : ViewModel() {
     private val _actions: MutableSharedFlow<EditReminderAction> = MutableSharedFlow()
     val actions: SharedFlow<EditReminderAction> = _actions
     val type = MutableStateFlow(Reminder.Type.Single)
-    val periodText = MutableStateFlow<String>("")
+    val defaultPeriodText = ""
+    val periodText = MutableStateFlow<String>(defaultPeriodText)
     val periodTextError = periodText.map { !validatePeriodText(it) }
-    val dateTime = MutableStateFlow(DateTime.now().plusHours(1))
+    private val defaultDateTime: DateTime
+        get() = DateTime.now().plusHours(1)
+    val dateTime = MutableStateFlow(defaultDateTime)
     val dateTimeError = dateTime.map { !validateDateTime(it) }
+    private var reminderId: String? = null
 
     fun saveSingleReminder() {
         val dateTime1 = dateTime.value
         if (!validateDateTime(dateTime1)) {
             return
         }
-        val reminder = SingleReminder(IdGenerator.newId(), eventId, dateTime1)
+        val reminder = SingleReminder(reminderId ?: IdGenerator.newId(), eventId, dateTime1)
         viewModelScope.launch {
-            reminderRepository.insertReminder(reminder)
+            if (reminderId == null) {
+                reminderRepository.insertReminder(reminder)
+            } else {
+                reminderRepository.updateReminder(reminder)
+            }
             _actions.emit(EditReminderAction.Finish)
         }
     }
+
 
     private fun validateDateTime(dateTime: DateTime): Boolean {
         return dateTime.isAfter(DateTime.now())
@@ -68,9 +76,13 @@ class EditReminderViewModel(
         if (!validatePeriodText) {
             return
         }
-        val reminder = RepeatedReminder(IdGenerator.newId(), eventId, periodText1)
+        val reminder = RepeatedReminder(reminderId ?: IdGenerator.newId(), eventId, periodText1)
         viewModelScope.launch {
-            reminderRepository.insertReminder(reminder)
+            if (reminderId == null) {
+                reminderRepository.insertReminder(reminder)
+            } else {
+                reminderRepository.updateReminder(reminder)
+            }
             _actions.emit(EditReminderAction.Finish)
         }
     }
@@ -83,7 +95,48 @@ class EditReminderViewModel(
         this.type.update { type }
     }
 
-    class Factory(private val eventId: String, private val reminderId: String?) :
+    fun deleteReminder() {
+        viewModelScope.launch {
+            reminderId?.let { reminderId ->
+                reminderRepository.deleteReminder(reminderId)
+            }
+            _actions.emit(EditReminderAction.Finish)
+        }
+    }
+
+    fun setReminder(reminderId: String?) {
+        this.reminderId = reminderId
+        if (reminderId == null) {
+            type.value = Reminder.Type.Single
+            dateTime.value = defaultDateTime
+            periodText.value = defaultPeriodText
+            return
+        }
+        viewModelScope.launch {
+            val reminder = reminderRepository.getReminder(reminderId)
+            if (reminder == null) {
+                type.value = Reminder.Type.Single
+                dateTime.value = defaultDateTime
+                periodText.value = defaultPeriodText
+                return@launch
+            }
+            type.value = reminder.type
+            when (reminder) {
+                is SingleReminder -> {
+                    dateTime.value = reminder.dateTime
+                    periodText.value = defaultPeriodText
+                }
+
+                is RepeatedReminder -> {
+                    periodText.value = reminder.periodText
+                    dateTime.value = defaultDateTime
+                }
+            }
+        }
+
+    }
+
+    class Factory(private val eventId: String) :
         ViewModelProvider.Factory {
         @Inject
         lateinit var reminderRepository: ReminderRepository
@@ -98,7 +151,6 @@ class EditReminderViewModel(
             application.userSessionComponent().inject(this)
             return EditReminderViewModel(
                 eventId,
-                reminderId,
                 reminderRepository,
             ) as T
         }

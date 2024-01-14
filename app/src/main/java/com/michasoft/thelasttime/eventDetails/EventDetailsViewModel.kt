@@ -35,7 +35,6 @@ class EventDetailsViewModel(
             eventInstances = emptyList(),
             isDeleteConfirmationDialogShowing = false,
             isBottomSheetShowing = false,
-            isAddReminderDialogShowing = false,
             reminder = null
         )
     )
@@ -58,6 +57,10 @@ class EventDetailsViewModel(
         eventRepository.eventsChanged.onEach {
             setupEvent(eventId)
         }.launchIn(viewModelScope)
+
+        reminderRepository.remindersChanged.onEach {
+            setupReminder(eventId)
+        }.launchIn(viewModelScope)
     }
 
     private suspend fun setupEvent(eventId: String) {
@@ -69,6 +72,15 @@ class EventDetailsViewModel(
                 isLoading = false,
                 event = event,
                 eventInstances = eventInstances,
+                reminder = reminder
+            )
+        }
+    }
+
+    private suspend fun setupReminder(eventId: String) {
+        val reminder = reminderRepository.getEventReminders(eventId = eventId).firstOrNull()
+        state.update {
+            it.copy(
                 reminder = reminder
             )
         }
@@ -141,16 +153,16 @@ class EventDetailsViewModel(
         }
     }
 
-    fun onReminderButtonClicked() {
-        state.update { it.copy(isAddReminderDialogShowing = true) }
+    fun onAddReminderButtonClicked() {
+        viewModelScope.launch {
+            _actions.emit(EventDetailsAction.ShowEditReminderDialog(eventId))
+        }
     }
 
-    fun onAddReminderDialogHide() {
-        state.update { it.copy(isAddReminderDialogShowing = false) }
-    }
-
-    fun onReminderClicked() {
-        //TODO("Not yet implemented")
+    fun onReminderClicked(reminderId: String) {
+        viewModelScope.launch {
+            _actions.emit(EventDetailsAction.ShowEditReminderDialog(eventId, reminderId))
+        }
     }
 
     class Factory(private val eventId: String) : ViewModelProvider.Factory {

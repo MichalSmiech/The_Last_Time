@@ -13,6 +13,5 @@ data class EventDetailsState(
     val eventInstances: List<EventInstance>,
     val isDeleteConfirmationDialogShowing: Boolean,
     val isBottomSheetShowing: Boolean,
-    val isAddReminderDialogShowing: Boolean,
     val reminder: Reminder?
 )

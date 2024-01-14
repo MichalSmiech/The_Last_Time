@@ -40,15 +40,18 @@ import org.joda.time.LocalDate
 @Composable
 fun EditReminderDialog(
     onDismiss: () -> Unit,
-    eventId: String,
-    reminderId: String? = null
+    initialState: EditReminderDialogInitialState,
 ) {
     val viewModel = viewModel<EditReminderViewModel>(
         factory = EditReminderViewModel.Factory(
-            eventId,
-            reminderId
+            initialState.eventId,
         )
     )
+    LaunchedEffect(initialState) {
+        viewModel.setReminder(
+            initialState.reminderId
+        )
+    }
     val scope = rememberCoroutineScope()
 
     val type = viewModel.type.collectAsState().value
@@ -75,7 +78,7 @@ fun EditReminderDialog(
             ) {
                 Text(
                     modifier = Modifier.padding(horizontal = 24.dp),
-                    text = if (reminderId == null) "Add reminder" else "Edit reminder",
+                    text = if (initialState.reminderId == null) "Add reminder" else "Edit reminder",
                     style = MaterialTheme.typography.headlineSmall
                 )
                 Spacer(modifier = Modifier.height(16.dp))
@@ -132,7 +135,8 @@ fun EditReminderDialog(
                         }
                         Buttons(
                             onSave = { viewModel.saveSingleReminder() },
-                            onCancel = onDismiss
+                            onCancel = onDismiss,
+                            onDelete = { viewModel.deleteReminder() }
                         )
                     } else {
                         val periodText = viewModel.periodText.collectAsState().value
@@ -166,7 +170,8 @@ fun EditReminderDialog(
                                 showError = true
                                 viewModel.saveRepeatedReminder()
                             },
-                            onCancel = onDismiss
+                            onCancel = onDismiss,
+                            onDelete = { viewModel.deleteReminder() }
                         )
                     }
 
@@ -179,13 +184,18 @@ fun EditReminderDialog(
 @Composable
 private fun Buttons(
     onSave: () -> Unit,
-    onCancel: () -> Unit
+    onCancel: () -> Unit,
+    onDelete: () -> Unit
 ) {
     Spacer(modifier = Modifier.height(24.dp))
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.End
     ) {
+        TextButton(onClick = onDelete) {
+            Text(text = "Delete")
+        }
+        Spacer(modifier = Modifier.width(8.dp))
         TextButton(onClick = onCancel) {
             Text(text = "Cancel")
         }
@@ -195,3 +205,8 @@ private fun Buttons(
         }
     }
 }
+
+data class EditReminderDialogInitialState(
+    val eventId: String,
+    val reminderId: String?
+)

@@ -46,7 +46,7 @@ fun EventDetailsContent(
     reminder: Reminder?,
     onEventInstanceClick: (String) -> Unit,
     onLabelClick: () -> Unit,
-    onReminderClick: () -> Unit,
+    onReminderClick: (String) -> Unit,
 ) {
     Column(modifier = Modifier.fillMaxSize()) {
         if (reminder != null || event.labels.isNotEmpty()) {
@@ -101,11 +101,11 @@ fun LabelItem(label: Label, onClick: () -> Unit) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ReminderItem(reminder: Reminder, onClick: () -> Unit) {
+fun ReminderItem(reminder: Reminder, onClick: (String) -> Unit) {
     Surface(
         shape = InputChipDefaults.shape,
         color = MaterialTheme.colorScheme.surfaceVariant,
-        onClick = onClick
+        onClick = { onClick(reminder.id) }
     ) {
         Row(
             modifier = Modifier.defaultMinSize(minHeight = InputChipDefaults.Height),

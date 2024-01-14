@@ -50,4 +50,19 @@ class RoomReminderSource @Inject constructor(
             )
         }
     }
+
+    suspend fun updateReminder(reminder: Reminder) {
+        when (reminder) {
+            is SingleReminder -> reminderDao.updateSingleReminder(
+                reminder.id,
+                reminder.dateTime,
+                reminder.label
+            )
+
+            is RepeatedReminder -> reminderDao.updateRepeatedReminder(
+                reminder.id,
+                reminder.periodText
+            )
+        }
+    }
 }
