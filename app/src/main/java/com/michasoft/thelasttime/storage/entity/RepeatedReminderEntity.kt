@@ -19,7 +19,13 @@ class RepeatedReminderEntity(
         reminder.nextTriggerMillis,
     )
 
-    fun toModel() = RepeatedReminder(id, eventId, periodText, nextTriggerMillis)
+    fun toModel() = RepeatedReminder(
+        id = id,
+        eventId = eventId,
+        periodText = periodText,
+        label = "",
+        nextTriggerMillis = nextTriggerMillis
+    )
 
     companion object {
         const val TABLE_NAME = "RepeatedReminders"

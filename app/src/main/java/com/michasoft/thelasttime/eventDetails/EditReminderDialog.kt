@@ -23,6 +23,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
@@ -32,6 +33,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.michasoft.thelasttime.model.reminder.Reminder
 import com.michasoft.thelasttime.view.EditableDate
 import com.michasoft.thelasttime.view.EditableTime
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import org.joda.time.LocalDate
 
@@ -47,8 +49,9 @@ fun EditReminderDialog(
             reminderId
         )
     )
+    val scope = rememberCoroutineScope()
 
-    var type = viewModel.type.collectAsState().value
+    val type = viewModel.type.collectAsState().value
     val typeIndex = when (type) {
         Reminder.Type.Single -> 0
         Reminder.Type.Repeated -> 1
@@ -58,7 +61,7 @@ fun EditReminderDialog(
             when (it) {
                 is EditReminderAction.Finish -> onDismiss()
             }
-        }
+        }.launchIn(scope)
     }
     Dialog(onDismissRequest = onDismiss) {
         Card(

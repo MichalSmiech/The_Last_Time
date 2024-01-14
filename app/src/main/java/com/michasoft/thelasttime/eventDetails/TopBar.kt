@@ -1,5 +1,6 @@
 package com.michasoft.thelasttime.eventDetails
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -58,49 +59,40 @@ fun TopBar(
             textStyle = LocalTextStyle.current.copy(fontSize = 20.sp)
         )
         ReminderButton(onClick = onReminderClick)
-        MoreButton(onClick = {
-            menuExpanded = !menuExpanded
-        })
-        DropdownMenu(
-            expanded = menuExpanded,
-            onDismissRequest = { menuExpanded = false },
-        ) {
-            DropdownMenuItem(
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Outlined.Label,
-                        contentDescription = "labels"
-                    )
-                },
-                text = {
-                    Text("Labels")
-                },
-                onClick = onLabelsClick,
-            )
-            DropdownMenuItem(
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Default.DeleteOutline,
-                        contentDescription = "delete"
-                    )
-                },
-                text = {
-                    Text("Delete")
-                },
-                onClick = onDeleteClick,
-            )
-            DropdownMenuItem(
-                text = {
-                    Text("Settings")
-                },
-                onClick = { /* TODO */ },
-            )
-            DropdownMenuItem(
-                text = {
-                    Text("About")
-                },
-                onClick = { /* TODO */ },
-            )
+        Box() {
+            MoreButton(onClick = {
+                menuExpanded = !menuExpanded
+            })
+            DropdownMenu(
+                expanded = menuExpanded,
+                onDismissRequest = { menuExpanded = false },
+            ) {
+                DropdownMenuItem(
+                    leadingIcon = {
+                        Icon(
+                            imageVector = Icons.Outlined.Label,
+                            contentDescription = "labels"
+                        )
+                    },
+                    text = {
+                        Text("Labels")
+                    },
+                    onClick = onLabelsClick,
+                )
+                DropdownMenuItem(
+                    leadingIcon = {
+                        Icon(
+                            imageVector = Icons.Default.DeleteOutline,
+                            contentDescription = "delete"
+                        )
+                    },
+                    text = {
+                        Text("Delete")
+                    },
+                    onClick = onDeleteClick,
+                )
+            }
+
         }
     }
 }

@@ -1,21 +1,44 @@
 package com.michasoft.thelasttime.model.reminder
 
 import org.joda.time.DateTime
+import org.joda.time.format.DateTimeFormat
 
 class RepeatedReminder(
     id: String,
     eventId: String,
     val periodText: String,
+    label: String,
     nextTriggerMillis: Long? = null,
 ) : Reminder(
     id = id,
     eventId = eventId,
     type = Type.Repeated,
+    label = label,
     nextTriggerMillis = nextTriggerMillis,
 ) {
+    constructor(id: String, eventId: String, periodText: String) : this(
+        id = id,
+        eventId = eventId,
+        periodText = periodText,
+        label = periodText //TODO ustawić następna datę
+    )
 
     companion object {
-        fun getNextTrigger(periodText: String): DateTime {
+        private val labelDatetimeFormatter = DateTimeFormat.forPattern("dd MMM , HH:mm")
+        private val labelFullDatetimeFormatter = DateTimeFormat.forPattern("dd MMM yyyy, HH:mm")
+
+        fun createLabel(lastEventInstanceDateTime: DateTime?, periodText: String): String {
+            if (lastEventInstanceDateTime == null) {
+                return periodText
+            }
+            val nextTriggerDateTime = getNextTrigger(periodText, lastEventInstanceDateTime)
+            if (nextTriggerDateTime.year != DateTime.now().year) {
+                return nextTriggerDateTime.toString(labelFullDatetimeFormatter)
+            }
+            return nextTriggerDateTime.toString(labelDatetimeFormatter)
+        }
+
+        fun getNextTrigger(periodText: String, startDateTime: DateTime = DateTime.now()): DateTime {
             if (periodText.isBlank()) {
                 throw IllegalArgumentException()
             }

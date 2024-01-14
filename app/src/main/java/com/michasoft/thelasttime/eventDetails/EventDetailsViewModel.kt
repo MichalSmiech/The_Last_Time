@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.michasoft.thelasttime.eventInstanceAdd.EventInstanceAddViewModel
 import com.michasoft.thelasttime.repo.EventRepository
+import com.michasoft.thelasttime.repo.ReminderRepository
 import com.michasoft.thelasttime.userSessionComponent
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,7 +23,8 @@ import javax.inject.Inject
  */
 class EventDetailsViewModel(
     private val eventId: String,
-    private val eventRepository: EventRepository
+    private val eventRepository: EventRepository,
+    private val reminderRepository: ReminderRepository
 ) : ViewModel() {
     private val _actions: MutableSharedFlow<EventDetailsAction> = MutableSharedFlow()
     val actions: SharedFlow<EventDetailsAction> = _actions
@@ -33,7 +35,8 @@ class EventDetailsViewModel(
             eventInstances = emptyList(),
             isDeleteConfirmationDialogShowing = false,
             isBottomSheetShowing = false,
-            isAddReminderDialogShowing = false
+            isAddReminderDialogShowing = false,
+            reminder = null
         )
     )
     private val eventNameChanges = MutableSharedFlow<String>()
@@ -60,11 +63,13 @@ class EventDetailsViewModel(
     private suspend fun setupEvent(eventId: String) {
         val event = eventRepository.getEvent(eventId, withLabels = true) ?: return
         val eventInstances = eventRepository.getEventInstances(eventId)
+        val reminder = reminderRepository.getEventReminders(eventId = eventId).firstOrNull()
         state.update {
             it.copy(
                 isLoading = false,
                 event = event,
-                eventInstances = eventInstances
+                eventInstances = eventInstances,
+                reminder = reminder
             )
         }
     }
@@ -144,9 +149,16 @@ class EventDetailsViewModel(
         state.update { it.copy(isAddReminderDialogShowing = false) }
     }
 
+    fun onReminderClicked() {
+        //TODO("Not yet implemented")
+    }
+
     class Factory(private val eventId: String) : ViewModelProvider.Factory {
         @Inject
         lateinit var eventRepository: EventRepository
+
+        @Inject
+        lateinit var reminderRepository: ReminderRepository
 
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(
@@ -159,6 +171,7 @@ class EventDetailsViewModel(
             return EventDetailsViewModel(
                 eventId,
                 eventRepository,
+                reminderRepository
             ) as T
         }
     }

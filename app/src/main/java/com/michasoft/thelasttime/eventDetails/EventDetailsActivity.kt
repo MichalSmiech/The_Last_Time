@@ -159,8 +159,10 @@ fun EventDetailsScreen(
                 EventDetailsContent(
                     event = state.event!!,
                     eventInstances = state.eventInstances,
+                    reminder = state.reminder,
                     onEventInstanceClick = viewModel::onEventInstanceClicked,
-                    onLabelClick = viewModel::onLabelClicked
+                    onLabelClick = viewModel::onLabelClicked,
+                    onReminderClick = viewModel::onReminderClicked
                 )
                 if (state.isDeleteConfirmationDialogShowing) {
                     DeleteConfirmationDialog(

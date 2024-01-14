@@ -4,6 +4,7 @@ import com.michasoft.thelasttime.di.UserSessionScope
 import com.michasoft.thelasttime.model.reminder.Reminder
 import com.michasoft.thelasttime.model.reminder.RepeatedReminder
 import com.michasoft.thelasttime.model.reminder.SingleReminder
+import com.michasoft.thelasttime.storage.dao.EventDao
 import com.michasoft.thelasttime.storage.dao.ReminderDao
 import com.michasoft.thelasttime.storage.entity.RepeatedReminderEntity
 import com.michasoft.thelasttime.storage.entity.SingleReminderEntity
@@ -11,7 +12,8 @@ import javax.inject.Inject
 
 @UserSessionScope
 class RoomReminderSource @Inject constructor(
-    private val reminderDao: ReminderDao
+    private val reminderDao: ReminderDao,
+    private val eventDao: EventDao
 ) {
     suspend fun insertReminder(reminder: Reminder) {
         when (reminder) {
@@ -33,10 +35,19 @@ class RoomReminderSource @Inject constructor(
 
     suspend fun getEventReminders(eventId: String): List<Reminder> {
         return reminderDao.getEventSingleReminders(eventId).map { it.toModel() }
-            .plus(reminderDao.getEventRepeatedReminders(eventId).map { it.toModel() })
+            .plus(reminderDao.getEventRepeatedReminders(eventId).map { it.toModel().applyLabel() })
     }
 
     suspend fun getReminder(id: String): Reminder? =
         reminderDao.getSingleReminder(id)?.toModel()
-            ?: reminderDao.getRepeatedReminder(id)?.toModel()
+            ?: reminderDao.getRepeatedReminder(id)?.toModel()?.applyLabel()
+
+    private suspend fun RepeatedReminder.applyLabel(): RepeatedReminder {
+        return this.apply {
+            label = RepeatedReminder.createLabel(
+                eventDao.getLastInstanceTimestamp(eventId),
+                periodText
+            )
+        }
+    }
 }

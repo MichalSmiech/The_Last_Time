@@ -135,5 +135,8 @@ class UserSessionModule {
 
     @Provides
     fun provideReminderDao(appDatabase: AppDatabase) = appDatabase.reminderDao
+
+    @Provides
+    fun provideEventDao(appDatabase: AppDatabase) = appDatabase.eventDao
 }
 
