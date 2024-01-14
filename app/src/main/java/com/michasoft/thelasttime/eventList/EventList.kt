@@ -4,15 +4,22 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.outlined.Notifications
+import androidx.compose.material.icons.outlined.Repeat
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -28,6 +35,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.michasoft.thelasttime.model.Event
 import com.michasoft.thelasttime.model.Label
+import com.michasoft.thelasttime.model.reminder.Reminder
 import com.michasoft.thelasttime.util.periodText
 
 /**
@@ -50,6 +58,7 @@ fun EventList(
     }
 }
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun EventItem(event: Event, onClick: (String) -> Unit, onInstanceAdd: (String) -> Unit) {
     Row(
@@ -75,8 +84,20 @@ fun EventItem(event: Event, onClick: (String) -> Unit, onInstanceAdd: (String) -
                     fontSize = 14.sp
                 )
             }
-            if (event.labels.isNotEmpty()) {
-                Labels(modifier = Modifier.padding(top = 8.dp), labels = event.labels)
+            if (event.reminder != null || event.labels.isNotEmpty()) {
+                FlowRow(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 8.dp),
+                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    event.reminder?.let { reminder ->
+                        ReminderItem(reminder = reminder)
+                    }
+                    event.labels.forEach {
+                        LabelItem(label = it)
+                    }
+                }
             }
         }
         AddButton(modifier = Modifier.padding(start = 16.dp), onClick = { onInstanceAdd(event.id) })
@@ -100,15 +121,6 @@ fun AddButton(
     }
 }
 
-@Composable
-fun Labels(modifier: Modifier, labels: List<Label>) {
-    Row(modifier = modifier, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-        labels.forEach {
-            LabelItem(label = it)
-        }
-    }
-}
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LabelItem(label: Label) {
@@ -124,6 +136,41 @@ fun LabelItem(label: Label) {
                 text = label.name,
                 modifier = Modifier
                     .padding(horizontal = 8.dp),
+                style = MaterialTheme.typography.labelMedium,
+                fontWeight = FontWeight.Normal,
+                letterSpacing = 0.sp
+            )
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun ReminderItem(reminder: Reminder) {
+    Surface(
+        shape = InputChipDefaults.shape,
+        color = MaterialTheme.colorScheme.surfaceVariant
+    ) {
+        Row(
+            modifier = Modifier.defaultMinSize(minHeight = 24.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            val icon = when (reminder.type) {
+                Reminder.Type.Single -> Icons.Outlined.Notifications
+                Reminder.Type.Repeated -> Icons.Outlined.Repeat
+            }
+            Icon(
+                modifier = Modifier
+                    .size(24.dp)
+                    .padding(start = 6.dp),
+                imageVector = icon,
+                contentDescription = "reminder"
+            )
+            Spacer(modifier = Modifier.width(4.dp))
+            Text(
+                text = reminder.label,
+                modifier = Modifier
+                    .padding(end = 8.dp),
                 style = MaterialTheme.typography.labelMedium,
                 fontWeight = FontWeight.Normal,
                 letterSpacing = 0.sp

@@ -1,5 +1,6 @@
 package com.michasoft.thelasttime.model
 
+import com.michasoft.thelasttime.model.reminder.Reminder
 import org.joda.time.DateTime
 
 /**
@@ -13,4 +14,5 @@ data class Event(
 ) {
     var lastInstanceTimestamp: DateTime? = null
     var labels: List<Label> = emptyList()
+    var reminder: Reminder? = null
 }

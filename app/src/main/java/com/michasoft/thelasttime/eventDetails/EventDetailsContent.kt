@@ -68,15 +68,6 @@ fun EventDetailsContent(
     }
 }
 
-@Composable
-fun Labels(modifier: Modifier, labels: List<Label>, onLabelClick: () -> Unit) {
-    Row(modifier = modifier, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-        labels.forEach {
-            LabelItem(label = it, onClick = onLabelClick)
-        }
-    }
-}
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LabelItem(label: Label, onClick: () -> Unit) {
@@ -116,7 +107,7 @@ fun ReminderItem(reminder: Reminder, onClick: (String) -> Unit) {
                 Reminder.Type.Repeated -> Icons.Outlined.Repeat
             }
             Icon(
-                modifier = Modifier.padding(start = 16.dp),
+                modifier = Modifier.padding(start = 12.dp),
                 imageVector = icon,
                 contentDescription = "reminder"
             )

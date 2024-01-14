@@ -24,7 +24,7 @@ class RepeatedReminder(
     )
 
     companion object {
-        private val labelDatetimeFormatter = DateTimeFormat.forPattern("dd MMM , HH:mm")
+        private val labelDatetimeFormatter = DateTimeFormat.forPattern("dd MMM, HH:mm")
         private val labelFullDatetimeFormatter = DateTimeFormat.forPattern("dd MMM yyyy, HH:mm")
 
         fun createLabel(lastEventInstanceDateTime: DateTime?, periodText: String): String {
@@ -35,7 +35,7 @@ class RepeatedReminder(
             if (nextTriggerDateTime.year != DateTime.now().year) {
                 return nextTriggerDateTime.toString(labelFullDatetimeFormatter)
             }
-            return nextTriggerDateTime.toString(labelDatetimeFormatter)
+            return Reminder.createLabel(nextTriggerDateTime)
         }
 
         fun getNextTrigger(periodText: String, startDateTime: DateTime = DateTime.now()): DateTime {

@@ -10,6 +10,7 @@ import com.michasoft.thelasttime.dataSource.FirestoreEventSource
 import com.michasoft.thelasttime.dataSource.ILocalEventSource
 import com.michasoft.thelasttime.dataSource.IRemoteEventSource
 import com.michasoft.thelasttime.dataSource.RoomEventSource
+import com.michasoft.thelasttime.dataSource.RoomReminderSource
 import com.michasoft.thelasttime.dataSource.SyncJobDataSource
 import com.michasoft.thelasttime.model.SyncJobQueue
 import com.michasoft.thelasttime.model.SyncJobQueueCoordinator
@@ -73,13 +74,15 @@ class UserSessionModule {
         localSource: ILocalEventSource,
         backupConfig: BackupConfig,
         syncJobQueue: SyncJobQueue,
-        syncJobQueueCoordinator: SyncJobQueueCoordinator
+        syncJobQueueCoordinator: SyncJobQueueCoordinator,
+        localReminderSource: RoomReminderSource
     ): EventRepository {
         return EventRepository(
             localSource,
             backupConfig,
             syncJobQueue,
-            syncJobQueueCoordinator
+            syncJobQueueCoordinator,
+            localReminderSource
         )
     }
 

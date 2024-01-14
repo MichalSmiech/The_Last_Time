@@ -1,7 +1,6 @@
 package com.michasoft.thelasttime.model.reminder
 
 import org.joda.time.DateTime
-import org.joda.time.format.DateTimeFormat
 
 class SingleReminder(
     id: String,
@@ -25,9 +24,8 @@ class SingleReminder(
 
 
     companion object {
-        private val labelDatetimeFormatter = DateTimeFormat.forPattern("dd MMM, HH:mm")
         fun createLabel(dateTime: DateTime): String {
-            return dateTime.toString(labelDatetimeFormatter)
+            return Reminder.createLabel(dateTime)
         }
     }
 }

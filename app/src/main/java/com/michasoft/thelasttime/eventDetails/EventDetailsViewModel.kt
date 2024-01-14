@@ -66,7 +66,7 @@ class EventDetailsViewModel(
     private suspend fun setupEvent(eventId: String) {
         val event = eventRepository.getEvent(eventId, withLabels = true) ?: return
         val eventInstances = eventRepository.getEventInstances(eventId)
-        val reminder = reminderRepository.getEventReminders(eventId = eventId).firstOrNull()
+        val reminder = reminderRepository.getEventReminder(eventId = eventId)
         state.update {
             it.copy(
                 isLoading = false,
@@ -78,7 +78,7 @@ class EventDetailsViewModel(
     }
 
     private suspend fun setupReminder(eventId: String) {
-        val reminder = reminderRepository.getEventReminders(eventId = eventId).firstOrNull()
+        val reminder = reminderRepository.getEventReminder(eventId = eventId)
         state.update {
             it.copy(
                 reminder = reminder

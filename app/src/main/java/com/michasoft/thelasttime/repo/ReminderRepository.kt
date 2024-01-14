@@ -18,8 +18,8 @@ class ReminderRepository @Inject constructor(
         return roomReminderSource.getReminder(id)
     }
 
-    suspend fun getEventReminders(eventId: String): List<Reminder> {
-        return roomReminderSource.getEventReminders(eventId)
+    suspend fun getEventReminder(eventId: String): Reminder? {
+        return roomReminderSource.getEventReminder(eventId)
     }
 
     suspend fun deleteReminder(reminder: Reminder) {

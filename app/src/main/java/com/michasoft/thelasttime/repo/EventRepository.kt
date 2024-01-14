@@ -1,6 +1,7 @@
 package com.michasoft.thelasttime.repo
 
 import com.michasoft.thelasttime.dataSource.ILocalEventSource
+import com.michasoft.thelasttime.dataSource.RoomReminderSource
 import com.michasoft.thelasttime.model.Event
 import com.michasoft.thelasttime.model.EventInstance
 import com.michasoft.thelasttime.model.Label
@@ -18,16 +19,17 @@ import kotlinx.coroutines.flow.SharedFlow
  * Created by mśmiech on 01.11.2021.
  */
 class EventRepository(
-    private val localSource: ILocalEventSource,
+    private val localEventSource: ILocalEventSource,
     private val backupConfig: BackupConfig,
     private val syncJobQueue: SyncJobQueue,
-    private val syncJobQueueCoordinator: SyncJobQueueCoordinator
+    private val syncJobQueueCoordinator: SyncJobQueueCoordinator,
+    private val localReminderSource: RoomReminderSource
 ) {
     private val _eventsChanged: MutableSharedFlow<Unit> = MutableSharedFlow()
     val eventsChanged: SharedFlow<Unit> = _eventsChanged
 
     suspend fun insertEvent(event: Event) {
-        localSource.insertEvent(event)
+        localEventSource.insertEvent(event)
         if (backupConfig.isAutoBackup()) {
             val syncJob = EventSyncJob.Factory.create(event.id, SyncJob.Action.Insert)
             syncJobQueue.add(syncJob)
@@ -37,19 +39,19 @@ class EventRepository(
     }
 
     suspend fun getEvent(eventId: String, withLabels: Boolean = false): Event? {
-        return localSource.getEvent(eventId)?.also { event ->
+        return localEventSource.getEvent(eventId)?.also { event ->
             if (withLabels) {
-                event.labels = localSource.getEventLabels(event.id)
+                event.labels = localEventSource.getEventLabels(event.id)
             }
         }
     }
 
     suspend fun getEvents(): ArrayList<Event> {
-        return localSource.getAllEventsAtOnce()
+        return localEventSource.getAllEventsAtOnce()
     }
 
     suspend fun deleteEventInstance(eventId: String, instanceId: String) {
-        localSource.deleteEventInstance(eventId, instanceId)
+        localEventSource.deleteEventInstance(eventId, instanceId)
         if (backupConfig.isAutoBackup()) {
             val syncJob =
                 EventInstanceSyncJob.Factory.create(eventId, instanceId, SyncJob.Action.Delete)
@@ -61,15 +63,19 @@ class EventRepository(
 
     suspend fun getEvents(
         withLastInstanceTimestamp: Boolean = false,
-        withLabels: Boolean = false
+        withLabels: Boolean = false,
+        withReminder: Boolean = false
     ): ArrayList<Event> {
         val events = getEvents()
         events.forEach { event ->
             if (withLastInstanceTimestamp) {
-                event.lastInstanceTimestamp = localSource.getLastInstanceTimestamp(event.id)
+                event.lastInstanceTimestamp = localEventSource.getLastInstanceTimestamp(event.id)
             }
             if (withLabels) {
-                event.labels = localSource.getEventLabels(event.id)
+                event.labels = localEventSource.getEventLabels(event.id)
+            }
+            if (withReminder) {
+                event.reminder = localReminderSource.getEventReminder(event.id)
             }
         }
         return events
@@ -77,7 +83,7 @@ class EventRepository(
 
     suspend fun updateEvent(event: Event) {
         //TODO check if eventInstanceSchema changed then have to update all instances
-        localSource.updateEvent(event)
+        localEventSource.updateEvent(event)
         if (backupConfig.isAutoBackup()) {
             val syncJob = EventSyncJob.Factory.create(event.id, SyncJob.Action.Update)
             syncJobQueue.add(syncJob)
@@ -87,7 +93,7 @@ class EventRepository(
     }
 
     suspend fun updateEventInstance(instance: EventInstance) {
-        localSource.updateEventInstance(instance)
+        localEventSource.updateEventInstance(instance)
         if (backupConfig.isAutoBackup()) {
             val syncJob = EventInstanceSyncJob.Factory.create(
                 instance.eventId,
@@ -101,7 +107,7 @@ class EventRepository(
     }
 
     suspend fun deleteEvent(eventId: String) {
-        localSource.deleteEvent(eventId)
+        localEventSource.deleteEvent(eventId)
         if (backupConfig.isAutoBackup()) {
             val syncJob = EventSyncJob.Factory.create(eventId, SyncJob.Action.Delete)
             syncJobQueue.add(syncJob)
@@ -111,7 +117,7 @@ class EventRepository(
     }
 
     suspend fun insertEventInstance(instance: EventInstance) {
-        localSource.insertEventInstance(instance)
+        localEventSource.insertEventInstance(instance)
         if (backupConfig.isAutoBackup()) {
             val syncJob = EventInstanceSyncJob.Factory.create(
                 instance.eventId,
@@ -125,7 +131,7 @@ class EventRepository(
     }
 
     suspend fun getEventInstance(eventId: String, instanceId: String): EventInstance? {
-        return localSource.getEventInstance(eventId, instanceId)
+        return localEventSource.getEventInstance(eventId, instanceId)
     }
 
     suspend fun createEventInstance(eventId: String): EventInstance {
@@ -134,29 +140,29 @@ class EventRepository(
     }
 
     suspend fun getEventInstances(eventId: String): List<EventInstance> {
-        return localSource.getAllEventInstancesAtOnce(eventId)
+        return localEventSource.getAllEventInstancesAtOnce(eventId)
     }
 
     suspend fun getLabels(): List<Label> {
-        return localSource.getLabels()
+        return localEventSource.getLabels()
     }
 
     suspend fun getEventLabels(eventId: String): List<Label> {
-        return localSource.getEventLabels(eventId)
+        return localEventSource.getEventLabels(eventId)
     }
 
     suspend fun insertLabel(label: Label) {
-        localSource.insertLabel(label)
+        localEventSource.insertLabel(label)
         //TODO sync
     }
 
     suspend fun insertEventLabel(eventId: String, labelId: String) {
-        localSource.insertEventLabel(eventId, labelId)
+        localEventSource.insertEventLabel(eventId, labelId)
         //TODO sync
     }
 
     suspend fun deleteEventLabel(eventId: String, labelId: String) {
-        localSource.deleteEventLabel(eventId, labelId)
+        localEventSource.deleteEventLabel(eventId, labelId)
         //TODO sync
     }
 }

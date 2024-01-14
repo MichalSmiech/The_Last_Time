@@ -63,7 +63,11 @@ class EventListViewModel(
     }
 
     private suspend fun refreshEvents() {
-        val events = eventRepository.getEvents(withLastInstanceTimestamp = true, withLabels = true)
+        val events = eventRepository.getEvents(
+            withLastInstanceTimestamp = true,
+            withLabels = true,
+            withReminder = true
+        )
         state.update {
             it.copy(
                 isLoading = false,
