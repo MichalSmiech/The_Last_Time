@@ -41,7 +41,7 @@ class ShowReminderReceiver : BroadcastReceiver() {
             val channelData = NotificationChannels.reminderChannelData
             createNotificationChannelUseCase.invoke(channelData)
 
-            val notificationId = Random.nextInt()
+            val notificationId = Random.nextInt() //TODO save in reminder?
             val notification = createReminderNotificationUseCase(reminder) ?: return@launch
             showNotificationUseCase.invoke(
                 notification,

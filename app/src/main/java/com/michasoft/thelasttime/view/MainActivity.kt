@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.core.app.ActivityOptionsCompat
 import com.michasoft.thelasttime.LastTimeApplication
 import com.michasoft.thelasttime.R
@@ -94,6 +95,10 @@ class MainActivity : UserSessionActivity() {
     fun restoreBackup(view: View) {
         CoroutineScope(Dispatchers.IO).launch {
             backupRepository.restoreBackup()
+            withContext(Dispatchers.Main) {
+                Toast.makeText(this@MainActivity, "restore backup finished", Toast.LENGTH_SHORT)
+                    .show()
+            }
         }
     }
 

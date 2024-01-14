@@ -1,6 +1,7 @@
 package com.michasoft.thelasttime.model.reminder
 
 import org.joda.time.DateTime
+import timber.log.Timber
 
 class RepeatedReminder(
     id: String,
@@ -32,14 +33,15 @@ class RepeatedReminder(
         }
 
         fun getNextTrigger(periodText: String, startDateTime: DateTime = DateTime.now()): DateTime {
+            Timber.d("getNextTrigger")
             if (periodText.isBlank()) {
                 throw IllegalArgumentException()
             }
-            var nextTrigger = startDateTime
+            var nextTrigger = DateTime(startDateTime).withSecondOfMinute(0)
             val usedTypes = mutableSetOf<String>()
             periodText.trim().split(regex = "\\s+".toRegex()).forEach {
                 val value = "\\d+".toRegex().find(it)!!.value.toInt()
-                val type = "y|m|w|d|h|min".toRegex().find(it)!!.value
+                val type = "min|y|m|w|d|h".toRegex().find(it)!!.value
                 if (type in usedTypes) {
                     throw IllegalArgumentException(type)
                 }
@@ -76,5 +78,9 @@ class RepeatedReminder(
             }
             return nextTrigger
         }
+    }
+
+    fun calcNextTriggerMillis(lastEventInstanceDateTime: DateTime): Long {
+        return getNextTrigger(periodText, lastEventInstanceDateTime).millis - DateTime.now().millis
     }
 }

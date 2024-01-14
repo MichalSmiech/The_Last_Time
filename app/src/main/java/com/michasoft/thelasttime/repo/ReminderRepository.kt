@@ -3,13 +3,15 @@ package com.michasoft.thelasttime.repo
 import com.michasoft.thelasttime.dataSource.RoomReminderSource
 import com.michasoft.thelasttime.di.UserSessionScope
 import com.michasoft.thelasttime.model.reminder.Reminder
+import com.michasoft.thelasttime.reminder.ScheduleReminderUseCase
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import javax.inject.Inject
 
 @UserSessionScope
 class ReminderRepository @Inject constructor(
-    private val roomReminderSource: RoomReminderSource
+    private val roomReminderSource: RoomReminderSource,
+    private val scheduleReminderUseCase: ScheduleReminderUseCase
 ) {
     private val _remindersChanged: MutableSharedFlow<Unit> = MutableSharedFlow()
     val remindersChanged: SharedFlow<Unit> = _remindersChanged
@@ -50,6 +52,7 @@ class ReminderRepository @Inject constructor(
             }
         }
         roomReminderSource.insertReminder(reminder)
+        scheduleReminderUseCase.execute(reminder)
         if (notify) {
             _remindersChanged.emit(Unit)
         }
