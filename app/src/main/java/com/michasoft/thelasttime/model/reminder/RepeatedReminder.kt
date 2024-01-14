@@ -1,7 +1,6 @@
 package com.michasoft.thelasttime.model.reminder
 
 import org.joda.time.DateTime
-import org.joda.time.format.DateTimeFormat
 
 class RepeatedReminder(
     id: String,
@@ -24,9 +23,6 @@ class RepeatedReminder(
     )
 
     companion object {
-        private val labelDatetimeFormatter = DateTimeFormat.forPattern("dd MMM, HH:mm")
-        private val labelFullDatetimeFormatter = DateTimeFormat.forPattern("dd MMM yyyy, HH:mm")
-
         fun createLabel(lastEventInstanceDateTime: DateTime?, periodText: String): String {
             if (lastEventInstanceDateTime == null) {
                 return periodText
