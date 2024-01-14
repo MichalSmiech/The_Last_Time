@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import com.michasoft.thelasttime.LastTimeApplication
+import com.michasoft.thelasttime.model.reminder.SingleReminder
 import com.michasoft.thelasttime.notification.CreateNotificationChannelUseCase
 import com.michasoft.thelasttime.notification.CreateReminderNotificationUseCase
 import com.michasoft.thelasttime.notification.NotificationChannels
@@ -47,6 +48,9 @@ class ShowReminderReceiver : BroadcastReceiver() {
                 notification,
                 notificationId
             )
+            if (reminder is SingleReminder) {
+                reminderRepository.deleteReminder(reminder)
+            }
         }
     }
 
