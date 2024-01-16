@@ -13,17 +13,16 @@ import com.michasoft.thelasttime.model.reminder.RepeatedReminder
 import com.michasoft.thelasttime.model.reminder.SingleReminder
 import timber.log.Timber
 import javax.inject.Inject
-import kotlin.random.Random
 
 class ScheduleReminderUseCase @Inject constructor(
     private val context: Context,
     private val localEventSource: ILocalEventSource
 ) {
     suspend fun execute(reminder: Reminder) {
-        val alarmMgr = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val alarmIntent = Intent(context, ShowReminderReceiver::class.java).let { intent ->
             intent.putExtra(ShowReminderReceiver.REMINDER_ID, reminder.id)
-            intent.setData(Uri.parse(Random.nextInt().toString())) //TODO save in reminder?
+            intent.setData(Uri.parse(reminder.id))
             PendingIntent.getBroadcast(context, 0, intent, FLAG_IMMUTABLE)
         }
         val nextTriggerMillis = when (reminder) {
@@ -44,7 +43,7 @@ class ScheduleReminderUseCase @Inject constructor(
             Timber.e("reminder nextTriggerMillis is null while ScheduleReminderUseCase, reminderId=${reminder.id}")
             return
         }
-        alarmMgr.set(
+        alarmManager.set(
             AlarmManager.ELAPSED_REALTIME_WAKEUP,
             SystemClock.elapsedRealtime() + nextTriggerMillis,
             alarmIntent
