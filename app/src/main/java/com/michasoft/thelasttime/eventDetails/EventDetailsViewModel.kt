@@ -7,6 +7,7 @@ import androidx.lifecycle.viewmodel.CreationExtras
 import com.michasoft.thelasttime.eventInstanceAdd.EventInstanceAddViewModel
 import com.michasoft.thelasttime.repo.EventRepository
 import com.michasoft.thelasttime.repo.ReminderRepository
+import com.michasoft.thelasttime.useCase.InsertEventInstanceUseCase
 import com.michasoft.thelasttime.userSessionComponent
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -24,7 +25,8 @@ import javax.inject.Inject
 class EventDetailsViewModel(
     private val eventId: String,
     private val eventRepository: EventRepository,
-    private val reminderRepository: ReminderRepository
+    private val reminderRepository: ReminderRepository,
+    private val insertEventInstanceUseCase: InsertEventInstanceUseCase
 ) : ViewModel() {
     private val _actions: MutableSharedFlow<EventDetailsAction> = MutableSharedFlow()
     val actions: SharedFlow<EventDetailsAction> = _actions
@@ -43,7 +45,7 @@ class EventDetailsViewModel(
         onSave = { eventInstance ->
             viewModelScope.launch {
                 _actions.emit(EventDetailsAction.HideEventInstanceAddBottomSheet)
-                eventRepository.insertEventInstance(eventInstance)
+                insertEventInstanceUseCase.execute(eventInstance)
             }
         }
     )
@@ -172,6 +174,9 @@ class EventDetailsViewModel(
         @Inject
         lateinit var reminderRepository: ReminderRepository
 
+        @Inject
+        lateinit var insertEventInstanceUseCase: InsertEventInstanceUseCase
+
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(
             modelClass: Class<T>,
@@ -183,7 +188,8 @@ class EventDetailsViewModel(
             return EventDetailsViewModel(
                 eventId,
                 eventRepository,
-                reminderRepository
+                reminderRepository,
+                insertEventInstanceUseCase
             ) as T
         }
     }

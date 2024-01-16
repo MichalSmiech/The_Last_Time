@@ -58,10 +58,14 @@ class ReminderRepository @Inject constructor(
             }
         }
         roomReminderSource.insertReminder(reminder)
+        scheduleReminderUseCase.execute(reminder)
         if (notify) {
             _remindersChanged.emit(Unit)
         }
-        scheduleReminderUseCase.execute(reminder)
+    }
+
+    suspend fun notifyRemindersChanged() {
+        _remindersChanged.emit(Unit)
     }
 
     suspend fun updateReminder(reminder: Reminder) {

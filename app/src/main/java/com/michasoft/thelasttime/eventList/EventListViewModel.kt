@@ -9,6 +9,7 @@ import com.michasoft.thelasttime.eventInstanceAdd.EventInstanceAddViewModel
 import com.michasoft.thelasttime.model.SyncJobQueue
 import com.michasoft.thelasttime.repo.EventRepository
 import com.michasoft.thelasttime.repo.UserSessionRepository
+import com.michasoft.thelasttime.useCase.InsertEventInstanceUseCase
 import com.michasoft.thelasttime.userSessionComponent
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -26,7 +27,8 @@ class EventListViewModel(
     private val eventRepository: EventRepository,
     private val syncJobQueue: SyncJobQueue,
     private val userPhotoUrl: Uri?,
-    private val userSessionRepository: UserSessionRepository
+    private val userSessionRepository: UserSessionRepository,
+    private val insertEventInstanceUseCase: InsertEventInstanceUseCase
 ) : ViewModel() {
     private val _actions: MutableSharedFlow<EventListAction> = MutableSharedFlow()
     val actions: SharedFlow<EventListAction> = _actions
@@ -44,7 +46,7 @@ class EventListViewModel(
         onSave = { eventInstance ->
             viewModelScope.launch {
                 _actions.emit(EventListAction.HideEventInstanceAddBottomSheet)
-                eventRepository.insertEventInstance(eventInstance)
+                insertEventInstanceUseCase.execute(eventInstance)
             }
         }
     )
@@ -144,6 +146,9 @@ class EventListViewModel(
         @Inject
         lateinit var userSessionRepository: UserSessionRepository
 
+        @Inject
+        lateinit var insertEventInstanceUseCase: InsertEventInstanceUseCase
+
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(
             modelClass: Class<T>,
@@ -156,7 +161,8 @@ class EventListViewModel(
                 eventRepository,
                 syncJobQueue,
                 application.userSessionComponent().getUserPhotoUrl(),
-                userSessionRepository
+                userSessionRepository,
+                insertEventInstanceUseCase
             ) as T
         }
     }
