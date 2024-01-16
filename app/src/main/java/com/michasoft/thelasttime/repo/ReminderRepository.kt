@@ -3,7 +3,11 @@ package com.michasoft.thelasttime.repo
 import com.michasoft.thelasttime.dataSource.RoomReminderSource
 import com.michasoft.thelasttime.di.UserSessionScope
 import com.michasoft.thelasttime.model.reminder.Reminder
+import com.michasoft.thelasttime.model.reminder.RepeatedReminder
+import com.michasoft.thelasttime.model.reminder.SingleReminder
+import com.michasoft.thelasttime.reminder.CancelReminderUseCase
 import com.michasoft.thelasttime.reminder.ScheduleReminderUseCase
+import com.michasoft.thelasttime.util.IdGenerator
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import javax.inject.Inject
@@ -11,7 +15,8 @@ import javax.inject.Inject
 @UserSessionScope
 class ReminderRepository @Inject constructor(
     private val roomReminderSource: RoomReminderSource,
-    private val scheduleReminderUseCase: ScheduleReminderUseCase
+    private val scheduleReminderUseCase: ScheduleReminderUseCase,
+    private val cancelReminderUseCase: CancelReminderUseCase
 ) {
     private val _remindersChanged: MutableSharedFlow<Unit> = MutableSharedFlow()
     val remindersChanged: SharedFlow<Unit> = _remindersChanged
@@ -33,6 +38,7 @@ class ReminderRepository @Inject constructor(
         if (notify) {
             _remindersChanged.emit(Unit)
         }
+        cancelReminderUseCase.execute(reminder)
     }
 
     suspend fun deleteReminder(reminderId: String) {
@@ -52,24 +58,36 @@ class ReminderRepository @Inject constructor(
             }
         }
         roomReminderSource.insertReminder(reminder)
-        scheduleReminderUseCase.execute(reminder)
         if (notify) {
             _remindersChanged.emit(Unit)
         }
+        scheduleReminderUseCase.execute(reminder)
     }
 
     suspend fun updateReminder(reminder: Reminder) {
         val oldReminder = getReminder(reminder.id)
-        if (oldReminder == null) {
-            insertReminder(reminder = reminder, check = false, notify = true)
-        } else {
-            if (oldReminder.type != reminder.type) {
-                deleteReminder(reminder = oldReminder, notify = false)
-                insertReminder(reminder = reminder, check = false, notify = true)
-            } else {
-                roomReminderSource.updateReminder(reminder)
-                _remindersChanged.emit(Unit)
-            }
+        if (oldReminder != null) {
+            deleteReminder(reminder = reminder, notify = false)
         }
+        val newReminder: Reminder = when (reminder) {
+            is SingleReminder -> SingleReminder(
+                IdGenerator.newId(),
+                reminder.eventId,
+                reminder.dateTime,
+                reminder.label,
+                reminder.nextTriggerMillis
+            )
+
+            is RepeatedReminder -> RepeatedReminder(
+                IdGenerator.newId(),
+                reminder.eventId,
+                reminder.periodText,
+                reminder.label,
+                reminder.nextTriggerMillis
+            )
+
+            else -> throw Exception()
+        }
+        insertReminder(newReminder)
     }
 }

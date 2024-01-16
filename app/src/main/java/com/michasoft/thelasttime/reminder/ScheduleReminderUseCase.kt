@@ -1,11 +1,7 @@
 package com.michasoft.thelasttime.reminder
 
 import android.app.AlarmManager
-import android.app.PendingIntent
-import android.app.PendingIntent.FLAG_IMMUTABLE
 import android.content.Context
-import android.content.Intent
-import android.net.Uri
 import android.os.SystemClock
 import com.michasoft.thelasttime.dataSource.ILocalEventSource
 import com.michasoft.thelasttime.model.reminder.Reminder
@@ -20,11 +16,7 @@ class ScheduleReminderUseCase @Inject constructor(
 ) {
     suspend fun execute(reminder: Reminder) {
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        val alarmIntent = Intent(context, ShowReminderReceiver::class.java).let { intent ->
-            intent.putExtra(ShowReminderReceiver.REMINDER_ID, reminder.id)
-            intent.setData(Uri.parse(reminder.id))
-            PendingIntent.getBroadcast(context, 0, intent, FLAG_IMMUTABLE)
-        }
+        val alarmPendingIntent = reminder.createAlarmPendingIntent(context)
         val nextTriggerMillis = when (reminder) {
             is SingleReminder -> reminder.calcNextTriggerMillis()
             is RepeatedReminder -> {
@@ -46,7 +38,7 @@ class ScheduleReminderUseCase @Inject constructor(
         alarmManager.set(
             AlarmManager.ELAPSED_REALTIME_WAKEUP,
             SystemClock.elapsedRealtime() + nextTriggerMillis,
-            alarmIntent
+            alarmPendingIntent
         )
         Timber.d("execute nextTriggerMillis=$nextTriggerMillis")
     }

@@ -32,7 +32,7 @@ class EditReminderViewModel(
     val periodText = MutableStateFlow<String>(defaultPeriodText)
     val periodTextError = periodText.map { !validatePeriodText(it) }
     private val defaultDateTime: DateTime
-        get() = DateTime.now().plusHours(1)
+        get() = DateTime.now().plusMinutes(1).withSecondOfMinute(0).withMillisOfSecond(0)
     val dateTime = MutableStateFlow(defaultDateTime)
     val dateTimeError = dateTime.map { !validateDateTime(it) }
     private var reminderId: String? = null
