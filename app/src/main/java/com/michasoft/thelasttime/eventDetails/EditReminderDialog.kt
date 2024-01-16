@@ -62,7 +62,7 @@ fun EditReminderDialog(
     LaunchedEffect(Unit) {
         viewModel.actions.onEach {
             when (it) {
-                is EditReminderAction.Finish -> onDismiss()
+                EditReminderAction.Finish -> onDismiss()
             }
         }.launchIn(scope)
     }
