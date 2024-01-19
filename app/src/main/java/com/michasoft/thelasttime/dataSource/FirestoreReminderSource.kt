@@ -88,14 +88,14 @@ class FirestoreReminderSource @Inject constructor(
         }
     }
 
-    suspend fun deleteReminder(reminder: Reminder) {
-        when (reminder) {
-            is SingleReminder -> singleReminderCollectionRef.document(reminder.id).delete().await()
-            is RepeatedReminder -> repeatedReminderCollectionRef.document(reminder.id).delete().await()
+    suspend fun deleteReminder(reminderId: String, reminderType: Reminder.Type) {
+        when (reminderType) {
+            Reminder.Type.Single -> singleReminderCollectionRef.document(reminderId).delete().await()
+            Reminder.Type.Repeated -> repeatedReminderCollectionRef.document(reminderId).delete().await()
         }
     }
 
-    suspend fun deleteAllEvents() {
+    suspend fun deleteAllReminders() {
         deleteAllSingleEvents()
         deleteAllRepeatedEvents()
     }
@@ -132,5 +132,9 @@ class FirestoreReminderSource @Inject constructor(
                 hasNext = false
             }
         }
+    }
+
+    suspend fun clear() {
+        deleteAllReminders()
     }
 }

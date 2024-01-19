@@ -1,54 +1,53 @@
 package com.michasoft.thelasttime.repo
 
+import com.michasoft.thelasttime.dataSource.FirestoreReminderSource
 import com.michasoft.thelasttime.dataSource.ILocalEventSource
 import com.michasoft.thelasttime.dataSource.IRemoteEventSource
-import com.michasoft.thelasttime.model.EventInstance
-import kotlinx.coroutines.flow.buffer
+import com.michasoft.thelasttime.dataSource.RoomReminderSource
+import com.michasoft.thelasttime.reminder.ScheduleReminderUseCase
+import javax.inject.Inject
 
 /**
  * Created by mśmiech on 08.11.2021.
  */
-class BackupRepository(
-    private val localSource: ILocalEventSource,
-    private val remoteSource: IRemoteEventSource
+class BackupRepository @Inject constructor(
+    private val localEventSource: ILocalEventSource,
+    private val remoteEventSource: IRemoteEventSource,
+    private val localReminderSource: RoomReminderSource,
+    private val remoteReminderSource: FirestoreReminderSource,
+    private val scheduleReminderUseCase: ScheduleReminderUseCase
 ) {
     suspend fun clearLocalDatabase() {
-        localSource.clear()
+        localEventSource.clear()
+        localReminderSource.clear()
     }
 
     suspend fun clearBackup() {
-        remoteSource.clear()
+        remoteEventSource.clear()
+        remoteReminderSource.clear()
     }
 
     suspend fun restoreBackup() {
-        remoteSource.getAllEvents()
-            .buffer(100)
+        restoreEvents()
+        restoreReminders()
+    }
+
+    private suspend fun restoreEvents() {
+        remoteEventSource.getAllEvents()
             .collect { event ->
-                localSource.insertEvent(event)
-                remoteSource.getAllEventInstances(event.id, event.eventInstanceSchema!!)
-                    .buffer(100)
+                localEventSource.insertEvent(event)
+                remoteEventSource.getAllEventInstances(event.id, event.eventInstanceSchema!!)
                     .collect { instance ->
-                        localSource.insertEventInstance(instance)
+                        localEventSource.insertEventInstance(instance)
                     }
             }
     }
 
-    suspend fun makeBackup() {
-        localSource.getAllEvents()
-            .buffer(10)
-            .collect { event ->
-                remoteSource.insertEvent(event)
-                val buffer = ArrayList<EventInstance>(100)
-                localSource.getAllEventInstances(event.id, event.eventInstanceSchema!!)
-                    .buffer(100)
-                    .collect {
-                        buffer.add(it)
-                        if (buffer.size == 100) {
-                            remoteSource.insertEventInstances(buffer)
-                            buffer.clear()
-                        }
-                    }
+    private suspend fun restoreReminders() {
+        remoteReminderSource.getAllReminders()
+            .collect { reminder ->
+                localReminderSource.insertReminder(reminder)
+                scheduleReminderUseCase.execute(reminder)
             }
     }
-
 }

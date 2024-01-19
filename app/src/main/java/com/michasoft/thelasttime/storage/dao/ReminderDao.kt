@@ -20,6 +20,9 @@ interface ReminderDao {
     @Query("DELETE FROM ${SingleReminderEntity.TABLE_NAME} WHERE id=:id")
     suspend fun deleteSingleReminder(id: String)
 
+    @Query("DELETE FROM ${SingleReminderEntity.TABLE_NAME}")
+    suspend fun deleteAllSingleReminders()
+
     @Insert
     suspend fun insertRepeatedReminder(reminder: RepeatedReminderEntity)
 
@@ -34,4 +37,7 @@ interface ReminderDao {
 
     @Query("DELETE FROM ${RepeatedReminderEntity.TABLE_NAME} WHERE id=:id")
     suspend fun deleteRepeatedReminder(id: String)
+
+    @Query("DELETE FROM ${RepeatedReminderEntity.TABLE_NAME}")
+    suspend fun deleteAllRepeatedReminders()
 }

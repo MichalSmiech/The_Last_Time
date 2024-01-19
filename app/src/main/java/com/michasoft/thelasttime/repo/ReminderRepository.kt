@@ -2,11 +2,16 @@ package com.michasoft.thelasttime.repo
 
 import com.michasoft.thelasttime.dataSource.RoomReminderSource
 import com.michasoft.thelasttime.di.UserSessionScope
+import com.michasoft.thelasttime.model.SyncJobQueue
+import com.michasoft.thelasttime.model.SyncJobQueueCoordinator
 import com.michasoft.thelasttime.model.reminder.Reminder
 import com.michasoft.thelasttime.model.reminder.RepeatedReminder
 import com.michasoft.thelasttime.model.reminder.SingleReminder
+import com.michasoft.thelasttime.model.syncJob.ReminderSyncJob
+import com.michasoft.thelasttime.model.syncJob.SyncJob
 import com.michasoft.thelasttime.reminder.CancelReminderUseCase
 import com.michasoft.thelasttime.reminder.ScheduleReminderUseCase
+import com.michasoft.thelasttime.util.BackupConfig
 import com.michasoft.thelasttime.util.IdGenerator
 import com.michasoft.thelasttime.util.notify
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -18,7 +23,10 @@ class ReminderRepository @Inject constructor(
     private val roomReminderSource: RoomReminderSource,
     private val scheduleReminderUseCase: ScheduleReminderUseCase,
     private val cancelReminderUseCase: CancelReminderUseCase,
-    @Named("reminderChanged") val remindersChanged: MutableSharedFlow<Unit>
+    @Named("reminderChanged") val remindersChanged: MutableSharedFlow<Unit>,
+    private val backupConfig: BackupConfig,
+    private val syncJobQueue: SyncJobQueue,
+    private val syncJobQueueCoordinator: SyncJobQueueCoordinator,
 ) {
 
     suspend fun getReminder(id: String): Reminder? {
@@ -39,6 +47,11 @@ class ReminderRepository @Inject constructor(
             remindersChanged.notify()
         }
         cancelReminderUseCase.execute(reminder)
+        if (backupConfig.isAutoBackup()) {
+            val syncJob = ReminderSyncJob.Factory.create(reminder, SyncJob.Action.Delete)
+            syncJobQueue.add(syncJob)
+            syncJobQueueCoordinator.triggerSync()
+        }
     }
 
     suspend fun deleteReminder(reminderId: String) {
@@ -65,6 +78,11 @@ class ReminderRepository @Inject constructor(
         scheduleReminderUseCase.execute(reminder)
         if (notify) {
             remindersChanged.notify()
+        }
+        if (backupConfig.isAutoBackup()) {
+            val syncJob = ReminderSyncJob.Factory.create(reminder, SyncJob.Action.Insert)
+            syncJobQueue.add(syncJob)
+            syncJobQueueCoordinator.triggerSync()
         }
     }
 
