@@ -50,14 +50,26 @@ class UserSessionModule {
 
     @Provides
     @UserSessionScope
-    @Named("reminderCollectionRef")
-    fun provideReminderCollectionRef(
+    @Named("singleReminderCollectionRef")
+    fun provideSingleReminderCollectionRef(
         firestore: FirebaseFirestore,
         user: User
     ): CollectionReference {
         return firestore.collection("users")
             .document(user.remoteId!!) //TODO co w przypadku gdy lokalne konto nie jest zlinkowane z firebase?
-            .collection("reminders")
+            .collection("singleReminders")
+    }
+
+    @Provides
+    @UserSessionScope
+    @Named("repeatedReminderCollectionRef")
+    fun provideRepeatedReminderCollectionRef(
+        firestore: FirebaseFirestore,
+        user: User
+    ): CollectionReference {
+        return firestore.collection("users")
+            .document(user.remoteId!!) //TODO co w przypadku gdy lokalne konto nie jest zlinkowane z firebase?
+            .collection("repeatedReminders")
     }
 
     @Provides

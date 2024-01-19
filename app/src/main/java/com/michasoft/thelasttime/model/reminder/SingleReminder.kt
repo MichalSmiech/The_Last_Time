@@ -20,10 +20,6 @@ class SingleReminder(
         createLabel(dateTime)
     )
 
-    fun calcNextTriggerMillis(): Long {
-        return dateTime.millis - DateTime.now().millis
-    }
-
     fun getNextTrigger(): DateTime {
         return dateTime
     }
