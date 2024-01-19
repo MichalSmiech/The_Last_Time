@@ -8,18 +8,18 @@ import com.michasoft.thelasttime.model.reminder.SingleReminder
 import com.michasoft.thelasttime.reminder.CancelReminderUseCase
 import com.michasoft.thelasttime.reminder.ScheduleReminderUseCase
 import com.michasoft.thelasttime.util.IdGenerator
+import com.michasoft.thelasttime.util.notify
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.SharedFlow
 import javax.inject.Inject
+import javax.inject.Named
 
 @UserSessionScope
 class ReminderRepository @Inject constructor(
     private val roomReminderSource: RoomReminderSource,
     private val scheduleReminderUseCase: ScheduleReminderUseCase,
-    private val cancelReminderUseCase: CancelReminderUseCase
+    private val cancelReminderUseCase: CancelReminderUseCase,
+    @Named("reminderChanged") val remindersChanged: MutableSharedFlow<Unit>
 ) {
-    private val _remindersChanged: MutableSharedFlow<Unit> = MutableSharedFlow()
-    val remindersChanged: SharedFlow<Unit> = _remindersChanged
 
     suspend fun getReminder(id: String): Reminder? {
         return roomReminderSource.getReminder(id)
@@ -36,7 +36,7 @@ class ReminderRepository @Inject constructor(
     private suspend fun deleteReminder(reminder: Reminder, notify: Boolean) {
         roomReminderSource.deleteReminder(reminder)
         if (notify) {
-            _remindersChanged.emit(Unit)
+            remindersChanged.notify()
         }
         cancelReminderUseCase.execute(reminder)
     }
@@ -56,16 +56,20 @@ class ReminderRepository @Inject constructor(
             if (reminder1 != null) {
                 deleteReminder(reminder1)
             }
+            val eventReminder = getEventReminder(reminder.eventId)
+            if (eventReminder != null) {
+                deleteReminder(eventReminder)
+            }
         }
         roomReminderSource.insertReminder(reminder)
         scheduleReminderUseCase.execute(reminder)
         if (notify) {
-            _remindersChanged.emit(Unit)
+            remindersChanged.notify()
         }
     }
 
     suspend fun notifyRemindersChanged() {
-        _remindersChanged.emit(Unit)
+        remindersChanged.notify()
     }
 
     suspend fun updateReminder(reminder: Reminder) {
@@ -79,7 +83,6 @@ class ReminderRepository @Inject constructor(
                 reminder.eventId,
                 reminder.dateTime,
                 reminder.label,
-                reminder.nextTriggerMillis
             )
 
             is RepeatedReminder -> RepeatedReminder(
@@ -87,7 +90,6 @@ class ReminderRepository @Inject constructor(
                 reminder.eventId,
                 reminder.periodText,
                 reminder.label,
-                reminder.nextTriggerMillis
             )
 
             else -> throw Exception()

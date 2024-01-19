@@ -10,21 +10,20 @@ class RepeatedReminderEntity(
     var id: String,
     val eventId: String,
     val periodText: String,
-    val nextTriggerMillis: Long?
+    val label: String
 ) {
     constructor(reminder: RepeatedReminder) : this(
         reminder.id,
         reminder.eventId,
         reminder.periodText,
-        reminder.nextTriggerMillis,
+        reminder.label
     )
 
     fun toModel() = RepeatedReminder(
         id = id,
         eventId = eventId,
         periodText = periodText,
-        label = "",
-        nextTriggerMillis = nextTriggerMillis
+        label = label,
     )
 
     companion object {

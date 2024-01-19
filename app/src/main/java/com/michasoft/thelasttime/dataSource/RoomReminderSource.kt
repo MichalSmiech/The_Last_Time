@@ -35,7 +35,7 @@ class RoomReminderSource @Inject constructor(
 
     private suspend fun getEventReminders(eventId: String): List<Reminder> {
         return reminderDao.getEventSingleReminders(eventId).map { it.toModel() }
-            .plus(reminderDao.getEventRepeatedReminders(eventId).map { it.toModel().applyLabel() })
+            .plus(reminderDao.getEventRepeatedReminders(eventId).map { it.toModel() })
     }
 
     suspend fun getEventReminder(eventId: String): Reminder? {
@@ -44,29 +44,9 @@ class RoomReminderSource @Inject constructor(
 
     suspend fun getReminder(id: String): Reminder? =
         reminderDao.getSingleReminder(id)?.toModel()
-            ?: reminderDao.getRepeatedReminder(id)?.toModel()?.applyLabel()
+            ?: reminderDao.getRepeatedReminder(id)?.toModel()
 
-    private suspend fun RepeatedReminder.applyLabel(): RepeatedReminder {
-        return this.apply {
-            label = RepeatedReminder.createLabel(
-                eventDao.getLastInstanceTimestamp(eventId),
-                periodText
-            )
-        }
-    }
-
-    suspend fun updateReminder(reminder: Reminder) {
-        when (reminder) {
-            is SingleReminder -> reminderDao.updateSingleReminder(
-                reminder.id,
-                reminder.dateTime,
-                reminder.label
-            )
-
-            is RepeatedReminder -> reminderDao.updateRepeatedReminder(
-                reminder.id,
-                reminder.periodText
-            )
-        }
+    suspend fun updateRepeatedReminderLabel(id: String, label: String) {
+        reminderDao.updateRepeatedReminderLabel(id, label)
     }
 }

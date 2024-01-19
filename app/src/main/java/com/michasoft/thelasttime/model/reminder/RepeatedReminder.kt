@@ -8,13 +8,11 @@ class RepeatedReminder(
     eventId: String,
     val periodText: String,
     label: String,
-    nextTriggerMillis: Long? = null,
 ) : Reminder(
     id = id,
     eventId = eventId,
     type = Type.Repeated,
     label = label,
-    nextTriggerMillis = nextTriggerMillis,
 ) {
     constructor(id: String, eventId: String, periodText: String) : this(
         id = id,
@@ -22,6 +20,10 @@ class RepeatedReminder(
         periodText = periodText,
         label = periodText //TODO ustawić następna datę
     )
+
+    fun createLabel(lastEventInstanceDateTime: DateTime?): String {
+        return RepeatedReminder.createLabel(lastEventInstanceDateTime, periodText)
+    }
 
     companion object {
         fun createLabel(lastEventInstanceDateTime: DateTime?, periodText: String): String {

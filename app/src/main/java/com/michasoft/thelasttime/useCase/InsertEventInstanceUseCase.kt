@@ -12,7 +12,7 @@ class InsertEventInstanceUseCase @Inject constructor(
     private val eventRepository: EventRepository,
     private val reminderRepository: ReminderRepository,
     private val scheduleReminderUseCase: ScheduleReminderUseCase,
-    private val cancelReminderUseCase: CancelReminderUseCase
+    private val cancelReminderUseCase: CancelReminderUseCase,
 ) {
     suspend fun execute(instance: EventInstance) {
         eventRepository.insertEventInstance(instance)
@@ -20,7 +20,6 @@ class InsertEventInstanceUseCase @Inject constructor(
         if (reminder is RepeatedReminder) {
             cancelReminderUseCase.execute(reminder)
             scheduleReminderUseCase.execute(reminder)
-            reminderRepository.notifyRemindersChanged()
         }
     }
 }

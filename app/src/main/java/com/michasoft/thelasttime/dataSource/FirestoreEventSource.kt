@@ -16,7 +16,10 @@ import timber.log.Timber
 /**
  * Created by mśmiech on 01.11.2021.
  */
-class FirestoreEventSource(private val firestore: FirebaseFirestore, private val eventCollectionRef: CollectionReference) :
+class FirestoreEventSource(
+    private val firestore: FirebaseFirestore,
+    private val eventCollectionRef: CollectionReference
+) :
     IRemoteEventSource {
     override suspend fun insertEvent(event: Event) {
         val dto = EventDto(event)

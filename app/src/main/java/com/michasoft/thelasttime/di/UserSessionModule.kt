@@ -23,6 +23,7 @@ import com.michasoft.thelasttime.storage.AppDatabase
 import com.michasoft.thelasttime.util.BackupConfig
 import dagger.Module
 import dagger.Provides
+import kotlinx.coroutines.flow.MutableSharedFlow
 import javax.inject.Named
 
 /**
@@ -45,6 +46,18 @@ class UserSessionModule {
         return firestore.collection("users")
             .document(user.remoteId!!) //TODO co w przypadku gdy lokalne konto nie jest zlinkowane z firebase?
             .collection("events")
+    }
+
+    @Provides
+    @UserSessionScope
+    @Named("reminderCollectionRef")
+    fun provideReminderCollectionRef(
+        firestore: FirebaseFirestore,
+        user: User
+    ): CollectionReference {
+        return firestore.collection("users")
+            .document(user.remoteId!!) //TODO co w przypadku gdy lokalne konto nie jest zlinkowane z firebase?
+            .collection("reminders")
     }
 
     @Provides
@@ -141,5 +154,10 @@ class UserSessionModule {
 
     @Provides
     fun provideEventDao(appDatabase: AppDatabase) = appDatabase.eventDao
+
+    @Provides
+    @UserSessionScope
+    @Named("reminderChanged")
+    fun provideReminderChangedFlow(): MutableSharedFlow<Unit> = MutableSharedFlow()
 }
 

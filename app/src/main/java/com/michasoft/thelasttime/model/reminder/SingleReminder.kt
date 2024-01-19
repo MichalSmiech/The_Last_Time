@@ -7,13 +7,11 @@ class SingleReminder(
     eventId: String,
     val dateTime: DateTime,
     label: String,
-    nextTriggerMillis: Long? = null,
 ) : Reminder(
     id = id,
     eventId = eventId,
     type = Type.Single,
     label = label,
-    nextTriggerMillis = nextTriggerMillis,
 ) {
     constructor(id: String, eventId: String, dateTime: DateTime) : this(
         id,
