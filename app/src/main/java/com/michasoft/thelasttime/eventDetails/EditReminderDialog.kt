@@ -136,7 +136,8 @@ fun EditReminderDialog(
                         Buttons(
                             onSave = { viewModel.saveSingleReminder() },
                             onCancel = onDismiss,
-                            onDelete = { viewModel.deleteReminder() }
+                            onDelete = { viewModel.deleteReminder() },
+                            deleteButtonShown = initialState.reminderId != null
                         )
                     } else {
                         val periodText = viewModel.periodText.collectAsState().value
@@ -171,7 +172,8 @@ fun EditReminderDialog(
                                 viewModel.saveRepeatedReminder()
                             },
                             onCancel = onDismiss,
-                            onDelete = { viewModel.deleteReminder() }
+                            onDelete = { viewModel.deleteReminder() },
+                            deleteButtonShown = initialState.reminderId != null
                         )
                     }
 
@@ -185,15 +187,18 @@ fun EditReminderDialog(
 private fun Buttons(
     onSave: () -> Unit,
     onCancel: () -> Unit,
-    onDelete: () -> Unit
+    onDelete: () -> Unit,
+    deleteButtonShown: Boolean
 ) {
     Spacer(modifier = Modifier.height(24.dp))
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.End
     ) {
-        TextButton(onClick = onDelete) {
-            Text(text = "Delete")
+        if (deleteButtonShown) {
+            TextButton(onClick = onDelete) {
+                Text(text = "Delete")
+            }
         }
         Spacer(modifier = Modifier.width(8.dp))
         TextButton(onClick = onCancel) {

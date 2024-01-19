@@ -29,10 +29,10 @@ class EditReminderViewModel(
     val actions: SharedFlow<EditReminderAction> = _actions
     val type = MutableStateFlow(Reminder.Type.Single)
     val defaultPeriodText = ""
-    val periodText = MutableStateFlow<String>(defaultPeriodText)
+    val periodText = MutableStateFlow(defaultPeriodText)
     val periodTextError = periodText.map { !validatePeriodText(it) }
     private val defaultDateTime: DateTime
-        get() = DateTime.now().plusMinutes(1).withSecondOfMinute(0).withMillisOfSecond(0)
+        get() = DateTime.now().plusHours(1).withSecondOfMinute(0).withMillisOfSecond(0)
     val dateTime = MutableStateFlow(defaultDateTime)
     val dateTimeError = dateTime.map { !validateDateTime(it) }
     private var reminderId: String? = null
@@ -40,6 +40,7 @@ class EditReminderViewModel(
     fun saveSingleReminder() {
         val dateTime1 = dateTime.value
         if (!validateDateTime(dateTime1)) {
+            dateTime.value = dateTime1 //refresh dateTimeError
             return
         }
         val reminder = SingleReminder(reminderId ?: IdGenerator.newId(), eventId, dateTime1)
@@ -52,7 +53,6 @@ class EditReminderViewModel(
             _actions.emit(EditReminderAction.Finish)
         }
     }
-
 
     private fun validateDateTime(dateTime: DateTime): Boolean {
         return dateTime.isAfter(DateTime.now())
