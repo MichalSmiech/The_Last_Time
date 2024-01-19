@@ -15,7 +15,7 @@ class CreateReminderNotificationUseCase @Inject constructor(
 ) {
     private val channelId = NotificationChannels.reminderChannelData.id
 
-    suspend operator fun invoke(reminder: Reminder): Notification? {
+    suspend fun invoke(reminder: Reminder): Notification? {
         val event = eventRepository.getEvent(eventId = reminder.eventId)
         if (event == null) {
             Timber.w("Event is not exists while CreateReminderNotificationUseCase")
