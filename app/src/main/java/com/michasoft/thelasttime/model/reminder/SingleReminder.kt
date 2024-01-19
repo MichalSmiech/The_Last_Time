@@ -20,14 +20,11 @@ class SingleReminder(
         createLabel(dateTime)
     )
 
-
-    companion object {
-        fun createLabel(dateTime: DateTime): String {
-            return Reminder.createLabel(dateTime)
-        }
-    }
-
     fun calcNextTriggerMillis(): Long {
         return dateTime.millis - DateTime.now().millis
+    }
+
+    fun getNextTrigger(): DateTime {
+        return dateTime
     }
 }

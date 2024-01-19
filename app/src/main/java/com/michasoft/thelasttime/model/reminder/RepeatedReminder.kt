@@ -1,7 +1,6 @@
 package com.michasoft.thelasttime.model.reminder
 
 import org.joda.time.DateTime
-import timber.log.Timber
 
 class RepeatedReminder(
     id: String,
@@ -18,24 +17,27 @@ class RepeatedReminder(
         id = id,
         eventId = eventId,
         periodText = periodText,
-        label = periodText //TODO ustawić następna datę
+        label = periodText
     )
 
-    fun createLabel(lastEventInstanceDateTime: DateTime?): String {
-        return RepeatedReminder.createLabel(lastEventInstanceDateTime, periodText)
+    fun createLabel(nextTrigger: DateTime?): String {
+        if (nextTrigger == null) {
+            return periodText
+        }
+        return Reminder.createLabel(nextTrigger)
+    }
+
+
+    fun getNextTrigger(lastEventInstanceDateTime: DateTime): DateTime? {
+        val nextTrigger = getNextTrigger(periodText, lastEventInstanceDateTime)
+        if (nextTrigger.isBeforeNow) {
+            return null
+        }
+        return nextTrigger
     }
 
     companion object {
-        fun createLabel(lastEventInstanceDateTime: DateTime?, periodText: String): String {
-            if (lastEventInstanceDateTime == null) {
-                return periodText
-            }
-            val nextTriggerDateTime = getNextTrigger(periodText, lastEventInstanceDateTime)
-            return Reminder.createLabel(nextTriggerDateTime)
-        }
-
         fun getNextTrigger(periodText: String, startDateTime: DateTime = DateTime.now()): DateTime {
-            Timber.d("getNextTrigger")
             if (periodText.isBlank()) {
                 throw IllegalArgumentException()
             }
@@ -80,9 +82,5 @@ class RepeatedReminder(
             }
             return nextTrigger
         }
-    }
-
-    fun calcNextTriggerMillis(lastEventInstanceDateTime: DateTime): Long {
-        return getNextTrigger(periodText, lastEventInstanceDateTime).millis - DateTime.now().millis
     }
 }

@@ -5,6 +5,7 @@ import android.content.Context
 import com.michasoft.thelasttime.dataSource.RoomReminderSource
 import com.michasoft.thelasttime.model.reminder.Reminder
 import com.michasoft.thelasttime.model.reminder.RepeatedReminder
+import com.michasoft.thelasttime.util.notify
 import kotlinx.coroutines.flow.MutableSharedFlow
 import javax.inject.Inject
 import javax.inject.Named
@@ -20,7 +21,7 @@ class CancelReminderUseCase @Inject constructor(
         alarmManager.cancel(alarmPendingIntent)
         if (reminder is RepeatedReminder) {
             localReminderSource.updateRepeatedReminderLabel(reminder.id, reminder.createLabel(null))
-            remindersChanged.emit(Unit)
+            remindersChanged.notify()
         }
     }
 }
