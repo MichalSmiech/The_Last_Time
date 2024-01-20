@@ -20,6 +20,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Named
+import kotlin.math.absoluteValue
 import kotlin.random.Random
 
 class ShowReminderReceiver : BroadcastReceiver() {
@@ -54,8 +55,8 @@ class ShowReminderReceiver : BroadcastReceiver() {
             val channelData = NotificationChannels.reminderChannelData
             createNotificationChannelUseCase.invoke(channelData)
 
-            val notificationId = Random.nextInt() //TODO save in reminder?
-            val notification = createReminderNotificationUseCase.invoke(reminder) ?: return@launch
+            val notificationId = Random.nextInt().absoluteValue + 1 //TODO save in reminder?
+            val notification = createReminderNotificationUseCase.invoke(reminder, notificationId) ?: return@launch
             showNotificationUseCase.invoke(notification, notificationId)
             if (reminder is SingleReminder) {
                 reminderRepository.deleteReminder(reminder)
