@@ -15,6 +15,7 @@ import com.michasoft.thelasttime.notification.ReminderNotificationActionReceiver
 import com.michasoft.thelasttime.reminder.ShowReminderReceiver
 import com.michasoft.thelasttime.repo.UserSessionRepository
 import com.michasoft.thelasttime.view.MainActivity
+import com.michasoft.thelasttime.view.UserSessionActivity
 import dagger.BindsInstance
 import dagger.Subcomponent
 import javax.inject.Named
@@ -49,5 +50,6 @@ interface UserSessionComponent {
     fun inject(factory: EditReminderViewModel.Factory)
     fun inject(reminderSyncJob: ReminderSyncJob)
     fun inject(reminderNotificationActionReceiver: ReminderNotificationActionReceiver)
+    fun inject(userSessionActivity: UserSessionActivity)
 
 }

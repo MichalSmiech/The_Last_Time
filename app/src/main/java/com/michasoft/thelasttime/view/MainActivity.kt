@@ -2,7 +2,6 @@ package com.michasoft.thelasttime.view
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.core.app.ActivityOptionsCompat
@@ -12,11 +11,8 @@ import com.michasoft.thelasttime.model.Event
 import com.michasoft.thelasttime.model.EventInstanceField
 import com.michasoft.thelasttime.model.EventInstanceFieldSchema
 import com.michasoft.thelasttime.model.EventInstanceSchema
-import com.michasoft.thelasttime.notification.CheckPostNotificationPermissionUseCase
 import com.michasoft.thelasttime.notification.CreateNotificationChannelUseCase
 import com.michasoft.thelasttime.notification.CreateReminderNotificationUseCase
-import com.michasoft.thelasttime.notification.NotificationChannels.reminderChannelData
-import com.michasoft.thelasttime.notification.RequestPostNotificationPermissionUseCase
 import com.michasoft.thelasttime.notification.ShowNotificationUseCase
 import com.michasoft.thelasttime.reminder.ScheduleReminderUseCase
 import com.michasoft.thelasttime.repo.BackupRepository
@@ -54,12 +50,6 @@ class MainActivity : UserSessionActivity() {
 
     @Inject
     lateinit var createReminderNotificationUseCase: CreateReminderNotificationUseCase
-
-    @Inject
-    lateinit var checkPostNotificationPermissionUseCase: CheckPostNotificationPermissionUseCase
-
-    @Inject
-    lateinit var requestPostNotificationPermissionUseCase: RequestPostNotificationPermissionUseCase
 
     @Inject
     lateinit var scheduleReminderUseCase: ScheduleReminderUseCase
@@ -132,7 +122,6 @@ class MainActivity : UserSessionActivity() {
         val event = Event(IdGenerator.newId(), "Water plants", DateTime.now(), eventInstanceSchema)
         CoroutineScope(Dispatchers.IO).launch {
             eventRepository.insertEvent(event)
-            Log.d("asd", "Added: " + event)
         }
     }
 
@@ -157,39 +146,8 @@ class MainActivity : UserSessionActivity() {
     }
 
     fun createChannelNotification(view: View) {
-        val channelData = reminderChannelData
-        createNotificationChannelUseCase.invoke(channelData)
     }
 
     fun showNotification(view: View) {
-//        val notificationId = 1
-//        val reminder = Reminder("test")
-//        val notification = createReminderNotificationUseCase(reminder)
-//        CoroutineScope(Dispatchers.Main).launch {
-//            showNotificationUseCase.invoke(
-//                notification,
-//                notificationId,
-//                lifecycle,
-//                activityResultRegistry
-//            )
-//        }
-        CoroutineScope(Dispatchers.Main).launch {
-//            if (checkPostNotificationPermissionUseCase.invoke().not()) {
-//                val granted =
-//                    requestPostNotificationPermissionUseCase.execute(
-//                        lifecycle,
-//                        activityResultRegistry
-//                    )
-//                if (granted.not()) {
-//                    return@launch
-//                }
-        }
-//            scheduleReminderUseCase.execute(
-//                Reminder(
-//                    eventRepository.getEvents().first().id,
-//                    10.seconds.inWholeMilliseconds
-//                )
-//            )
-//        }
     }
 }

@@ -23,6 +23,9 @@ interface ReminderDao {
     @Query("DELETE FROM ${SingleReminderEntity.TABLE_NAME}")
     suspend fun deleteAllSingleReminders()
 
+    @Query("SELECT COUNT (*) FROM ${SingleReminderEntity.TABLE_NAME} LIMIT 1")
+    suspend fun hasSingleReminders(): Int
+
     @Insert
     suspend fun insertRepeatedReminder(reminder: RepeatedReminderEntity)
 
@@ -40,4 +43,7 @@ interface ReminderDao {
 
     @Query("DELETE FROM ${RepeatedReminderEntity.TABLE_NAME}")
     suspend fun deleteAllRepeatedReminders()
+
+    @Query("SELECT COUNT (*) FROM ${RepeatedReminderEntity.TABLE_NAME} LIMIT 1")
+    suspend fun hasRepeatedReminders(): Int
 }

@@ -52,4 +52,13 @@ class RoomReminderSource @Inject constructor(
         reminderDao.deleteAllSingleReminders()
         reminderDao.deleteAllRepeatedReminders()
     }
+
+    suspend fun hasReminders(): Boolean {
+        val hasRepeatedReminders = reminderDao.hasRepeatedReminders()
+        if (hasRepeatedReminders == 1) {
+            return true
+        }
+        val hasSingleReminders = reminderDao.hasSingleReminders()
+        return hasSingleReminders == 1
+    }
 }

@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.michasoft.thelasttime.eventInstanceAdd.EventInstanceAddViewModel
+import com.michasoft.thelasttime.permission.EnsurePostNotificationPermissionUseCase
 import com.michasoft.thelasttime.repo.EventRepository
 import com.michasoft.thelasttime.repo.ReminderRepository
 import com.michasoft.thelasttime.useCase.InsertEventInstanceUseCase
@@ -26,7 +27,8 @@ class EventDetailsViewModel(
     private val eventId: String,
     private val eventRepository: EventRepository,
     private val reminderRepository: ReminderRepository,
-    private val insertEventInstanceUseCase: InsertEventInstanceUseCase
+    private val insertEventInstanceUseCase: InsertEventInstanceUseCase,
+    private val ensurePostNotificationPermissionUseCase: EnsurePostNotificationPermissionUseCase
 ) : ViewModel() {
     private val _actions: MutableSharedFlow<EventDetailsAction> = MutableSharedFlow()
     val actions: SharedFlow<EventDetailsAction> = _actions
@@ -157,7 +159,9 @@ class EventDetailsViewModel(
 
     fun onAddReminderButtonClicked() {
         viewModelScope.launch {
-            _actions.emit(EventDetailsAction.ShowEditReminderDialog(eventId))
+            if (ensurePostNotificationPermissionUseCase.execute()) {
+                _actions.emit(EventDetailsAction.ShowEditReminderDialog(eventId))
+            }
         }
     }
 
@@ -177,6 +181,9 @@ class EventDetailsViewModel(
         @Inject
         lateinit var insertEventInstanceUseCase: InsertEventInstanceUseCase
 
+        @Inject
+        lateinit var ensurePostNotificationPermissionUseCase: EnsurePostNotificationPermissionUseCase
+
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(
             modelClass: Class<T>,
@@ -189,7 +196,8 @@ class EventDetailsViewModel(
                 eventId,
                 eventRepository,
                 reminderRepository,
-                insertEventInstanceUseCase
+                insertEventInstanceUseCase,
+                ensurePostNotificationPermissionUseCase
             ) as T
         }
     }

@@ -86,10 +86,6 @@ class ReminderRepository @Inject constructor(
         }
     }
 
-    suspend fun notifyRemindersChanged() {
-        remindersChanged.notify()
-    }
-
     suspend fun updateReminder(reminder: Reminder) {
         val oldReminder = getReminder(reminder.id)
         if (oldReminder != null) {

@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.Notification
 import android.content.Context
 import androidx.core.app.NotificationManagerCompat
+import com.michasoft.thelasttime.permission.CheckPostNotificationPermissionUseCase
 import javax.inject.Inject
 
 class ShowNotificationUseCase @Inject constructor(
@@ -11,11 +12,11 @@ class ShowNotificationUseCase @Inject constructor(
     private val checkPostNotificationPermissionUseCase: CheckPostNotificationPermissionUseCase,
 ) {
     @SuppressLint("MissingPermission")
-    suspend operator fun invoke(
+    operator fun invoke(
         notification: Notification,
         notificationId: Int,
     ) {
-        if (checkPostNotificationPermissionUseCase.invoke().not()) {
+        if (checkPostNotificationPermissionUseCase.execute().not()) {
             return
         }
         with(NotificationManagerCompat.from(context)) {
