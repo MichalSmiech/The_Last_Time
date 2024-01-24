@@ -39,11 +39,11 @@ class CreateReminderNotificationUseCase @Inject constructor(
             PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
         }
         return NotificationCompat.Builder(context, channelId)
-            .setSmallIcon(R.drawable.baseline_schedule_24)
+            .setSmallIcon(R.drawable.ic_reminder)
             .setContentTitle("Reminder")
             .setContentText(event.name)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-            .addAction(R.drawable.outline_add, "done", addEventInstancePendingIntent)
+            .addAction(R.drawable.outline_add, "add", addEventInstancePendingIntent)
             .setContentIntent(startEventDetailsPendingIntent)
             .setAutoCancel(true)
             .build()
