@@ -1,31 +1,36 @@
 package com.michasoft.thelasttime.view
 
-import android.app.DatePickerDialog
-import android.content.Context
-import android.widget.DatePicker
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccessTime
+import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDialog
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.unit.dp
+import org.joda.time.DateTime
 import org.joda.time.LocalDate
+import org.joda.time.LocalTime
 import org.joda.time.format.DateTimeFormat
 
 /**
  * Created by mśmiech on 25.09.2023.
  */
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditableDate(
     modifier: Modifier = Modifier,
@@ -33,6 +38,8 @@ fun EditableDate(
     onDateChange: (LocalDate) -> Unit,
     minDate: LocalDate? = null
 ) {
+    val datePickerState = rememberDatePickerState()
+    val showDialog = rememberSaveable { mutableStateOf(false) }
     Row(
         modifier = modifier,
         verticalAlignment = Alignment.CenterVertically
@@ -43,46 +50,41 @@ fun EditableDate(
             contentDescription = "date time icon"
         )
         Spacer(modifier = Modifier.width(13.dp))
-        val datePicker = createDatePicker(
-            context = LocalContext.current,
-            date = date,
-            minDate = minDate,
-            onDatePicked = {
-                onDateChange(it)
-            }
-        )
-        TextButton(onClick = { datePicker.show() }) {
+        TextButton(onClick = {
+            datePickerState.setSelection(date.toDateTime(LocalTime.now()).millis)
+            showDialog.value = true
+        }) {
             Text(
                 text = date.toString(dateFormatter).capitalize(Locale.current),
                 color = MaterialTheme.colorScheme.onSurface
             )
         }
     }
-}
-
-private fun createDatePicker(
-    context: Context,
-    date: LocalDate,
-    onDatePicked: (LocalDate) -> Unit,
-    minDate: LocalDate? = null
-): DatePickerDialog {
-    val year = date.year
-    val month = date.monthOfYear - 1
-    val dayOfMonth = date.dayOfMonth
-    val datePicker = DatePickerDialog(
-        context,
-        { _: DatePicker, selectedYear: Int, selectedMonth: Int, selectedDayOfMonth: Int ->
-            val pickedDate = LocalDate(selectedYear, selectedMonth + 1, selectedDayOfMonth)
-            onDatePicked(pickedDate)
-        },
-        year,
-        month,
-        dayOfMonth
-    )
-    if (minDate != null) {
-        datePicker.datePicker.minDate = minDate.toDate().time
+    if (showDialog.value) {
+        DatePickerDialog(
+            onDismissRequest = { showDialog.value = false },
+            confirmButton = {
+                TextButton(onClick = {
+                    val selectedDate = DateTime(datePickerState.selectedDateMillis).toLocalDate()
+                    onDateChange(selectedDate)
+                    showDialog.value = false
+                }) {
+                    Text("Ok")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = {
+                    showDialog.value = false
+                }) {
+                    Text("Cancel")
+                }
+            }
+        ) {
+            DatePicker(state = datePickerState, dateValidator = { date ->
+                minDate?.let { minDate -> !DateTime(date).isBefore(minDate.toDateTime(LocalTime.MIDNIGHT)) } ?: true
+            })
+        }
     }
-    return datePicker
 }
 
 private val dateFormatter = DateTimeFormat.forPattern("EEE, dd MMM yyyy")
