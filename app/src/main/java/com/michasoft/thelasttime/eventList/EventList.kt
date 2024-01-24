@@ -84,14 +84,14 @@ fun EventItem(event: Event, onClick: (String) -> Unit, onInstanceAdd: (String) -
                     fontSize = 14.sp
                 )
             }
-            if (event.reminder != null || event.labels.isNotEmpty()) {
+            if (event.reminders.isNotEmpty() || event.labels.isNotEmpty()) {
                 FlowRow(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(top = 8.dp),
                     horizontalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
-                    event.reminder?.let { reminder ->
+                    event.reminders.forEach { reminder ->
                         ReminderItem(reminder = reminder)
                     }
                     event.labels.forEach {

@@ -39,7 +39,7 @@ class EventDetailsViewModel(
             eventInstances = emptyList(),
             isDeleteConfirmationDialogShowing = false,
             isBottomSheetShowing = false,
-            reminder = null
+            reminders = emptyList()
         )
     )
     private val eventNameChanges = MutableSharedFlow<String>()
@@ -63,29 +63,29 @@ class EventDetailsViewModel(
         }.launchIn(viewModelScope)
 
         reminderRepository.remindersChanged.onEach {
-            setupReminder(eventId)
+            setupReminders(eventId)
         }.launchIn(viewModelScope)
     }
 
     private suspend fun setupEvent(eventId: String) {
         val event = eventRepository.getEvent(eventId, withLabels = true) ?: return
         val eventInstances = eventRepository.getEventInstances(eventId)
-        val reminder = reminderRepository.getEventReminder(eventId = eventId)
+        val reminders = reminderRepository.getEventReminders(eventId = eventId)
         state.update {
             it.copy(
                 isLoading = false,
                 event = event,
                 eventInstances = eventInstances,
-                reminder = reminder
+                reminders = reminders
             )
         }
     }
 
-    private suspend fun setupReminder(eventId: String) {
-        val reminder = reminderRepository.getEventReminder(eventId = eventId)
+    private suspend fun setupReminders(eventId: String) {
+        val reminders = reminderRepository.getEventReminders(eventId = eventId)
         state.update {
             it.copy(
-                reminder = reminder
+                reminders = reminders
             )
         }
     }

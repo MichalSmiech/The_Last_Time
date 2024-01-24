@@ -16,8 +16,8 @@ class InsertEventInstanceUseCase @Inject constructor(
 ) {
     suspend fun execute(instance: EventInstance) {
         eventRepository.insertEventInstance(instance)
-        val reminder = reminderRepository.getEventReminder(instance.eventId) ?: return
-        if (reminder is RepeatedReminder) {
+        val reminders = reminderRepository.getEventReminders(instance.eventId)
+        reminders.filterIsInstance<RepeatedReminder>().forEach { reminder ->
             cancelReminderUseCase.execute(reminder)
             scheduleReminderUseCase.execute(reminder)
         }

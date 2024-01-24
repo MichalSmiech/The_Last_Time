@@ -31,13 +31,9 @@ class RoomReminderSource @Inject constructor(
         }
     }
 
-    private suspend fun getEventReminders(eventId: String): List<Reminder> {
+    suspend fun getEventReminders(eventId: String): List<Reminder> {
         return reminderDao.getEventSingleReminders(eventId).map { it.toModel() }
             .plus(reminderDao.getEventRepeatedReminders(eventId).map { it.toModel() })
-    }
-
-    suspend fun getEventReminder(eventId: String): Reminder? {
-        return getEventReminders(eventId).firstOrNull()
     }
 
     suspend fun getReminder(id: String): Reminder? =

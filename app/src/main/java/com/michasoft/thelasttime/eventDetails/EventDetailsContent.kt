@@ -43,20 +43,20 @@ import org.joda.time.DateTime
 fun EventDetailsContent(
     event: Event,
     eventInstances: List<EventInstance>,
-    reminder: Reminder?,
+    reminders: List<Reminder>,
     onEventInstanceClick: (String) -> Unit,
     onLabelClick: () -> Unit,
     onReminderClick: (String) -> Unit,
 ) {
     Column(modifier = Modifier.fillMaxSize()) {
-        if (reminder != null || event.labels.isNotEmpty()) {
+        if (reminders.isNotEmpty() || event.labels.isNotEmpty()) {
             FlowRow(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(start = 16.dp, top = 8.dp, end = 16.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                if (reminder != null) {
+                reminders.forEach { reminder ->
                     ReminderItem(reminder = reminder, onClick = onReminderClick)
                 }
                 event.labels.forEach {
@@ -187,7 +187,7 @@ fun EventDetailsContentPreview() {
     EventDetailsContent(
         event = event,
         eventInstances = eventInstances,
-        reminder = reminder,
+        reminders = listOf(reminder),
         onReminderClick = {},
         onLabelClick = {},
         onEventInstanceClick = {}

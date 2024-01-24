@@ -14,5 +14,5 @@ data class Event(
 ) {
     var lastInstanceTimestamp: DateTime? = null
     var labels: List<Label> = emptyList()
-    var reminder: Reminder? = null
+    var reminders: List<Reminder> = emptyList()
 }

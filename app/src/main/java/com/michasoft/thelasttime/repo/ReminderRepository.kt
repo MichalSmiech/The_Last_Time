@@ -33,9 +33,7 @@ class ReminderRepository @Inject constructor(
         return roomReminderSource.getReminder(id)
     }
 
-    suspend fun getEventReminder(eventId: String): Reminder? {
-        return roomReminderSource.getEventReminder(eventId)
-    }
+    suspend fun getEventReminders(eventId: String) = roomReminderSource.getEventReminders(eventId)
 
     suspend fun deleteReminder(reminder: Reminder) {
         deleteReminder(reminder = reminder, notify = true)
@@ -68,10 +66,6 @@ class ReminderRepository @Inject constructor(
             val reminder1 = getReminder(reminder.id)
             if (reminder1 != null) {
                 deleteReminder(reminder1)
-            }
-            val eventReminder = getEventReminder(reminder.eventId)
-            if (eventReminder != null) {
-                deleteReminder(eventReminder)
             }
         }
         roomReminderSource.insertReminder(reminder)

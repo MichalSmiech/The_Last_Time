@@ -68,7 +68,7 @@ class EventListViewModel(
         val events = eventRepository.getEvents(
             withLastInstanceTimestamp = true,
             withLabels = true,
-            withReminder = true
+            withReminders = true
         )
         state.update {
             it.copy(

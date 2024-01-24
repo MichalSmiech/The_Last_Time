@@ -38,7 +38,10 @@ class EventRepository(
         _eventsChanged.emit(Unit)
     }
 
-    suspend fun getEvent(eventId: String, withLabels: Boolean = false): Event? {
+    suspend fun getEvent(
+        eventId: String,
+        withLabels: Boolean = false,
+    ): Event? {
         return localEventSource.getEvent(eventId)?.also { event ->
             if (withLabels) {
                 event.labels = localEventSource.getEventLabels(event.id)
@@ -64,7 +67,7 @@ class EventRepository(
     suspend fun getEvents(
         withLastInstanceTimestamp: Boolean = false,
         withLabels: Boolean = false,
-        withReminder: Boolean = false
+        withReminders: Boolean = false
     ): ArrayList<Event> {
         val events = getEvents()
         events.forEach { event ->
@@ -74,8 +77,8 @@ class EventRepository(
             if (withLabels) {
                 event.labels = localEventSource.getEventLabels(event.id)
             }
-            if (withReminder) {
-                event.reminder = localReminderSource.getEventReminder(event.id)
+            if (withReminders) {
+                event.reminders = localReminderSource.getEventReminders(event.id)
             }
         }
         return events
