@@ -1,7 +1,9 @@
 package com.michasoft.thelasttime.view
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.provider.Settings
 import android.view.View
 import android.widget.Toast
 import androidx.core.app.ActivityOptionsCompat
@@ -28,6 +30,7 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import org.joda.time.DateTime
 import javax.inject.Inject
+
 
 class MainActivity : UserSessionActivity() {
     @Inject
@@ -149,5 +152,19 @@ class MainActivity : UserSessionActivity() {
     }
 
     fun showNotification(view: View) {
+        val batterySaverIntent = Intent()
+//        startActivity(Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS))
+
+        val intent = Intent()
+        intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+        val uri = Uri.fromParts("package", this.packageName, null)
+        intent.setData(uri)
+        startActivity(intent)
+
+//        batterySaverIntent.component = ComponentName(
+//            "com.android.settings",
+//            "com.android.settings.Settings\$BatterySaverSettingsActivity"
+//        )
+//        startActivityForResult(batterySaverIntent, 0)
     }
 }
