@@ -2,6 +2,7 @@ package com.michasoft.thelasttime.storage.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.michasoft.thelasttime.model.TimeRange
 import com.michasoft.thelasttime.model.reminder.RepeatedReminder
 import org.joda.time.DateTime
 
@@ -12,12 +13,14 @@ class RepeatedReminderEntity(
     val eventId: String,
     val triggerDateTime: DateTime?,
     val periodText: String,
+    val timeRange: TimeRange?
 ) {
     constructor(reminder: RepeatedReminder) : this(
         reminder.id,
         reminder.eventId,
         reminder.triggerDateTime,
         reminder.periodText,
+        reminder.timeRange,
     )
 
     fun toModel() = RepeatedReminder(
@@ -25,6 +28,7 @@ class RepeatedReminderEntity(
         eventId = eventId,
         triggerDateTime = triggerDateTime,
         periodText = periodText,
+        timeRange = timeRange,
     )
 
     companion object {

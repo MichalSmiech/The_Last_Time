@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
+import com.michasoft.thelasttime.model.TimeRange
 import com.michasoft.thelasttime.model.reminder.Reminder
 import com.michasoft.thelasttime.model.reminder.RepeatedReminder
 import com.michasoft.thelasttime.model.reminder.SingleReminder
@@ -31,6 +32,9 @@ class EditReminderViewModel(
     val defaultPeriodText = ""
     val periodText = MutableStateFlow(defaultPeriodText)
     val periodTextError = periodText.map { !validatePeriodText(it) }
+    val timeRangeEnabled = MutableStateFlow<Boolean>(false)
+    val timeRangeStart = MutableStateFlow<LocalTime>(LocalTime(9, 0))
+    val timeRangeEnd = MutableStateFlow<LocalTime>(LocalTime(22, 0))
     private val defaultDateTime: DateTime
         get() = DateTime.now().plusHours(1).withSecondOfMinute(0).withMillisOfSecond(0)
     val dateTime = MutableStateFlow(defaultDateTime)
@@ -70,13 +74,31 @@ class EditReminderViewModel(
         periodText.update { value }
     }
 
+    fun changeTimeRangeStart(localTime: LocalTime) {
+        timeRangeStart.update { localTime }
+    }
+
+    fun changeTimeRangeEnd(localTime: LocalTime) {
+        timeRangeEnd.update { localTime }
+    }
+
+    fun changeTimeRangeEnabled(enable: Boolean) {
+        timeRangeEnabled.update { enable }
+    }
+
     fun saveRepeatedReminder() {
         val periodText1 = periodText.value
         val validatePeriodText = validatePeriodText(periodText1)
         if (!validatePeriodText) {
             return
         }
-        val reminder = RepeatedReminder(reminderId ?: IdGenerator.newId(), eventId, periodText1)
+        val timeRange = run {
+            if (timeRangeEnabled.value.not()) {
+                return@run null
+            }
+            return@run TimeRange(timeRangeStart.value, timeRangeEnd.value)
+        }
+        val reminder = RepeatedReminder(reminderId ?: IdGenerator.newId(), eventId, periodText1, timeRange)
         viewModelScope.launch {
             if (reminderId == null) {
                 reminderRepository.insertReminder(reminder)

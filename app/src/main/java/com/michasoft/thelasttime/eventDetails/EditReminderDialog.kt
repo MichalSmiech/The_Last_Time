@@ -1,5 +1,6 @@
 package com.michasoft.thelasttime.eventDetails
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -11,6 +12,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
@@ -25,6 +27,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -143,6 +146,9 @@ fun EditReminderDialog(
                         val periodText = viewModel.periodText.collectAsState().value
                         val periodTextError =
                             viewModel.periodTextError.collectAsState(initial = false).value
+                        val timeRangeEnabled = viewModel.timeRangeEnabled.collectAsState().value
+                        val timeRangeStart = viewModel.timeRangeStart.collectAsState().value
+                        val timeRangeEnd = viewModel.timeRangeEnd.collectAsState().value
                         var showError by remember { mutableStateOf(false) }
                         Text(
                             text = "After creating an event instance,\nremind me in:",
@@ -166,6 +172,33 @@ fun EditReminderDialog(
                                     "\nExample: 1d 3h 15min",
                             style = MaterialTheme.typography.bodySmall
                         )
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable { viewModel.changeTimeRangeEnabled(timeRangeEnabled.not()) },
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Checkbox(
+                                checked = timeRangeEnabled,
+                                onCheckedChange = { viewModel.changeTimeRangeEnabled(it) })
+                            Text(text = "only in range")
+                        }
+                        if (timeRangeEnabled) {
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Text(text = "start")
+                                EditableTime(
+                                    time = timeRangeStart,
+                                    onTimeChange = { viewModel.changeTimeRangeStart(it) }
+                                )
+                            }
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Text(text = "end")
+                                EditableTime(
+                                    time = timeRangeEnd,
+                                    onTimeChange = { viewModel.changeTimeRangeEnd(it) }
+                                )
+                            }
+                        }
                         Buttons(
                             onSave = {
                                 showError = true

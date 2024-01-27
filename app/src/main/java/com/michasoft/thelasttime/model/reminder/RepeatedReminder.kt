@@ -1,5 +1,6 @@
 package com.michasoft.thelasttime.model.reminder
 
+import com.michasoft.thelasttime.model.TimeRange
 import org.joda.time.DateTime
 
 class RepeatedReminder(
@@ -7,6 +8,7 @@ class RepeatedReminder(
     eventId: String,
     triggerDateTime: DateTime?,
     val periodText: String,
+    val timeRange: TimeRange?
 ) : Reminder(
     id = id,
     eventId = eventId,
@@ -17,15 +19,23 @@ class RepeatedReminder(
     override val type: Type
         get() = Type.Repeated
 
-    constructor(id: String, eventId: String, periodText: String) : this(
+    constructor(id: String, eventId: String, periodText: String, timeRange: TimeRange?) : this(
         id = id,
         eventId = eventId,
         triggerDateTime = null,
         periodText = periodText,
+        timeRange = timeRange,
     )
 
     fun getNextTrigger(lastEventInstanceDateTime: DateTime): DateTime? {
-        val nextTrigger = getNextTrigger(periodText, lastEventInstanceDateTime)
+        var nextTrigger = getNextTrigger(periodText, lastEventInstanceDateTime)
+        if (timeRange != null) {
+            if (nextTrigger.toLocalTime().isBefore(timeRange.start)) {
+                nextTrigger = nextTrigger.withTime(timeRange.start)
+            } else if (nextTrigger.toLocalTime().isAfter(timeRange.end)) {
+                nextTrigger = nextTrigger.plusDays(1).withTime(timeRange.start)
+            }
+        }
         if (nextTrigger.isBeforeNow) {
             return null
         }

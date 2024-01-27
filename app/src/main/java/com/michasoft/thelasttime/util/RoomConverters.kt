@@ -2,6 +2,7 @@ package com.michasoft.thelasttime.util
 
 import androidx.room.TypeConverter
 import com.michasoft.thelasttime.model.EventInstanceField
+import com.michasoft.thelasttime.model.TimeRange
 import com.michasoft.thelasttime.model.reminder.Reminder
 import org.joda.time.DateTime
 
@@ -27,4 +28,14 @@ class RoomConverters {
 
     @TypeConverter
     fun fromReminderType(value: Reminder.Type?) = value?.toString()
+
+    @TypeConverter
+    fun toTimeRange(value: String?): TimeRange? {
+        return TimeRange.deserialize(value)
+    }
+
+    @TypeConverter
+    fun fromTimeRange(value: TimeRange?): String? {
+        return value?.serialize()
+    }
 }

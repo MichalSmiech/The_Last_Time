@@ -96,6 +96,7 @@ class ReminderRepository @Inject constructor(
                 IdGenerator.newId(),
                 reminder.eventId,
                 reminder.periodText,
+                reminder.timeRange,
             )
 
             else -> throw Exception()
