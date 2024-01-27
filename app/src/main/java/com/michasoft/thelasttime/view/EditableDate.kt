@@ -39,7 +39,7 @@ fun EditableDate(
     minDate: LocalDate? = null
 ) {
     val datePickerState = rememberDatePickerState()
-    val showDialog = rememberSaveable { mutableStateOf(false) }
+    val showDatePicker = rememberSaveable { mutableStateOf(false) }
     Row(
         modifier = modifier,
         verticalAlignment = Alignment.CenterVertically
@@ -52,7 +52,7 @@ fun EditableDate(
         Spacer(modifier = Modifier.width(13.dp))
         TextButton(onClick = {
             datePickerState.setSelection(date.toDateTime(LocalTime.now()).millis)
-            showDialog.value = true
+            showDatePicker.value = true
         }) {
             Text(
                 text = date.toString(dateFormatter).capitalize(Locale.current),
@@ -60,29 +60,31 @@ fun EditableDate(
             )
         }
     }
-    if (showDialog.value) {
+    if (showDatePicker.value) {
         DatePickerDialog(
-            onDismissRequest = { showDialog.value = false },
+            onDismissRequest = { showDatePicker.value = false },
             confirmButton = {
                 TextButton(onClick = {
                     val selectedDate = DateTime(datePickerState.selectedDateMillis).toLocalDate()
                     onDateChange(selectedDate)
-                    showDialog.value = false
+                    showDatePicker.value = false
                 }) {
                     Text("Ok")
                 }
             },
             dismissButton = {
                 TextButton(onClick = {
-                    showDialog.value = false
+                    showDatePicker.value = false
                 }) {
                     Text("Cancel")
                 }
             }
         ) {
-            DatePicker(state = datePickerState, dateValidator = { date ->
-                minDate?.let { minDate -> !DateTime(date).isBefore(minDate.toDateTime(LocalTime.MIDNIGHT)) } ?: true
-            })
+            DatePicker(
+                state = datePickerState,
+                dateValidator = { date ->
+                    minDate?.let { minDate -> !DateTime(date).isBefore(minDate.toDateTime(LocalTime.MIDNIGHT)) } ?: true
+                })
         }
     }
 }
