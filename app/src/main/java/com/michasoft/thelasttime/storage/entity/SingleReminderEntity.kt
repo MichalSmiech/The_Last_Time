@@ -10,17 +10,17 @@ class SingleReminderEntity(
     @PrimaryKey
     var id: String,
     val eventId: String,
+    val triggerDateTime: DateTime?,
     val dateTime: DateTime,
-    val label: String,
 ) {
     constructor(reminder: SingleReminder) : this(
         reminder.id,
         reminder.eventId,
+        reminder.triggerDateTime,
         reminder.dateTime,
-        reminder.label,
     )
 
-    fun toModel() = SingleReminder(id, eventId, dateTime, label)
+    fun toModel() = SingleReminder(id, eventId, triggerDateTime, dateTime)
 
     companion object {
         const val TABLE_NAME = "SingleReminders"

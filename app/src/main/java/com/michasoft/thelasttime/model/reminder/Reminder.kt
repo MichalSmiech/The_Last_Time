@@ -11,9 +11,11 @@ import org.joda.time.format.DateTimeFormat
 abstract class Reminder(
     val id: String,
     val eventId: String,
-    val type: Type,
-    var label: String,
+    val triggerDateTime: DateTime?,
 ) {
+    abstract val label: String
+    abstract val type: Type
+
     enum class Type {
         Single,
         Repeated
@@ -25,6 +27,19 @@ abstract class Reminder(
             intent.setData(Uri.parse(id))
             PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
         }
+
+    protected fun createLabel(dateTime: DateTime): String {
+        if (dateTime.year != DateTime.now().year) {
+            return dateTime.toString(labelFullDatetimeFormatter)
+        }
+        if (dateTime.dayOfYear() == DateTime.now().dayOfYear()) {
+            return "Today, " + dateTime.toString(labelTimeFormatter)
+        }
+        if (dateTime.dayOfYear() == DateTime.now().plusDays(1).dayOfYear()) {
+            return "Tomorrow, " + dateTime.toString(labelTimeFormatter)
+        }
+        return dateTime.toString(labelDatetimeFormatter)
+    }
 
     companion object {
         private val labelTimeFormatter = DateTimeFormat.forPattern("HH:mm")

@@ -183,7 +183,7 @@ fun EventDetailsContentPreview() {
             arrayListOf<EventInstanceField>()
         ),
     )
-    val reminder = SingleReminder("", "", DateTime.now().plusHours(1), "12:00")
+    val reminder = SingleReminder("", "", DateTime.now().plusHours(1))
     EventDetailsContent(
         event = event,
         eventInstances = eventInstances,

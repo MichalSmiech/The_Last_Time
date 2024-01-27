@@ -46,9 +46,7 @@ class ScheduleReminderUseCase @Inject constructor(
         } else {
             Timber.d("reminder nextTrigger is null while ScheduleReminderUseCase, reminderId=${reminder.id}")
         }
-        if (reminder is RepeatedReminder) {
-            localReminderSource.updateRepeatedReminderLabel(reminder.id, reminder.createLabel(nextTrigger))
-            remindersChanged.notify()
-        }
+        localReminderSource.updateReminderTriggerDateTime(reminder, nextTrigger)
+        remindersChanged.notify()
     }
 }

@@ -5,11 +5,15 @@ import androidx.room.Insert
 import androidx.room.Query
 import com.michasoft.thelasttime.storage.entity.RepeatedReminderEntity
 import com.michasoft.thelasttime.storage.entity.SingleReminderEntity
+import org.joda.time.DateTime
 
 @Dao
 interface ReminderDao {
     @Insert
     suspend fun insertSingleReminder(reminder: SingleReminderEntity)
+
+    @Query("UPDATE ${SingleReminderEntity.TABLE_NAME} SET triggerDateTime=:triggerDateTime WHERE id=:id")
+    suspend fun updateSingleReminderTriggerDateTime(id: String, triggerDateTime: DateTime?)
 
     @Query("SELECT * FROM ${SingleReminderEntity.TABLE_NAME} WHERE id=:id")
     suspend fun getSingleReminder(id: String): SingleReminderEntity?
@@ -29,8 +33,8 @@ interface ReminderDao {
     @Insert
     suspend fun insertRepeatedReminder(reminder: RepeatedReminderEntity)
 
-    @Query("UPDATE ${RepeatedReminderEntity.TABLE_NAME} SET label=:label WHERE id=:id")
-    suspend fun updateRepeatedReminderLabel(id: String, label: String)
+    @Query("UPDATE ${RepeatedReminderEntity.TABLE_NAME} SET triggerDateTime=:triggerDateTime WHERE id=:id")
+    suspend fun updateRepeatedReminderTriggerDateTime(id: String, triggerDateTime: DateTime?)
 
     @Query("SELECT * FROM ${RepeatedReminderEntity.TABLE_NAME} WHERE id=:id")
     suspend fun getRepeatedReminder(id: String): RepeatedReminderEntity?

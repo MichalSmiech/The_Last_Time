@@ -44,7 +44,7 @@ class ReminderRepository @Inject constructor(
         if (notify) {
             remindersChanged.notify()
         }
-        cancelReminderUseCase.execute(reminder)
+        cancelReminderUseCase.execute(reminder = reminder, notify = false)
         if (backupConfig.isAutoBackup()) {
             val syncJob = ReminderSyncJob.Factory.create(reminder, SyncJob.Action.Delete)
             syncJobQueue.add(syncJob)
@@ -90,14 +90,12 @@ class ReminderRepository @Inject constructor(
                 IdGenerator.newId(),
                 reminder.eventId,
                 reminder.dateTime,
-                reminder.label,
             )
 
             is RepeatedReminder -> RepeatedReminder(
                 IdGenerator.newId(),
                 reminder.eventId,
                 reminder.periodText,
-                reminder.label,
             )
 
             else -> throw Exception()

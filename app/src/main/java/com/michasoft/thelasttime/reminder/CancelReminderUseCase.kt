@@ -4,7 +4,6 @@ import android.app.AlarmManager
 import android.content.Context
 import com.michasoft.thelasttime.dataSource.RoomReminderSource
 import com.michasoft.thelasttime.model.reminder.Reminder
-import com.michasoft.thelasttime.model.reminder.RepeatedReminder
 import com.michasoft.thelasttime.util.notify
 import kotlinx.coroutines.flow.MutableSharedFlow
 import javax.inject.Inject
@@ -15,12 +14,12 @@ class CancelReminderUseCase @Inject constructor(
     @Named("reminderChanged") private val remindersChanged: MutableSharedFlow<Unit>,
     private val localReminderSource: RoomReminderSource
 ) {
-    suspend fun execute(reminder: Reminder) {
+    suspend fun execute(reminder: Reminder, notify: Boolean = true) {
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val alarmPendingIntent = reminder.createAlarmPendingIntent(context)
         alarmManager.cancel(alarmPendingIntent)
-        if (reminder is RepeatedReminder) {
-            localReminderSource.updateRepeatedReminderLabel(reminder.id, reminder.createLabel(null))
+        localReminderSource.updateReminderTriggerDateTime(reminder, triggerDateTime = null)
+        if (notify) {
             remindersChanged.notify()
         }
     }

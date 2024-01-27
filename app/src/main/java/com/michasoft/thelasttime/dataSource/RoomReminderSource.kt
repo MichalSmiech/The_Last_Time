@@ -7,6 +7,7 @@ import com.michasoft.thelasttime.model.reminder.SingleReminder
 import com.michasoft.thelasttime.storage.dao.ReminderDao
 import com.michasoft.thelasttime.storage.entity.RepeatedReminderEntity
 import com.michasoft.thelasttime.storage.entity.SingleReminderEntity
+import org.joda.time.DateTime
 import javax.inject.Inject
 
 @UserSessionScope
@@ -40,8 +41,11 @@ class RoomReminderSource @Inject constructor(
         reminderDao.getSingleReminder(id)?.toModel()
             ?: reminderDao.getRepeatedReminder(id)?.toModel()
 
-    suspend fun updateRepeatedReminderLabel(id: String, label: String) {
-        reminderDao.updateRepeatedReminderLabel(id, label)
+    suspend fun updateReminderTriggerDateTime(reminder: Reminder, triggerDateTime: DateTime?) {
+        when (reminder) {
+            is SingleReminder -> reminderDao.updateSingleReminderTriggerDateTime(reminder.id, triggerDateTime)
+            is RepeatedReminder -> reminderDao.updateRepeatedReminderTriggerDateTime(reminder.id, triggerDateTime)
+        }
     }
 
     suspend fun clear() {

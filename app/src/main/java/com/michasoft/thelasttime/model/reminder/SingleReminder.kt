@@ -5,22 +5,31 @@ import org.joda.time.DateTime
 class SingleReminder(
     id: String,
     eventId: String,
+    triggerDateTime: DateTime?,
     val dateTime: DateTime,
-    label: String,
 ) : Reminder(
     id = id,
     eventId = eventId,
-    type = Type.Single,
-    label = label,
+    triggerDateTime = triggerDateTime,
 ) {
-    constructor(id: String, eventId: String, dateTime: DateTime) : this(
-        id,
-        eventId,
-        dateTime,
-        createLabel(dateTime)
+    override val label: String
+        get() = createLabel(triggerDateTime ?: dateTime)
+    override val type: Type
+        get() = Type.Single
+
+    constructor(
+        id: String,
+        eventId: String,
+        dateTime: DateTime,
+    ) : this(
+        id = id,
+        eventId = eventId,
+        triggerDateTime = null,
+        dateTime = dateTime,
     )
 
     fun getNextTrigger(): DateTime {
         return dateTime
     }
+
 }

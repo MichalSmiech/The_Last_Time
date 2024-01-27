@@ -49,7 +49,7 @@ class BackupRepository @Inject constructor(
         remoteReminderSource.getAllReminders()
             .collect { reminder ->
                 localReminderSource.insertReminder(reminder)
-                cancelReminderUseCase.execute(reminder)
+                cancelReminderUseCase.execute(reminder, notify = false)
                 scheduleReminderUseCase.execute(reminder)
             }
     }

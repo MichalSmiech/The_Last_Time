@@ -5,28 +5,24 @@ import org.joda.time.DateTime
 class RepeatedReminder(
     id: String,
     eventId: String,
+    triggerDateTime: DateTime?,
     val periodText: String,
-    label: String,
 ) : Reminder(
     id = id,
     eventId = eventId,
-    type = Type.Repeated,
-    label = label,
+    triggerDateTime = triggerDateTime,
 ) {
+    override val label: String
+        get() = triggerDateTime?.let { createLabel(it) } ?: periodText
+    override val type: Type
+        get() = Type.Repeated
+
     constructor(id: String, eventId: String, periodText: String) : this(
         id = id,
         eventId = eventId,
+        triggerDateTime = null,
         periodText = periodText,
-        label = periodText
     )
-
-    fun createLabel(nextTrigger: DateTime?): String {
-        if (nextTrigger == null) {
-            return periodText
-        }
-        return Reminder.createLabel(nextTrigger)
-    }
-
 
     fun getNextTrigger(lastEventInstanceDateTime: DateTime): DateTime? {
         val nextTrigger = getNextTrigger(periodText, lastEventInstanceDateTime)
