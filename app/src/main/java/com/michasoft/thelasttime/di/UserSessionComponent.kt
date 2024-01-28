@@ -2,7 +2,6 @@ package com.michasoft.thelasttime.di
 
 import android.net.Uri
 import com.michasoft.thelasttime.eventAdd.EventAddViewModel
-import com.michasoft.thelasttime.eventDetails.EditReminderViewModel
 import com.michasoft.thelasttime.eventDetails.EventDetailsViewModel
 import com.michasoft.thelasttime.eventInstanceDetails.EventInstanceDetailsViewModel
 import com.michasoft.thelasttime.eventLabels.EventLabelsViewModel
@@ -13,6 +12,7 @@ import com.michasoft.thelasttime.model.syncJob.EventSyncJob
 import com.michasoft.thelasttime.model.syncJob.ReminderSyncJob
 import com.michasoft.thelasttime.notification.ReminderNotificationActionReceiver
 import com.michasoft.thelasttime.reminder.ShowReminderReceiver
+import com.michasoft.thelasttime.reminderEdit.EditReminderViewModel
 import com.michasoft.thelasttime.repo.UserSessionRepository
 import com.michasoft.thelasttime.view.MainActivity
 import com.michasoft.thelasttime.view.UserSessionActivity
@@ -36,6 +36,8 @@ interface UserSessionComponent {
 
     fun getUser(): User
     fun getUserSessionRepository(): UserSessionRepository
+    fun getEditReminderViewModel(): EditReminderViewModel
+
     @Named("userPhotoUrl")
     fun getUserPhotoUrl(): Uri?
     fun inject(activity: MainActivity)
@@ -47,7 +49,6 @@ interface UserSessionComponent {
     fun inject(factory: EventAddViewModel.Factory)
     fun inject(factory: EventLabelsViewModel.Factory)
     fun inject(showReminderReceiver: ShowReminderReceiver)
-    fun inject(factory: EditReminderViewModel.Factory)
     fun inject(reminderSyncJob: ReminderSyncJob)
     fun inject(reminderNotificationActionReceiver: ReminderNotificationActionReceiver)
     fun inject(userSessionActivity: UserSessionActivity)

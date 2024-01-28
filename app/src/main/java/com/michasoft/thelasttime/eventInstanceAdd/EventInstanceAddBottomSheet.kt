@@ -3,8 +3,14 @@ package com.michasoft.thelasttime.eventInstanceAdd
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccessTime
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -34,17 +40,34 @@ fun EventInstanceAddBottomSheet(viewModel: EventInstanceAddViewModel) {
             verticalAlignment = Alignment.Bottom,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Column {
-                EditableDate(
-                    modifier = Modifier.padding(start = 13.dp),
-                    date = state.instance.timestamp.toLocalDate(),
-                    onDateChange = viewModel::changeDate
-                )
-                EditableTime(
-                    modifier = Modifier.padding(start = 13.dp),
-                    time = state.instance.timestamp.toLocalTime(),
-                    onTimeChange = viewModel::changeTime
-                )
+            Column(modifier = Modifier.padding(start = 13.dp)) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        modifier = Modifier.padding(vertical = 13.dp),
+                        imageVector = Icons.Default.AccessTime,
+                        contentDescription = "date time icon"
+                    )
+                    Spacer(modifier = Modifier.width(13.dp))
+                    EditableDate(
+                        date = state.instance.timestamp.toLocalDate(),
+                        onDateChange = viewModel::changeDate
+                    )
+                }
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Spacer(
+                        modifier = Modifier
+                            .size(24.dp)
+                    )
+                    Spacer(modifier = Modifier.width(13.dp))
+                    EditableTime(
+                        time = state.instance.timestamp.toLocalTime(),
+                        onTimeChange = viewModel::changeTime
+                    )
+                }
             }
             TextButton(
                 modifier = Modifier.padding(16.dp, 0.dp),

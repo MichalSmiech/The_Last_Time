@@ -15,7 +15,6 @@ import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import javax.inject.Inject
 
 /**
@@ -66,10 +65,7 @@ abstract class UserSessionActivity: AppCompatActivity() {
                 }
             }.launchIn(this)
             if (needRequestPostNotificationPermissionUseCase.execute()) {
-                Timber.tag("asd").d("needRequestPostNotificationPermissionUseCase true")
                 ensurePostNotificationPermissionUseCase.execute()
-            } else {
-                Timber.tag("asd").d("needRequestPostNotificationPermissionUseCase false")
             }
         }
     }
