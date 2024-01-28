@@ -162,6 +162,11 @@ class EditReminderViewModel @Inject constructor(
 
                 is RepeatedReminder -> {
                     periodText.value = reminder.periodText
+                    timeRangeEnabled.value = reminder.timeRange != null
+                    reminder.timeRange?.let {
+                        timeRangeStart.value = it.start
+                        timeRangeEnd.value = it.end
+                    }
                 }
             }
         }

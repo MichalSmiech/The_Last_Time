@@ -33,6 +33,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -172,6 +173,7 @@ private fun EditReminderContent(
             }
             Spacer(modifier = Modifier.height(8.dp))
             Column(Modifier.padding(horizontal = 24.dp)) {
+                var showError by remember { mutableStateOf(false) }
                 if (type == Reminder.Type.Single) {
                     SingleReminderContent(
                         dateTime = dateTime,
@@ -191,10 +193,14 @@ private fun EditReminderContent(
                         onTimeRangeEnabledChange = onTimeRangeEnabledChange,
                         onTimeRangeStartChange = onTimeRangeStartChange,
                         onTimeRangeEndChange = onTimeRangeEndChange,
+                        showError = showError
                     )
                 }
                 Buttons(
-                    onSave = { onReminderSave() },
+                    onSave = {
+                        showError = true
+                        onReminderSave()
+                    },
                     onCancel = onDismiss,
                     onDelete = { onReminderDelete() },
                     deleteButtonShown = initialState.reminderId != null
@@ -260,8 +266,8 @@ private fun RepeatedReminderContent(
     onTimeRangeEnabledChange: (Boolean) -> Unit,
     onTimeRangeStartChange: (LocalTime) -> Unit,
     onTimeRangeEndChange: (LocalTime) -> Unit,
+    showError: Boolean
 ) {
-    val showError by remember { mutableStateOf(false) }
     Text(
         text = "After creating an event instance,\nremind me in:",
         style = MaterialTheme.typography.bodyMedium
@@ -271,19 +277,26 @@ private fun RepeatedReminderContent(
         onValueChange = onPeriodTextChange,
         isError = showError && periodTextError,
         supportingText = {
-            if (showError && periodTextError) {
-                Text(text = "Invalid value")
+            Column {
+                if (showError && periodTextError) {
+                    Text(text = "Invalid value")
+                }
+                Text(
+                    text = "y - year, m - month, w - week, d - day,\nh - hour, min - minute " +
+                            "\nExample: 1d 3h 15min",
+//                    style = MaterialTheme.typography.bodySmall
+                )
             }
         },
         placeholder = {
             Text(text = "Enter period")
         }
     )
-    Text(
-        text = "y - year, m - month, w - week, d - day, h - hour, min - minute " +
-                "\nExample: 1d 3h 15min",
-        style = MaterialTheme.typography.bodySmall
-    )
+//    Text(
+//        text = "y - year, m - month, w - week, d - day, h - hour, min - minute " +
+//                "\nExample: 1d 3h 15min",
+//        style = MaterialTheme.typography.bodySmall
+//    )
     Spacer(modifier = Modifier.height(16.dp))
     Row(
         modifier = Modifier
