@@ -1,4 +1,4 @@
-package com.michasoft.thelasttime.model.remote.dto
+package com.michasoft.thelasttime.model.dto
 
 import com.michasoft.thelasttime.model.EventInstanceField
 import com.michasoft.thelasttime.model.EventInstanceFieldSchema

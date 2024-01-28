@@ -3,11 +3,11 @@ package com.michasoft.thelasttime.dataSource
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
+import com.michasoft.thelasttime.model.dto.RepeatedReminderDto
+import com.michasoft.thelasttime.model.dto.SingleReminderDto
 import com.michasoft.thelasttime.model.reminder.Reminder
 import com.michasoft.thelasttime.model.reminder.RepeatedReminder
 import com.michasoft.thelasttime.model.reminder.SingleReminder
-import com.michasoft.thelasttime.model.remote.dto.RepeatedReminderDto
-import com.michasoft.thelasttime.model.remote.dto.SingleReminderDto
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.flow

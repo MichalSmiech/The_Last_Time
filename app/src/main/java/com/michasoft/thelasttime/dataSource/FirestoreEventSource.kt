@@ -6,8 +6,8 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.michasoft.thelasttime.model.Event
 import com.michasoft.thelasttime.model.EventInstance
 import com.michasoft.thelasttime.model.EventInstanceSchema
-import com.michasoft.thelasttime.model.remote.dto.EventDto
-import com.michasoft.thelasttime.model.remote.dto.EventInstanceFieldSchemaDto
+import com.michasoft.thelasttime.model.dto.EventDto
+import com.michasoft.thelasttime.model.dto.EventInstanceFieldSchemaDto
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.tasks.await
