@@ -7,5 +7,6 @@ import com.michasoft.thelasttime.model.Label
  */
 data class LabelsEditState(
     val isLoading: Boolean,
-    val labels: List<Label>
+    val labels: List<Label>,
+    val newLabelName: String
 )

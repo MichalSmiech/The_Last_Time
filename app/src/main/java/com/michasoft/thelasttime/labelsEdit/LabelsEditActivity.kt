@@ -79,7 +79,10 @@ fun LabelsEditScreen(
                 LabelsEditContent(
                     state = state,
                     onLabelNameChange = viewModel::onLabelNameChange,
-                    newLabelFocusRequester = newLabelFocusRequester
+                    newLabelFocusRequester = newLabelFocusRequester,
+                    onNewLabelNameChange = viewModel::onNewNameChange,
+                    onNewLabelAdd = viewModel::onNewLabelAdd,
+                    onLabelDelete = viewModel::onLabelDelete,
                 )
                 if (withNewLabelTextFieldFocus) {
                     LaunchedEffect(key1 = Unit) {

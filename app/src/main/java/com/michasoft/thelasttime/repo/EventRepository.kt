@@ -172,4 +172,8 @@ class EventRepository(
         localEventSource.deleteEventLabel(eventId, labelId)
         //TODO sync
     }
+
+    suspend fun deleteLabel(labelId: String) {
+        localEventSource.deleteLabel(labelId)
+    }
 }

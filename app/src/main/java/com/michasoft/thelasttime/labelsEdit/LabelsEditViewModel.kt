@@ -7,6 +7,7 @@ import androidx.lifecycle.viewmodel.CreationExtras
 import com.michasoft.thelasttime.model.Label
 import com.michasoft.thelasttime.repo.EventRepository
 import com.michasoft.thelasttime.userSessionComponent
+import com.michasoft.thelasttime.util.IdGenerator
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -30,7 +31,8 @@ class LabelsEditViewModel(
     val state = MutableStateFlow(
         LabelsEditState(
             isLoading = false,
-            labels = emptyList()
+            labels = emptyList(),
+            newLabelName = ""
         )
     )
     private val labelNameChanges = MutableSharedFlow<Pair<String, String>>()
@@ -60,8 +62,38 @@ class LabelsEditViewModel(
                 set(index, label.copy(name = name))
             })
         }
+        if (name.isNotEmpty()) {
+            viewModelScope.launch {
+                labelNameChanges.emit(Pair(label.id, name))
+            }
+        }
+    }
+
+    fun onNewNameChange(name: String) {
+        state.update { it.copy(newLabelName = name) }
+    }
+
+    fun onNewLabelAdd(labelName: String) {
+        val newLabel = Label(IdGenerator.newId(), labelName)
+        state.update {
+            it.copy(
+                newLabelName = "",
+                labels = listOf(newLabel) + it.labels
+            )
+        }
         viewModelScope.launch {
-            labelNameChanges.emit(Pair(label.id, name))
+            eventRepository.insertLabel(label = newLabel)
+        }
+    }
+
+    fun onLabelDelete(label: Label) {
+        state.update {
+            it.copy(labels = it.labels.toMutableList().apply {
+                remove(label)
+            })
+        }
+        viewModelScope.launch {
+            eventRepository.deleteLabel(labelId = label.id)
         }
     }
 

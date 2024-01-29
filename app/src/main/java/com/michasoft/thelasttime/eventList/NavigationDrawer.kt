@@ -4,14 +4,15 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.outlined.Home
@@ -46,7 +47,9 @@ fun DrawerContent(
     onAddNewLabelClick: () -> Unit
 ) {
     Column(
-        modifier = Modifier.width(280.dp)
+        modifier = Modifier
+            .width(280.dp)
+            .verticalScroll(rememberScrollState())
     ) {
         DrawerHeader()
         MenuItem(
@@ -76,6 +79,7 @@ fun DrawerContent(
             type = MenuItemType.SIGNOUT,
             onMenuItemClick = onMenuItemClick
         )
+        Spacer(modifier = Modifier.height(16.dp))
     }
 }
 
@@ -181,10 +185,10 @@ fun LabelsSection(
 
 @Composable
 fun LabelList(labels: List<Label>, onLabelClick: (Label) -> Unit) {
-    LazyColumn(
+    Column(
         modifier = Modifier
     ) {
-        items(labels) {
+        labels.forEach {
             LabelItemUI(it, onLabelClick, false)
         }
     }
