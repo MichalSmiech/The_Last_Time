@@ -159,6 +159,10 @@ class EventRepository(
         //TODO sync
     }
 
+    suspend fun updateLabelName(labelId: String, name: String) {
+        localEventSource.updateLabelName(labelId, name)
+    }
+
     suspend fun insertEventLabel(eventId: String, labelId: String) {
         localEventSource.insertEventLabel(eventId, labelId)
         //TODO sync

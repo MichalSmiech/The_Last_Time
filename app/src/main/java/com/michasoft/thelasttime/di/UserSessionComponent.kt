@@ -6,6 +6,7 @@ import com.michasoft.thelasttime.eventDetails.EventDetailsViewModel
 import com.michasoft.thelasttime.eventInstanceDetails.EventInstanceDetailsViewModel
 import com.michasoft.thelasttime.eventLabels.EventLabelsViewModel
 import com.michasoft.thelasttime.eventList.EventListViewModel
+import com.michasoft.thelasttime.labelsEdit.LabelsEditViewModel
 import com.michasoft.thelasttime.model.User
 import com.michasoft.thelasttime.model.syncJob.EventInstanceSyncJob
 import com.michasoft.thelasttime.model.syncJob.EventSyncJob
@@ -52,5 +53,6 @@ interface UserSessionComponent {
     fun inject(reminderSyncJob: ReminderSyncJob)
     fun inject(reminderNotificationActionReceiver: ReminderNotificationActionReceiver)
     fun inject(userSessionActivity: UserSessionActivity)
+    fun inject(factory: LabelsEditViewModel.Factory)
 
 }

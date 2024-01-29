@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Edit
@@ -17,43 +18,57 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.unit.dp
+import com.michasoft.thelasttime.model.Label
 import com.michasoft.thelasttime.view.NoShapeTextField
 
 /**
  * Created by mśmiech on 27.11.2023.
  */
 @Composable
-fun LabelsEditContent() {
+fun LabelsEditContent(
+    state: LabelsEditState,
+    onLabelNameChange: (Label, String) -> Unit,
+    newLabelFocusRequester: FocusRequester,
+) {
     Box(modifier = Modifier.fillMaxSize()) {
-        LabelItemList()
+        LabelItemList(
+            labelItems = state.labels,
+            onLabelNameChange = onLabelNameChange,
+            newLabelFocusRequester = newLabelFocusRequester
+        )
     }
 }
 
 @Composable
-fun LabelItemList() {
+fun LabelItemList(
+    labelItems: List<Label>,
+    onLabelNameChange: (Label, String) -> Unit,
+    newLabelFocusRequester: FocusRequester,
+) {
     LazyColumn(
         modifier = Modifier
             .padding(vertical = 8.dp)
             .fillMaxSize(),
     ) {
         item {
-            NewLabelItemUI()
+            NewLabelItemUI(newLabelFocusRequester)
         }
-        item {
-            LabelItemUI()
-        }
-        item {
-            LabelItemUI()
-        }
-        item {
-            LabelItemUI()
+        items(items = labelItems, key = { it.id }) {
+            LabelItemUI(
+                label = it,
+                onLabelNameChange = onLabelNameChange
+            )
         }
     }
 }
 
 @Composable
-fun NewLabelItemUI() {
+fun NewLabelItemUI(
+    focusRequester: FocusRequester
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -74,7 +89,8 @@ fun NewLabelItemUI() {
         NoShapeTextField(
             modifier = Modifier
                 .weight(1f)
-                .padding(horizontal = 8.dp),
+                .padding(horizontal = 8.dp)
+                .focusRequester(focusRequester),
             singleLine = true,
             value = "",
             onValueChange = { },
@@ -84,7 +100,10 @@ fun NewLabelItemUI() {
 }
 
 @Composable
-fun LabelItemUI() {
+fun LabelItemUI(
+    label: Label,
+    onLabelNameChange: (Label, String) -> Unit
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -107,8 +126,8 @@ fun LabelItemUI() {
                 .weight(1f)
                 .padding(horizontal = 8.dp),
             singleLine = true,
-            value = "test label name",
-            onValueChange = { }
+            value = label.name,
+            onValueChange = { onLabelNameChange(label, it) }
         )
         Box(
             modifier = Modifier

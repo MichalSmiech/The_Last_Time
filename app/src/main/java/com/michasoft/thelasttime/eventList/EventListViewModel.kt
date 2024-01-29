@@ -128,12 +128,18 @@ class EventListViewModel(
 
     fun onLabelsEditClicked() {
         viewModelScope.launch {
-            _actions.emit(EventListAction.NavigateToLabelsEdit)
+            _actions.emit(EventListAction.NavigateToLabelsEdit())
         }
     }
 
     suspend fun singOut() {
         userSessionRepository.logout()
+    }
+
+    fun onAddNewLabelClicked() {
+        viewModelScope.launch {
+            _actions.emit(EventListAction.NavigateToLabelsEdit(withNewLabelFocus = true))
+        }
     }
 
     class Factory : ViewModelProvider.Factory {

@@ -10,6 +10,7 @@ import com.michasoft.thelasttime.repo.EventRepository
 import com.michasoft.thelasttime.repo.ReminderRepository
 import com.michasoft.thelasttime.useCase.InsertEventInstanceUseCase
 import com.michasoft.thelasttime.userSessionComponent
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -23,6 +24,7 @@ import javax.inject.Inject
 /**
  * Created by mśmiech on 21.09.2023.
  */
+@OptIn(FlowPreview::class)
 class EventDetailsViewModel(
     private val eventId: String,
     private val eventRepository: EventRepository,

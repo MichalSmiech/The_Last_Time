@@ -9,7 +9,7 @@ sealed class EventListAction {
     object NavigateToEventAdd : EventListAction()
     object NavigateToSettings : EventListAction()
     object NavigateToDebug : EventListAction()
-    object NavigateToLabelsEdit : EventListAction()
+    data class NavigateToLabelsEdit(val withNewLabelFocus: Boolean = false) : EventListAction()
     object CloseDrawer : EventListAction()
     object SignOut : EventListAction()
 }

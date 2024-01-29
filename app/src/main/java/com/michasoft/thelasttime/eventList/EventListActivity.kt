@@ -94,7 +94,7 @@ class EventListActivity : UserSessionActivity() {
                         }
 
                         is EventListAction.NavigateToLabelsEdit -> {
-                            launchLabelsEditActivity()
+                            launchLabelsEditActivity(it.withNewLabelFocus)
                         }
 
                         is EventListAction.CloseDrawer -> {
@@ -147,9 +147,9 @@ class EventListActivity : UserSessionActivity() {
         )
     }
 
-    private fun launchLabelsEditActivity() {
+    private fun launchLabelsEditActivity(withNewLabelFocus: Boolean) {
         startActivity(
-            Intent(this, LabelsEditActivity::class.java),
+            LabelsEditActivity.getLaunchIntent(this, withNewLabelFocus),
             ActivityOptionsCompat.makeSceneTransitionAnimation(this).toBundle()
         )
     }
@@ -177,7 +177,7 @@ fun EventListScreen(
                     labels = state.labels,
                     onLabelClick = {},
                     onLabelsEditClick = { viewModel.onLabelsEditClicked() },
-                    onAddNewLabelClick = {}
+                    onAddNewLabelClick = { viewModel.onAddNewLabelClicked() }
                 )
             }
         }

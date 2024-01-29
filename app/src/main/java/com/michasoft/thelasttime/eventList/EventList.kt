@@ -95,7 +95,7 @@ fun EventItem(event: Event, onClick: (String) -> Unit, onInstanceAdd: (String) -
                         ReminderItem(reminder = reminder)
                     }
                     event.labels.forEach {
-                        LabelItem(label = it)
+                        LabelItemUI(label = it)
                     }
                 }
             }
@@ -123,7 +123,7 @@ fun AddButton(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LabelItem(label: Label) {
+private fun LabelItemUI(label: Label) {
     Surface(
         shape = InputChipDefaults.shape,
         color = MaterialTheme.colorScheme.surfaceVariant
@@ -146,7 +146,7 @@ fun LabelItem(label: Label) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ReminderItem(reminder: Reminder) {
+private fun ReminderItem(reminder: Reminder) {
     Surface(
         shape = InputChipDefaults.shape,
         color = MaterialTheme.colorScheme.surfaceVariant
