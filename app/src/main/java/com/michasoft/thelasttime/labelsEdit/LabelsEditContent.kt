@@ -150,23 +150,12 @@ fun NewLabelItemUI(
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done)
             )
             if (isFocused) {
-                Box(
-                    modifier = Modifier
-                        .padding(end = 8.dp)
-                        .size(48.dp)
-                        .clickable {
-                            if (name.isNotBlank()) {
-                                focusManager.clearFocus()
-                                onNewLabelAdd(name)
-                            }
-                        },
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Check,
-                        contentDescription = "add label icon"
-                    )
-                }
+                TrailingIcon(icon = Icons.Default.Check, onClick = {
+                    if (name.isNotBlank()) {
+                        focusManager.clearFocus()
+                        onNewLabelAdd(name)
+                    }
+                })
             }
         }
         if (isFocused) {
@@ -192,11 +181,7 @@ fun LabelItemUI(
         Row(
             modifier = modifier
                 .fillMaxWidth()
-                .height(56.dp)
-                .onFocusChanged {
-                    isFocused = it.isFocused
-                }
-                .focusRequester(focusRequester),
+                .height(56.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             if (isFocused) {
@@ -210,7 +195,11 @@ fun LabelItemUI(
             NoShapeTextField(
                 modifier = Modifier
                     .weight(1f)
-                    .padding(horizontal = 8.dp),
+                    .padding(horizontal = 8.dp)
+                    .onFocusChanged {
+                        isFocused = it.isFocused
+                    }
+                    .focusRequester(focusRequester),
                 singleLine = true,
                 value = label.name,
                 onValueChange = { onLabelNameChange(label, it) },
