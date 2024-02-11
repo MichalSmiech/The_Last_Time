@@ -5,15 +5,12 @@ import android.content.Context
 import android.content.Intent
 import com.michasoft.thelasttime.LastTimeApplication
 import com.michasoft.thelasttime.dataSource.RoomReminderSource
-import com.michasoft.thelasttime.model.reminder.RepeatedReminder
-import com.michasoft.thelasttime.model.reminder.SingleReminder
 import com.michasoft.thelasttime.notification.CreateNotificationChannelUseCase
 import com.michasoft.thelasttime.notification.CreateReminderNotificationUseCase
 import com.michasoft.thelasttime.notification.NotificationChannels
 import com.michasoft.thelasttime.notification.ShowNotificationUseCase
 import com.michasoft.thelasttime.repo.EventRepository
 import com.michasoft.thelasttime.repo.ReminderRepository
-import com.michasoft.thelasttime.util.notify
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -58,16 +55,6 @@ class ShowReminderReceiver : BroadcastReceiver() {
             val notificationId = Random.nextInt().absoluteValue + 1
             val notification = createReminderNotificationUseCase.invoke(reminder, notificationId) ?: return@launch
             showNotificationUseCase.invoke(notification, notificationId)
-            when (reminder) {
-                is SingleReminder -> {
-                    reminderRepository.deleteReminder(reminder)
-                }
-
-                is RepeatedReminder -> {
-                    localReminderSource.updateReminderTriggerDateTime(reminder, triggerDateTime = null)
-                    remindersChanged.notify()
-                }
-            }
         }
     }
 

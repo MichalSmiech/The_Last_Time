@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import com.michasoft.thelasttime.reminder.ShowReminderReceiver
+import com.michasoft.thelasttime.util.isNotAfterNow
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
 
@@ -15,6 +16,9 @@ abstract class Reminder(
 ) {
     abstract val label: String
     abstract val type: Type
+
+    val isShownOrSkipped: Boolean
+        get() = triggerDateTime?.isNotAfterNow == true
 
     enum class Type {
         Single,

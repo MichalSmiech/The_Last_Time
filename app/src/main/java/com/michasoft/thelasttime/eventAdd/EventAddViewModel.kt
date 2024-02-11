@@ -33,7 +33,7 @@ class EventAddViewModel(
             return
         }
         viewModelScope.launch {
-            val event = EventFactory.createEvent(state.value.eventName)
+            val event = EventFactory.createEvent(state.value.eventName.trim())
             eventRepository.insertEvent(event)
             _actions.emit(EventAddAction.FinishAndNavigateToEventDetails(event.id))
         }

@@ -44,7 +44,7 @@ class ReminderRepository @Inject constructor(
         if (notify) {
             remindersChanged.notify()
         }
-        cancelReminderUseCase.execute(reminder = reminder, notify = false)
+        cancelReminderUseCase.execute(reminder)
         if (backupConfig.isAutoBackup()) {
             val syncJob = ReminderSyncJob.Factory.create(reminder, SyncJob.Action.Delete)
             syncJobQueue.add(syncJob)

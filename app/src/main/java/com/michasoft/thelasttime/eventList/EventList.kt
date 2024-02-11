@@ -149,7 +149,7 @@ private fun LabelItemUI(label: Label) {
 private fun ReminderItem(reminder: Reminder) {
     Surface(
         shape = InputChipDefaults.shape,
-        color = MaterialTheme.colorScheme.surfaceVariant
+        color = if (reminder.isShownOrSkipped) MaterialTheme.colorScheme.errorContainer else MaterialTheme.colorScheme.surfaceVariant,
     ) {
         Row(
             modifier = Modifier.defaultMinSize(minHeight = 24.dp),

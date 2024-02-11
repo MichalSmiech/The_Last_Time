@@ -95,7 +95,7 @@ fun LabelItem(label: Label, onClick: () -> Unit) {
 fun ReminderItem(reminder: Reminder, onClick: (String) -> Unit) {
     Surface(
         shape = InputChipDefaults.shape,
-        color = MaterialTheme.colorScheme.surfaceVariant,
+        color = if (reminder.isShownOrSkipped) MaterialTheme.colorScheme.errorContainer else MaterialTheme.colorScheme.surfaceVariant,
         onClick = { onClick(reminder.id) }
     ) {
         Row(
@@ -183,7 +183,7 @@ fun EventDetailsContentPreview() {
             arrayListOf<EventInstanceField>()
         ),
     )
-    val reminder = SingleReminder("", "", DateTime.now().plusHours(1))
+    val reminder = SingleReminder("", "", DateTime.now().plusHours(-1), DateTime.now().plusHours(1))
     EventDetailsContent(
         event = event,
         eventInstances = eventInstances,
