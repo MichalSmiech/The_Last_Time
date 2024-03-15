@@ -89,7 +89,7 @@ class UserSessionModule {
     @Provides
     @UserSessionScope
     fun provideLocalEventSource(appDatabase: AppDatabase): ILocalEventSource {
-        return RoomEventSource(appDatabase, appDatabase.eventDao)
+        return RoomEventSource(appDatabase, appDatabase.eventDao, appDatabase.labelDao)
     }
 
     @Provides

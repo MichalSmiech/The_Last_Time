@@ -7,6 +7,7 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.michasoft.thelasttime.model.User
 import com.michasoft.thelasttime.storage.dao.EventDao
+import com.michasoft.thelasttime.storage.dao.LabelDao
 import com.michasoft.thelasttime.storage.dao.ReminderDao
 import com.michasoft.thelasttime.storage.dao.SyncJobDao
 import com.michasoft.thelasttime.storage.entity.EventEntity
@@ -43,6 +44,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract val eventDao: EventDao
     abstract val syncJobDao: SyncJobDao
     abstract val reminderDao: ReminderDao
+    abstract val labelDao: LabelDao
 
     companion object {
         fun build(context: Context, user: User) : AppDatabase {

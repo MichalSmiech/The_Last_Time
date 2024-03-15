@@ -12,6 +12,7 @@ import com.michasoft.thelasttime.model.eventInstanceField.IntField
 import com.michasoft.thelasttime.model.eventInstanceField.TextField
 import com.michasoft.thelasttime.storage.AppDatabase
 import com.michasoft.thelasttime.storage.dao.EventDao
+import com.michasoft.thelasttime.storage.dao.LabelDao
 import com.michasoft.thelasttime.storage.entity.EventEntity
 import com.michasoft.thelasttime.storage.entity.EventInstanceEntity
 import com.michasoft.thelasttime.storage.entity.EventInstanceFieldSchemaEntity
@@ -27,7 +28,11 @@ import org.joda.time.DateTime
 /**
  * Created by mśmiech on 05.09.2021.
  */
-class RoomEventSource(private val appDatabase: AppDatabase, private val eventDao: EventDao) :
+class RoomEventSource(
+    private val appDatabase: AppDatabase,
+    private val eventDao: EventDao,
+    private val labelDao: LabelDao
+) :
     ILocalEventSource {
     override suspend fun getEvent(eventId: String): Event? {
         val eventEntity = eventDao.getEvent(eventId) ?: return null
@@ -42,7 +47,7 @@ class RoomEventSource(private val appDatabase: AppDatabase, private val eventDao
         }
         eventDao.deleteEventInstanceFieldSchemasWithEventId(eventId)
         eventDao.deleteEvent(eventId)
-        eventDao.deleteEventAllLabels(eventId)
+        labelDao.deleteEventAllLabels(eventId)
     }
 
     override suspend fun getEventInstanceSchema(eventId: String): EventInstanceSchema {
@@ -150,11 +155,11 @@ class RoomEventSource(private val appDatabase: AppDatabase, private val eventDao
         eventDao.deleteAllEventInstanceTextFields()
         eventDao.deleteAllEventInstanceFieldSchemas()
         eventDao.deleteAllEvents()
-        eventDao.deleteAllEventLabels()
+        labelDao.deleteAllEventLabels()
     }
 
     private suspend fun deleteAllLabels() {
-        eventDao.deleteAllLabel()
+        labelDao.deleteAllLabel()
     }
 
     override suspend fun clear() {
@@ -291,33 +296,33 @@ class RoomEventSource(private val appDatabase: AppDatabase, private val eventDao
     }
 
     override suspend fun insertLabel(label: Label) {
-        eventDao.insertLabel(LabelEntity(label))
+        labelDao.insertLabel(LabelEntity(label))
     }
 
     override suspend fun updateLabelName(labelId: String, name: String) {
-        eventDao.updateLabelName(labelId, name)
+        labelDao.updateLabelName(labelId, name)
     }
 
     override suspend fun deleteLabel(labelId: String) {
         appDatabase.withTransaction {
-            eventDao.deleteAllEventLabels(labelId)
-            eventDao.deleteLabel(labelId)
+            labelDao.deleteAllEventLabels(labelId)
+            labelDao.deleteLabel(labelId)
         }
     }
 
     override suspend fun insertEventLabel(eventId: String, labelId: String) {
-        eventDao.insertEventLabel(EventLabelEntity(eventId, labelId))
+        labelDao.insertEventLabel(EventLabelEntity(eventId, labelId))
     }
 
     override suspend fun deleteEventLabel(eventId: String, labelId: String) {
-        eventDao.deleteEventLabel(eventId, labelId)
+        labelDao.deleteEventLabel(eventId, labelId)
     }
 
     override suspend fun getEventLabels(eventId: String): List<Label> {
-        return eventDao.getEventLabels(eventId).map { it.toModel() }
+        return labelDao.getEventLabels(eventId).map { it.toModel() }
     }
 
     override suspend fun getLabels(): List<Label> {
-        return eventDao.getLabels().map { it.toModel() }
+        return labelDao.getLabels().map { it.toModel() }
     }
 }
