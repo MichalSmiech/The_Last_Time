@@ -40,8 +40,7 @@ class CreateReminderNotificationUseCase @Inject constructor(
         }
         return NotificationCompat.Builder(context, channelId)
             .setSmallIcon(R.drawable.ic_reminder)
-            .setContentTitle("Reminder")
-            .setContentText(event.name)
+            .setContentTitle(event.name)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .addAction(R.drawable.outline_add, "add", addEventInstancePendingIntent)
             .setContentIntent(startEventDetailsPendingIntent)
