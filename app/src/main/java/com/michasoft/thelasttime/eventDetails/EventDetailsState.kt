@@ -2,6 +2,7 @@ package com.michasoft.thelasttime.eventDetails
 
 import com.michasoft.thelasttime.model.Event
 import com.michasoft.thelasttime.model.EventInstance
+import com.michasoft.thelasttime.model.Label
 import com.michasoft.thelasttime.model.reminder.Reminder
 
 /**
@@ -13,5 +14,6 @@ data class EventDetailsState(
     val eventInstances: List<EventInstance>,
     val isDeleteConfirmationDialogShowing: Boolean,
     val isBottomSheetShowing: Boolean,
-    val reminders: List<Reminder>
+    val reminders: List<Reminder>,
+    val labels: List<Label>
 )

@@ -188,6 +188,7 @@ fun EventDetailsScreen(
                     event = state.event!!,
                     eventInstances = state.eventInstances,
                     reminders = state.reminders,
+                    labels = state.labels,
                     onEventInstanceClick = viewModel::onEventInstanceClicked,
                     onLabelClick = viewModel::onLabelClicked,
                     onReminderClick = viewModel::onReminderClicked

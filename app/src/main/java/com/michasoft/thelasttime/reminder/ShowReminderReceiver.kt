@@ -13,10 +13,8 @@ import com.michasoft.thelasttime.repo.EventRepository
 import com.michasoft.thelasttime.repo.ReminderRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import javax.inject.Named
 import kotlin.math.absoluteValue
 import kotlin.random.Random
 
@@ -38,10 +36,6 @@ class ShowReminderReceiver : BroadcastReceiver() {
 
     @Inject
     lateinit var localReminderSource: RoomReminderSource
-
-    @Inject
-    @Named("reminderChanged")
-    lateinit var remindersChanged: MutableSharedFlow<Unit>
 
     override fun onReceive(context: Context?, intent: Intent?) {
         val reminderId = intent?.getStringExtra(REMINDER_ID) ?: return

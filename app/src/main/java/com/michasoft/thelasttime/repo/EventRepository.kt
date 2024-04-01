@@ -39,15 +39,8 @@ class EventRepository(
         _eventsChanged.emit(Unit)
     }
 
-    suspend fun getEvent(
-        eventId: String,
-        withLabels: Boolean = false,
-    ): Event? {
-        return localEventSource.getEvent(eventId)?.also { event ->
-            if (withLabels) {
-                event.labels = localLabelSource.getEventLabels(event.id)
-            }
-        }
+    suspend fun getEvent(eventId: String): Event? {
+        return localEventSource.getEvent(eventId)
     }
 
     suspend fun getEvents(): ArrayList<Event> {

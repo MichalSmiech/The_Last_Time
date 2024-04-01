@@ -9,7 +9,10 @@ import com.michasoft.thelasttime.model.syncJob.EventLabelSyncJob
 import com.michasoft.thelasttime.model.syncJob.LabelSyncJob
 import com.michasoft.thelasttime.model.syncJob.SyncJob
 import com.michasoft.thelasttime.util.BackupConfig
+import com.michasoft.thelasttime.util.notify
+import kotlinx.coroutines.flow.MutableSharedFlow
 import javax.inject.Inject
+import javax.inject.Named
 
 @UserSessionScope
 class LabelRepository @Inject constructor(
@@ -17,6 +20,7 @@ class LabelRepository @Inject constructor(
     private val backupConfig: BackupConfig,
     private val syncJobQueue: SyncJobQueue,
     private val syncJobQueueCoordinator: SyncJobQueueCoordinator,
+    @Named("labelsChanged") val labelsChanged: MutableSharedFlow<Unit>,
 ) {
 
     suspend fun getLabels(): List<Label> {
@@ -34,6 +38,7 @@ class LabelRepository @Inject constructor(
             syncJobQueue.add(syncJob)
             syncJobQueueCoordinator.triggerSync()
         }
+        labelsChanged.notify()
     }
 
     suspend fun updateLabelName(labelId: String, name: String) {
@@ -43,6 +48,7 @@ class LabelRepository @Inject constructor(
             syncJobQueue.add(syncJob)
             syncJobQueueCoordinator.triggerSync()
         }
+        labelsChanged.notify()
     }
 
     suspend fun deleteLabel(labelId: String) {
@@ -52,6 +58,7 @@ class LabelRepository @Inject constructor(
             syncJobQueue.add(syncJob)
             syncJobQueueCoordinator.triggerSync()
         }
+        labelsChanged.notify()
     }
 
     suspend fun insertEventLabel(eventId: String, labelId: String) {
@@ -61,6 +68,7 @@ class LabelRepository @Inject constructor(
             syncJobQueue.add(syncJob)
             syncJobQueueCoordinator.triggerSync()
         }
+        labelsChanged.notify()
     }
 
     suspend fun deleteEventLabel(eventId: String, labelId: String) {
@@ -70,6 +78,7 @@ class LabelRepository @Inject constructor(
             syncJobQueue.add(syncJob)
             syncJobQueueCoordinator.triggerSync()
         }
+        labelsChanged.notify()
     }
 
     suspend fun deleteEventAllLabels(eventId: String) {

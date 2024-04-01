@@ -23,7 +23,7 @@ class ReminderRepository @Inject constructor(
     private val roomReminderSource: RoomReminderSource,
     private val scheduleReminderUseCase: ScheduleReminderUseCase,
     private val cancelReminderUseCase: CancelReminderUseCase,
-    @Named("reminderChanged") val remindersChanged: MutableSharedFlow<Unit>,
+    @Named("remindersChanged") val remindersChanged: MutableSharedFlow<Unit>,
     private val backupConfig: BackupConfig,
     private val syncJobQueue: SyncJobQueue,
     private val syncJobQueueCoordinator: SyncJobQueueCoordinator,

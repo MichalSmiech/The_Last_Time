@@ -44,6 +44,7 @@ fun EventDetailsContent(
     event: Event,
     eventInstances: List<EventInstance>,
     reminders: List<Reminder>,
+    labels: List<Label>,
     onEventInstanceClick: (String) -> Unit,
     onLabelClick: () -> Unit,
     onReminderClick: (String) -> Unit,
@@ -59,7 +60,7 @@ fun EventDetailsContent(
                 reminders.forEach { reminder ->
                     ReminderItem(reminder = reminder, onClick = onReminderClick)
                 }
-                event.labels.forEach {
+                labels.forEach {
                     LabelItem(label = it, onClick = onLabelClick)
                 }
             }
@@ -131,14 +132,6 @@ fun EventDetailsContentPreview() {
         DateTime.now(),
         EventInstanceSchema()
     )
-    event.labels = listOf(
-        Label("", "work"),
-        Label("", "home"),
-        Label("", "gym"),
-        Label("", "gym"),
-        Label("", "gym"),
-        Label("", "gym"),
-    )
     val eventInstances = listOf<EventInstance>(
         EventInstance(
             "",
@@ -188,6 +181,14 @@ fun EventDetailsContentPreview() {
         event = event,
         eventInstances = eventInstances,
         reminders = listOf(reminder),
+        labels = listOf(
+            Label("", "work"),
+            Label("", "home"),
+            Label("", "gym"),
+            Label("", "gym"),
+            Label("", "gym"),
+            Label("", "gym"),
+        ),
         onReminderClick = {},
         onLabelClick = {},
         onEventInstanceClick = {}

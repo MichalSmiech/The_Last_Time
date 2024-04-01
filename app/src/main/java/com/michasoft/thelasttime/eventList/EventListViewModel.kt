@@ -58,6 +58,10 @@ class EventListViewModel(
             refreshEvents()
         }.launchIn(viewModelScope)
 
+        labelRepository.labelsChanged.onEach {
+            refreshEvents()
+        }.launchIn(viewModelScope)
+
         syncJobQueue.changed.onEach {
             val error = syncJobQueue.isError()
             if (state.value.isErrorSync != error) {

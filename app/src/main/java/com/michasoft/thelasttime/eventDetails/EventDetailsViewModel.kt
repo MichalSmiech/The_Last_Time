@@ -7,6 +7,7 @@ import androidx.lifecycle.viewmodel.CreationExtras
 import com.michasoft.thelasttime.eventInstanceAdd.EventInstanceAddViewModel
 import com.michasoft.thelasttime.permission.EnsurePostNotificationPermissionUseCase
 import com.michasoft.thelasttime.repo.EventRepository
+import com.michasoft.thelasttime.repo.LabelRepository
 import com.michasoft.thelasttime.repo.ReminderRepository
 import com.michasoft.thelasttime.useCase.DeleteEventUseCase
 import com.michasoft.thelasttime.useCase.InsertEventInstanceUseCase
@@ -33,6 +34,7 @@ class EventDetailsViewModel(
     private val insertEventInstanceUseCase: InsertEventInstanceUseCase,
     private val ensurePostNotificationPermissionUseCase: EnsurePostNotificationPermissionUseCase,
     private val deleteEventUseCase: DeleteEventUseCase,
+    private val labelRepository: LabelRepository
 ) : ViewModel() {
     private val _actions: MutableSharedFlow<EventDetailsAction> = MutableSharedFlow()
     val actions: SharedFlow<EventDetailsAction> = _actions
@@ -43,7 +45,8 @@ class EventDetailsViewModel(
             eventInstances = emptyList(),
             isDeleteConfirmationDialogShowing = false,
             isBottomSheetShowing = false,
-            reminders = emptyList()
+            reminders = emptyList(),
+            labels = emptyList()
         )
     )
     private val eventNameChanges = MutableSharedFlow<String>()
@@ -63,16 +66,20 @@ class EventDetailsViewModel(
         }.launchIn(viewModelScope)
 
         eventRepository.eventsChanged.onEach {
-            setupEvent(eventId)
+            setupEvent()
         }.launchIn(viewModelScope)
 
         reminderRepository.remindersChanged.onEach {
-            setupReminders(eventId)
+            setupReminders()
+        }.launchIn(viewModelScope)
+
+        labelRepository.labelsChanged.onEach {
+            setupLabels()
         }.launchIn(viewModelScope)
     }
 
-    private suspend fun setupEvent(eventId: String) {
-        val event = eventRepository.getEvent(eventId, withLabels = true) ?: return
+    private suspend fun setupEvent() {
+        val event = eventRepository.getEvent(eventId) ?: return
         val eventInstances = eventRepository.getEventInstances(eventId)
         val reminders = reminderRepository.getEventReminders(eventId = eventId)
         state.update {
@@ -85,12 +92,19 @@ class EventDetailsViewModel(
         }
     }
 
-    private suspend fun setupReminders(eventId: String) {
+    private suspend fun setupReminders() {
         val reminders = reminderRepository.getEventReminders(eventId = eventId)
         state.update {
             it.copy(
                 reminders = reminders
             )
+        }
+    }
+
+    private suspend fun setupLabels() {
+        val labels = labelRepository.getEventLabels(eventId)
+        state.update {
+            it.copy(labels = labels)
         }
     }
 
@@ -117,7 +131,7 @@ class EventDetailsViewModel(
 
     fun onStart() {
         viewModelScope.launch {
-            setupEvent(eventId)
+            setupEvent()
         }
     }
 
@@ -191,6 +205,9 @@ class EventDetailsViewModel(
         @Inject
         lateinit var deleteEventUseCase: DeleteEventUseCase
 
+        @Inject
+        lateinit var labelRepository: LabelRepository
+
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(
             modelClass: Class<T>,
@@ -205,7 +222,8 @@ class EventDetailsViewModel(
                 reminderRepository,
                 insertEventInstanceUseCase,
                 ensurePostNotificationPermissionUseCase,
-                deleteEventUseCase
+                deleteEventUseCase,
+                labelRepository
             ) as T
         }
     }

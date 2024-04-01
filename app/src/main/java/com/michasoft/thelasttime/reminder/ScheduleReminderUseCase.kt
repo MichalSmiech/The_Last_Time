@@ -17,7 +17,7 @@ class ScheduleReminderUseCase @Inject constructor(
     private val context: Context,
     private val localEventSource: ILocalEventSource,
     private val localReminderSource: RoomReminderSource,
-    @Named("reminderChanged") private val remindersChanged: MutableSharedFlow<Unit>
+    @Named("remindersChanged") private val remindersChanged: MutableSharedFlow<Unit>
 ) {
     suspend fun execute(reminder: Reminder) {
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager

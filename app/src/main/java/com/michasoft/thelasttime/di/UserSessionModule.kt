@@ -189,7 +189,12 @@ class UserSessionModule {
 
     @Provides
     @UserSessionScope
-    @Named("reminderChanged")
-    fun provideReminderChangedFlow(): MutableSharedFlow<Unit> = MutableSharedFlow()
+    @Named("remindersChanged")
+    fun provideRemindersChangedFlow(): MutableSharedFlow<Unit> = MutableSharedFlow()
+
+    @Provides
+    @UserSessionScope
+    @Named("labelsChanged")
+    fun provideLabelChangedFlow(): MutableSharedFlow<Unit> = MutableSharedFlow()
 }
 
