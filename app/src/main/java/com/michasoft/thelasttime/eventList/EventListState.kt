@@ -13,5 +13,6 @@ data class EventListState(
     val isErrorSync: Boolean,
     val isBottomSheetShowing: Boolean,
     val userPhotoUrl: Uri?,
-    val labels: List<Label>
+    val labels: List<Label>,
+    val labelFilter: Label?
 )

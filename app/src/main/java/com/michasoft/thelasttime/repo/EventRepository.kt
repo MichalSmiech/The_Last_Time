@@ -62,7 +62,7 @@ class EventRepository(
         withLastInstanceTimestamp: Boolean = false,
         withLabels: Boolean = false,
         withReminders: Boolean = false
-    ): ArrayList<Event> {
+    ): List<Event> {
         val events = getEvents()
         events.forEach { event ->
             if (withLastInstanceTimestamp) {

@@ -6,12 +6,14 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.michasoft.thelasttime.eventInstanceAdd.EventInstanceAddViewModel
+import com.michasoft.thelasttime.model.Label
 import com.michasoft.thelasttime.model.SyncJobQueue
 import com.michasoft.thelasttime.repo.EventRepository
 import com.michasoft.thelasttime.repo.LabelRepository
 import com.michasoft.thelasttime.repo.UserSessionRepository
 import com.michasoft.thelasttime.useCase.InsertEventInstanceUseCase
 import com.michasoft.thelasttime.userSessionComponent
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -41,7 +43,8 @@ class EventListViewModel(
             isErrorSync = false,
             isBottomSheetShowing = false,
             userPhotoUrl = userPhotoUrl,
-            labels = emptyList()
+            labels = emptyList(),
+            labelFilter = null
         )
     )
     val eventInstanceAddViewModel = EventInstanceAddViewModel(
@@ -60,6 +63,7 @@ class EventListViewModel(
 
         labelRepository.labelsChanged.onEach {
             refreshEvents()
+            setupLabels()
         }.launchIn(viewModelScope)
 
         syncJobQueue.changed.onEach {
@@ -71,11 +75,15 @@ class EventListViewModel(
     }
 
     private suspend fun refreshEvents() {
-        val events = eventRepository.getEvents(
+        var events = eventRepository.getEvents(
             withLastInstanceTimestamp = true,
             withLabels = true,
             withReminders = true
         )
+        val labelFilter = state.value.labelFilter
+        if (labelFilter != null) {
+            events = events.filter { labelFilter in it.labels }
+        }
         state.update {
             it.copy(
                 isLoading = false,
@@ -121,11 +129,25 @@ class EventListViewModel(
         viewModelScope.launch {
             when (item) {
                 MenuItemType.SETTINGS -> _actions.emit(EventListAction.NavigateToSettings)
-                MenuItemType.DEBUG -> _actions.emit(EventListAction.NavigateToDebug)
-                MenuItemType.EVENTS -> _actions.emit(EventListAction.CloseDrawer)
+                MenuItemType.DEBUG -> {
+                    emitActionAndWaitForResult(EventListAction::CloseDrawer)
+                    _actions.emit(EventListAction.NavigateToDebug)
+                }
+
+                MenuItemType.EVENTS -> {
+                    emitActionAndWaitForResult(EventListAction::CloseDrawer)
+                    changeLabelFilter(null)
+                }
+
                 MenuItemType.SIGNOUT -> _actions.emit(EventListAction.SignOut)
             }
         }
+    }
+
+    private suspend fun <R> emitActionAndWaitForResult(actionSupplier: (CompletableDeferred<R>) -> EventListAction): R {
+        val deferred = CompletableDeferred<R>()
+        _actions.emit(actionSupplier(deferred))
+        return deferred.await()
     }
 
     fun onBottomSheetHidden() {
@@ -145,6 +167,19 @@ class EventListViewModel(
     fun onAddNewLabelClicked() {
         viewModelScope.launch {
             _actions.emit(EventListAction.NavigateToLabelsEdit(withNewLabelFocus = true))
+        }
+    }
+
+    fun changeLabelFilter(label: Label?) {
+        if (state.value.labelFilter == label) return
+        state.update {
+            it.copy(
+                labelFilter = label,
+                isLoading = true
+            )
+        }
+        viewModelScope.launch {
+            refreshEvents()
         }
     }
 

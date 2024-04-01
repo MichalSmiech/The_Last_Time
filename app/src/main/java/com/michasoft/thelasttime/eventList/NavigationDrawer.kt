@@ -41,7 +41,9 @@ import com.michasoft.thelasttime.model.Label
 @Composable
 fun DrawerContent(
     onMenuItemClick: (MenuItemType) -> Unit,
+    activeMenuItem: MenuItemType? = null,
     labels: List<Label>,
+    activeLabel: Label? = null,
     onLabelClick: (Label) -> Unit,
     onLabelsEditClick: () -> Unit,
     onAddNewLabelClick: () -> Unit
@@ -55,29 +57,34 @@ fun DrawerContent(
         MenuItem(
             type = MenuItemType.EVENTS,
             onMenuItemClick = onMenuItemClick,
-            isActive = true
+            isActive = activeMenuItem == MenuItemType.EVENTS
         )
         LabelsSection(
             labels = labels,
+            activeLabel = activeLabel,
             onLabelClick = onLabelClick,
             onLabelsEditClick = onLabelsEditClick,
             onAddNewLabelClick = onAddNewLabelClick
         )
         MenuItem(
             type = MenuItemType.SETTINGS,
-            onMenuItemClick = onMenuItemClick
+            onMenuItemClick = onMenuItemClick,
+            isActive = activeMenuItem == MenuItemType.SETTINGS
         )
         MenuItem(
             type = MenuItemType.DEBUG,
-            onMenuItemClick = onMenuItemClick
+            onMenuItemClick = onMenuItemClick,
+            isActive = activeMenuItem == MenuItemType.DEBUG
         )
         MenuItem(
             type = MenuItemType.SETTINGS,
-            onMenuItemClick = onMenuItemClick
+            onMenuItemClick = onMenuItemClick,
+            isActive = activeMenuItem == MenuItemType.SETTINGS
         )
         MenuItem(
             type = MenuItemType.SIGNOUT,
-            onMenuItemClick = onMenuItemClick
+            onMenuItemClick = onMenuItemClick,
+            isActive = activeMenuItem == MenuItemType.SIGNOUT
         )
         Spacer(modifier = Modifier.height(16.dp))
     }
@@ -147,6 +154,7 @@ enum class MenuItemType(val description: String, val icon: ImageVector) {
 @Composable
 fun LabelsSection(
     labels: List<Label>,
+    activeLabel: Label? = null,
     onLabelClick: (Label) -> Unit,
     onLabelsEditClick: () -> Unit,
     onAddNewLabelClick: () -> Unit
@@ -175,7 +183,7 @@ fun LabelsSection(
             )
         }
     }
-    LabelList(labels = labels, onLabelClick = onLabelClick)
+    LabelList(labels = labels, activeLabel = activeLabel, onLabelClick = onLabelClick)
     AddNewLabel(onClick = onAddNewLabelClick)
     Divider(
         color = MaterialTheme.colorScheme.secondaryContainer,
@@ -184,12 +192,12 @@ fun LabelsSection(
 }
 
 @Composable
-fun LabelList(labels: List<Label>, onLabelClick: (Label) -> Unit) {
+fun LabelList(labels: List<Label>, activeLabel: Label? = null, onLabelClick: (Label) -> Unit) {
     Column(
         modifier = Modifier
     ) {
         labels.forEach {
-            LabelItemUI(it, onLabelClick, false)
+            LabelItemUI(it, onLabelClick, it == activeLabel)
         }
     }
 }

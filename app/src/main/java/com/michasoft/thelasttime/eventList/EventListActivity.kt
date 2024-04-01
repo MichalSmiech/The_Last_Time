@@ -5,10 +5,16 @@ import android.os.Bundle
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.outlined.Label
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -21,12 +27,15 @@ import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SheetState
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityOptionsCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
@@ -61,10 +70,10 @@ class EventListActivity : UserSessionActivity() {
             }
             val coroutineScope = rememberCoroutineScope()
             LaunchedEffect(Unit) {
-                viewModel.actions.onEach {
-                    when (it) {
+                viewModel.actions.onEach { action ->
+                    when (action) {
                         is EventListAction.NavigateToEventDetails -> launchEventDetailsActivity(
-                            it.eventId
+                            action.eventId
                         )
 
                         is EventListAction.HideEventInstanceAddBottomSheet -> {
@@ -86,20 +95,18 @@ class EventListActivity : UserSessionActivity() {
                         }
 
                         is EventListAction.NavigateToDebug -> {
-                            coroutineScope.launch {
-                                drawerState.close()
-                            }.invokeOnCompletion {
-                                launchMainActivity()
-                            }
+                            launchMainActivity()
                         }
 
                         is EventListAction.NavigateToLabelsEdit -> {
-                            launchLabelsEditActivity(it.withNewLabelFocus)
+                            launchLabelsEditActivity(action.withNewLabelFocus)
                         }
 
                         is EventListAction.CloseDrawer -> {
                             coroutineScope.launch {
                                 drawerState.close()
+                            }.invokeOnCompletion {
+                                action.deferred.complete(Unit)
                             }
                         }
 
@@ -108,7 +115,8 @@ class EventListActivity : UserSessionActivity() {
                                 viewModel.singOut()
                             }
                             Intent(this@EventListActivity, LoginActivity::class.java).also {
-                                startActivity(it,
+                                startActivity(
+                                    it,
                                     ActivityOptionsCompat.makeSceneTransitionAnimation(this@EventListActivity)
                                         .toBundle()
                                 )
@@ -168,14 +176,23 @@ fun EventListScreen(
     drawerState: DrawerState
 ) {
     val state = viewModel.state.collectAsStateWithLifecycle().value
+    val scope = rememberCoroutineScope()
     ModalNavigationDrawer(
         drawerState = drawerState,
         drawerContent = {
             ModalDrawerSheet {
                 DrawerContent(
                     onMenuItemClick = { viewModel.menuItemClicked(it) },
+                    activeMenuItem = if (state.labelFilter == null) MenuItemType.EVENTS else null,
                     labels = state.labels,
-                    onLabelClick = {},
+                    activeLabel = state.labelFilter,
+                    onLabelClick = { label ->
+                        scope.launch {
+                            drawerState.close()
+                        }.invokeOnCompletion {
+                            viewModel.changeLabelFilter(label)
+                        }
+                    },
                     onLabelsEditClick = { viewModel.onLabelsEditClicked() },
                     onAddNewLabelClick = { viewModel.onAddNewLabelClicked() }
                 )
@@ -188,7 +205,7 @@ fun EventListScreen(
             },
             floatingActionButtonPosition = FabPosition.End,
             topBar = {
-                TopBar(state.isErrorSync, drawerState, state.userPhotoUrl)
+                TopBar(state.isErrorSync, drawerState, state.userPhotoUrl, state.labelFilter)
             }
         ) {
             Surface(
@@ -198,6 +215,21 @@ fun EventListScreen(
             ) {
                 if (state.isLoading) {
                     LoadingView()
+                } else if (state.events.isEmpty()) {
+                    Box(modifier = Modifier.fillMaxSize()) {
+                        Column(
+                            modifier = Modifier.align(Alignment.Center),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Icon(
+                                modifier = Modifier.size(100.dp),
+                                imageVector = Icons.Outlined.Label,
+                                contentDescription = null
+                            )
+                            Text(text = "No events with this label")
+                            Spacer(modifier = Modifier.height(60.dp))
+                        }
+                    }
                 } else {
                     EventListContent(
                         events = state.events,
