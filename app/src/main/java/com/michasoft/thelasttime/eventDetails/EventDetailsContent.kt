@@ -50,7 +50,7 @@ fun EventDetailsContent(
     onReminderClick: (String) -> Unit,
 ) {
     Column(modifier = Modifier.fillMaxSize()) {
-        if (reminders.isNotEmpty() || event.labels.isNotEmpty()) {
+        if (reminders.isNotEmpty() || labels.isNotEmpty()) {
             FlowRow(
                 modifier = Modifier
                     .fillMaxWidth()

@@ -81,13 +81,11 @@ class EventDetailsViewModel(
     private suspend fun setupEvent() {
         val event = eventRepository.getEvent(eventId) ?: return
         val eventInstances = eventRepository.getEventInstances(eventId)
-        val reminders = reminderRepository.getEventReminders(eventId = eventId)
         state.update {
             it.copy(
                 isLoading = false,
                 event = event,
                 eventInstances = eventInstances,
-                reminders = reminders
             )
         }
     }
@@ -132,6 +130,8 @@ class EventDetailsViewModel(
     fun onStart() {
         viewModelScope.launch {
             setupEvent()
+            setupReminders()
+            setupLabels()
         }
     }
 
