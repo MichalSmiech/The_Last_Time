@@ -38,13 +38,13 @@ class RoomEventSource(
     }
 
     override suspend fun deleteEvent(eventId: String) {
+        labelDao.deleteEventAllLabels(eventId)
         val instanceIds = eventDao.getAllEventInstanceIdsWithEventId(eventId)
         instanceIds.forEach { instanceId ->
             deleteEventInstance(eventId, instanceId)
         }
         eventDao.deleteEventInstanceFieldSchemasWithEventId(eventId)
         eventDao.deleteEvent(eventId)
-        labelDao.deleteEventAllLabels(eventId)
     }
 
     override suspend fun getEventInstanceSchema(eventId: String): EventInstanceSchema {

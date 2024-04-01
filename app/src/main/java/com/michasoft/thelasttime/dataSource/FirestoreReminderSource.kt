@@ -8,6 +8,7 @@ import com.michasoft.thelasttime.model.dto.SingleReminderDto
 import com.michasoft.thelasttime.model.reminder.Reminder
 import com.michasoft.thelasttime.model.reminder.RepeatedReminder
 import com.michasoft.thelasttime.model.reminder.SingleReminder
+import com.michasoft.thelasttime.util.deleteAllDocuments
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.flow
@@ -101,37 +102,12 @@ class FirestoreReminderSource @Inject constructor(
     }
 
     private suspend fun deleteAllSingleEvents() {
-        val baseQuery = singleReminderCollectionRef.limit(500)
-        var hasNext = true
-        while (hasNext) {
-            val querySnapshot = baseQuery.get().await()
-            if (querySnapshot.documents.size > 0) {
-                val batch = firestore.batch()
-                querySnapshot.documents.forEach {
-                    batch.delete(it.reference)
-                }
-                batch.commit().await()
-            } else {
-                hasNext = false
-            }
-        }
+        singleReminderCollectionRef.deleteAllDocuments()
     }
 
     private suspend fun deleteAllRepeatedEvents() {
-        val baseQuery = repeatedReminderCollectionRef.limit(500)
-        var hasNext = true
-        while (hasNext) {
-            val querySnapshot = baseQuery.get().await()
-            if (querySnapshot.documents.size > 0) {
-                val batch = firestore.batch()
-                querySnapshot.documents.forEach {
-                    batch.delete(it.reference)
-                }
-                batch.commit().await()
-            } else {
-                hasNext = false
-            }
-        }
+        repeatedReminderCollectionRef.deleteAllDocuments()
+
     }
 
     suspend fun clear() {
