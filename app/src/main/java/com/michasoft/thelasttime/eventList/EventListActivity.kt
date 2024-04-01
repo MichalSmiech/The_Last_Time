@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.outlined.DoDisturb
 import androidx.compose.material.icons.outlined.Label
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
@@ -215,7 +216,7 @@ fun EventListScreen(
             ) {
                 if (state.isLoading) {
                     LoadingView()
-                } else if (state.events.isEmpty()) {
+                } else if (state.events.isEmpty() && state.labelFilter != null) {
                     Box(modifier = Modifier.fillMaxSize()) {
                         Column(
                             modifier = Modifier.align(Alignment.Center),
@@ -227,6 +228,21 @@ fun EventListScreen(
                                 contentDescription = null
                             )
                             Text(text = "No events with this label")
+                            Spacer(modifier = Modifier.height(60.dp))
+                        }
+                    }
+                } else if (state.events.isEmpty()) {
+                    Box(modifier = Modifier.fillMaxSize()) {
+                        Column(
+                            modifier = Modifier.align(Alignment.Center),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Icon(
+                                modifier = Modifier.size(100.dp),
+                                imageVector = Icons.Outlined.DoDisturb,
+                                contentDescription = null
+                            )
+                            Text(text = "No events")
                             Spacer(modifier = Modifier.height(60.dp))
                         }
                     }
