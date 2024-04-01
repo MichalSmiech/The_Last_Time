@@ -1,12 +1,15 @@
 package com.michasoft.thelasttime.dataSource
 
 import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.michasoft.thelasttime.di.UserSessionScope
 import com.michasoft.thelasttime.model.Label
 import com.michasoft.thelasttime.model.dto.EventLabelDto
 import com.michasoft.thelasttime.model.dto.LabelDto
 import com.michasoft.thelasttime.util.deleteAllDocuments
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 import javax.inject.Named
@@ -48,5 +51,50 @@ class FirestoreLabelSource @Inject constructor(
 
     private suspend fun deleteAllEventLabels(labelId: String) {
         labelCollectionRef.document(labelId).collection(EVENT_LABEL_COLLECTION).deleteAllDocuments()
+    }
+
+    suspend fun getAllLabels(): Flow<Label> = flow {
+        val baseQuery = labelCollectionRef.orderBy("name").limit(100)
+        var hasNext = true
+        var startAfter: DocumentSnapshot? = null
+        while (hasNext) {
+            val querySnapshot =
+                baseQuery.let { query -> startAfter?.let { query.startAfter(it) } ?: query }.get().await()
+            if (querySnapshot.documents.size > 0) {
+                querySnapshot.documents.forEach {
+                    val labelDto = it.toObject(LabelDto::class.java)
+                    val label = labelDto?.toModel(it.id)
+                    if (label != null) {
+                        emit(label)
+                    }
+                }
+                startAfter = querySnapshot.documents.last()
+            } else {
+                hasNext = false
+            }
+        }
+    }
+
+
+    /**
+     * @return flow of event ids
+     */
+    fun getEventLabels(labelId: String): Flow<String> = flow {
+        val baseQuery =
+            labelCollectionRef.document(labelId).collection(EVENT_LABEL_COLLECTION).orderBy("eventId").limit(100)
+        var hasNext = true
+        var startAfter: DocumentSnapshot? = null
+        while (hasNext) {
+            val querySnapshot =
+                baseQuery.let { query -> startAfter?.let { query.startAfter(it) } ?: query }.get().await()
+            if (querySnapshot.documents.size > 0) {
+                querySnapshot.documents.forEach {
+                    emit(it.id)
+                }
+                startAfter = querySnapshot.documents.last()
+            } else {
+                hasNext = false
+            }
+        }
     }
 }

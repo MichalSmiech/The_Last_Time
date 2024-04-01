@@ -1,5 +1,6 @@
 package com.michasoft.thelasttime.repo
 
+import com.michasoft.thelasttime.dataSource.FirestoreLabelSource
 import com.michasoft.thelasttime.dataSource.FirestoreReminderSource
 import com.michasoft.thelasttime.dataSource.ILocalEventSource
 import com.michasoft.thelasttime.dataSource.IRemoteEventSource
@@ -19,7 +20,8 @@ class BackupRepository @Inject constructor(
     private val remoteReminderSource: FirestoreReminderSource,
     private val scheduleReminderUseCase: ScheduleReminderUseCase,
     private val cancelReminderUseCase: CancelReminderUseCase,
-    private val localLabelSource: RoomLabelSource
+    private val localLabelSource: RoomLabelSource,
+    private val remoteLabelSource: FirestoreLabelSource
 ) {
     suspend fun clearLocalDatabase() {
         localEventSource.clear()
@@ -36,6 +38,7 @@ class BackupRepository @Inject constructor(
     suspend fun restoreBackup() {
         restoreEvents()
         restoreReminders()
+        restoreLabels()
     }
 
     private suspend fun restoreEvents() {
@@ -55,6 +58,17 @@ class BackupRepository @Inject constructor(
                 localReminderSource.insertReminder(reminder)
                 cancelReminderUseCase.execute(reminder)
                 scheduleReminderUseCase.execute(reminder)
+            }
+    }
+
+    private suspend fun restoreLabels() {
+        remoteLabelSource.getAllLabels()
+            .collect { label ->
+                localLabelSource.insertLabel(label)
+                remoteLabelSource.getEventLabels(label.id)
+                    .collect { eventId ->
+                        localLabelSource.insertEventLabel(eventId, label.id)
+                    }
             }
     }
 }
