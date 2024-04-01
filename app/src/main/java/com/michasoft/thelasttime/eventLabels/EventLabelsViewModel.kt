@@ -6,7 +6,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.michasoft.thelasttime.eventLabels.model.LabelItem
 import com.michasoft.thelasttime.model.Label
-import com.michasoft.thelasttime.repo.EventRepository
+import com.michasoft.thelasttime.repo.LabelRepository
 import com.michasoft.thelasttime.userSessionComponent
 import com.michasoft.thelasttime.util.IdGenerator
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -21,7 +21,7 @@ import javax.inject.Inject
  */
 class EventLabelsViewModel(
     private val eventId: String,
-    private val eventRepository: EventRepository
+    private val labelRepository: LabelRepository
 ) : ViewModel() {
     private val _actions: MutableSharedFlow<EventLabelsAction> = MutableSharedFlow()
     val actions: SharedFlow<EventLabelsAction> = _actions
@@ -49,8 +49,8 @@ class EventLabelsViewModel(
     }
 
     private suspend fun refreshData() {
-        eventLabels = eventRepository.getEventLabels(eventId).toSet()
-        allLabels = eventRepository.getLabels()
+        eventLabels = labelRepository.getEventLabels(eventId).toSet()
+        allLabels = labelRepository.getLabels()
         refreshLabelItems()
     }
 
@@ -82,12 +82,12 @@ class EventLabelsViewModel(
         if (checked) {
             eventLabels = eventLabels + label
             viewModelScope.launch {
-                eventRepository.insertEventLabel(eventId, label.id)
+                labelRepository.insertEventLabel(eventId, label.id)
             }
         } else {
             eventLabels = eventLabels - label
             viewModelScope.launch {
-                eventRepository.deleteEventLabel(eventId, label.id)
+                labelRepository.deleteEventLabel(eventId, label.id)
             }
         }
         refreshLabelItems()
@@ -99,8 +99,8 @@ class EventLabelsViewModel(
         eventLabels += label
         clearFilterLabelName()
         viewModelScope.launch {
-            eventRepository.insertLabel(label)
-            eventRepository.insertEventLabel(eventId, label.id)
+            labelRepository.insertLabel(label)
+            labelRepository.insertEventLabel(eventId, label.id)
         }
     }
 
@@ -132,7 +132,7 @@ class EventLabelsViewModel(
 
     class Factory(private val eventId: String) : ViewModelProvider.Factory {
         @Inject
-        lateinit var eventRepository: EventRepository
+        lateinit var labelRepository: LabelRepository
 
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(
@@ -144,7 +144,7 @@ class EventLabelsViewModel(
             application.userSessionComponent().inject(this)
             return EventLabelsViewModel(
                 eventId,
-                eventRepository,
+                labelRepository
             ) as T
         }
     }

@@ -3,7 +3,6 @@ package com.michasoft.thelasttime.dataSource
 import com.michasoft.thelasttime.model.Event
 import com.michasoft.thelasttime.model.EventInstance
 import com.michasoft.thelasttime.model.EventInstanceSchema
-import com.michasoft.thelasttime.model.Label
 import kotlinx.coroutines.flow.Flow
 import org.joda.time.DateTime
 
@@ -39,12 +38,4 @@ interface ILocalEventSource {
     suspend fun getLastInstanceTimestamp(eventId: String): DateTime?
     suspend fun updateEventInstance(instance: EventInstance)
     suspend fun updateEvent(event: Event)
-
-    suspend fun insertLabel(label: Label)
-    suspend fun updateLabelName(labelId: String, name: String)
-    suspend fun deleteLabel(labelId: String)
-    suspend fun insertEventLabel(eventId: String, labelId: String)
-    suspend fun deleteEventLabel(eventId: String, labelId: String)
-    suspend fun getEventLabels(eventId: String): List<Label>
-    suspend fun getLabels(): List<Label>
 }

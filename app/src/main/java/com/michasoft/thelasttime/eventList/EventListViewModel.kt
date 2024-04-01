@@ -8,6 +8,7 @@ import androidx.lifecycle.viewmodel.CreationExtras
 import com.michasoft.thelasttime.eventInstanceAdd.EventInstanceAddViewModel
 import com.michasoft.thelasttime.model.SyncJobQueue
 import com.michasoft.thelasttime.repo.EventRepository
+import com.michasoft.thelasttime.repo.LabelRepository
 import com.michasoft.thelasttime.repo.UserSessionRepository
 import com.michasoft.thelasttime.useCase.InsertEventInstanceUseCase
 import com.michasoft.thelasttime.userSessionComponent
@@ -28,7 +29,8 @@ class EventListViewModel(
     private val syncJobQueue: SyncJobQueue,
     private val userPhotoUrl: Uri?,
     private val userSessionRepository: UserSessionRepository,
-    private val insertEventInstanceUseCase: InsertEventInstanceUseCase
+    private val insertEventInstanceUseCase: InsertEventInstanceUseCase,
+    private val labelRepository: LabelRepository
 ) : ViewModel() {
     private val _actions: MutableSharedFlow<EventListAction> = MutableSharedFlow()
     val actions: SharedFlow<EventListAction> = _actions
@@ -86,7 +88,7 @@ class EventListViewModel(
     }
 
     private suspend fun setupLabels() {
-        val labels = eventRepository.getLabels()
+        val labels = labelRepository.getLabels()
         state.update { it.copy(labels = labels) }
     }
 
@@ -155,6 +157,9 @@ class EventListViewModel(
         @Inject
         lateinit var insertEventInstanceUseCase: InsertEventInstanceUseCase
 
+        @Inject
+        lateinit var labelRepository: LabelRepository
+
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(
             modelClass: Class<T>,
@@ -168,7 +173,8 @@ class EventListViewModel(
                 syncJobQueue,
                 application.userSessionComponent().getUserPhotoUrl(),
                 userSessionRepository,
-                insertEventInstanceUseCase
+                insertEventInstanceUseCase,
+                labelRepository,
             ) as T
         }
     }

@@ -6,7 +6,6 @@ import com.michasoft.thelasttime.model.EventInstance
 import com.michasoft.thelasttime.model.EventInstanceField
 import com.michasoft.thelasttime.model.EventInstanceField.Type
 import com.michasoft.thelasttime.model.EventInstanceSchema
-import com.michasoft.thelasttime.model.Label
 import com.michasoft.thelasttime.model.eventInstanceField.DoubleField
 import com.michasoft.thelasttime.model.eventInstanceField.IntField
 import com.michasoft.thelasttime.model.eventInstanceField.TextField
@@ -16,8 +15,6 @@ import com.michasoft.thelasttime.storage.dao.LabelDao
 import com.michasoft.thelasttime.storage.entity.EventEntity
 import com.michasoft.thelasttime.storage.entity.EventInstanceEntity
 import com.michasoft.thelasttime.storage.entity.EventInstanceFieldSchemaEntity
-import com.michasoft.thelasttime.storage.entity.EventLabelEntity
-import com.michasoft.thelasttime.storage.entity.LabelEntity
 import com.michasoft.thelasttime.storage.entity.eventInstanceField.EventInstanceDoubleFieldEntity
 import com.michasoft.thelasttime.storage.entity.eventInstanceField.EventInstanceIntFieldEntity
 import com.michasoft.thelasttime.storage.entity.eventInstanceField.EventInstanceTextFieldEntity
@@ -293,36 +290,5 @@ class RoomEventSource(
             }
             //TODO compare other fields and update if needed
         }
-    }
-
-    override suspend fun insertLabel(label: Label) {
-        labelDao.insertLabel(LabelEntity(label))
-    }
-
-    override suspend fun updateLabelName(labelId: String, name: String) {
-        labelDao.updateLabelName(labelId, name)
-    }
-
-    override suspend fun deleteLabel(labelId: String) {
-        appDatabase.withTransaction {
-            labelDao.deleteAllEventLabels(labelId)
-            labelDao.deleteLabel(labelId)
-        }
-    }
-
-    override suspend fun insertEventLabel(eventId: String, labelId: String) {
-        labelDao.insertEventLabel(EventLabelEntity(eventId, labelId))
-    }
-
-    override suspend fun deleteEventLabel(eventId: String, labelId: String) {
-        labelDao.deleteEventLabel(eventId, labelId)
-    }
-
-    override suspend fun getEventLabels(eventId: String): List<Label> {
-        return labelDao.getEventLabels(eventId).map { it.toModel() }
-    }
-
-    override suspend fun getLabels(): List<Label> {
-        return labelDao.getLabels().map { it.toModel() }
     }
 }

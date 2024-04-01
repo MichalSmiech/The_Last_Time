@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.michasoft.thelasttime.model.Label
 import com.michasoft.thelasttime.repo.EventRepository
+import com.michasoft.thelasttime.repo.LabelRepository
 import com.michasoft.thelasttime.userSessionComponent
 import com.michasoft.thelasttime.util.IdGenerator
 import kotlinx.coroutines.FlowPreview
@@ -24,7 +25,7 @@ import javax.inject.Inject
  */
 @OptIn(FlowPreview::class)
 class LabelsEditViewModel(
-    private val eventRepository: EventRepository
+    private val labelRepository: LabelRepository
 ) : ViewModel() {
     private val _actions: MutableSharedFlow<LabelsEditAction> = MutableSharedFlow()
     val actions: SharedFlow<LabelsEditAction> = _actions
@@ -39,13 +40,13 @@ class LabelsEditViewModel(
 
     init {
         viewModelScope.launch {
-            val labels = eventRepository.getLabels()
+            val labels = labelRepository.getLabels()
             state.update { it.copy(labels = labels) }
         }
 
         labelNameChanges.debounce(500).onEach {
             val (labelId, labelName) = it
-            eventRepository.updateLabelName(labelId, labelName)
+            labelRepository.updateLabelName(labelId, labelName)
         }.launchIn(viewModelScope)
     }
 
@@ -82,7 +83,7 @@ class LabelsEditViewModel(
             )
         }
         viewModelScope.launch {
-            eventRepository.insertLabel(label = newLabel)
+            labelRepository.insertLabel(label = newLabel)
         }
     }
 
@@ -93,13 +94,16 @@ class LabelsEditViewModel(
             })
         }
         viewModelScope.launch {
-            eventRepository.deleteLabel(labelId = label.id)
+            labelRepository.deleteLabel(labelId = label.id)
         }
     }
 
     class Factory() : ViewModelProvider.Factory {
         @Inject
         lateinit var eventRepository: EventRepository
+
+        @Inject
+        lateinit var labelRepository: LabelRepository
 
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(
@@ -110,7 +114,7 @@ class LabelsEditViewModel(
                 checkNotNull(extras[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY])
             application.userSessionComponent().inject(this)
             return LabelsEditViewModel(
-                eventRepository,
+                labelRepository
             ) as T
         }
     }

@@ -10,6 +10,7 @@ import com.michasoft.thelasttime.dataSource.FirestoreEventSource
 import com.michasoft.thelasttime.dataSource.ILocalEventSource
 import com.michasoft.thelasttime.dataSource.IRemoteEventSource
 import com.michasoft.thelasttime.dataSource.RoomEventSource
+import com.michasoft.thelasttime.dataSource.RoomLabelSource
 import com.michasoft.thelasttime.dataSource.RoomReminderSource
 import com.michasoft.thelasttime.dataSource.SyncJobDataSource
 import com.michasoft.thelasttime.model.SyncJobQueue
@@ -73,6 +74,30 @@ class UserSessionModule {
 
     @Provides
     @UserSessionScope
+    @Named("labelCollectionRef")
+    fun provideLabelCollectionRef(
+        firestore: FirebaseFirestore,
+        user: User
+    ): CollectionReference {
+        return firestore.collection("users")
+            .document(user.remoteId!!) //TODO co w przypadku gdy lokalne konto nie jest zlinkowane z firebase?
+            .collection("labels")
+    }
+
+    @Provides
+    @UserSessionScope
+    @Named("eventLabelCollectionRef")
+    fun provideEventLabelCollectionRef(
+        firestore: FirebaseFirestore,
+        user: User
+    ): CollectionReference {
+        return firestore.collection("users")
+            .document(user.remoteId!!) //TODO co w przypadku gdy lokalne konto nie jest zlinkowane z firebase?
+            .collection("labels")
+    }
+
+    @Provides
+    @UserSessionScope
     fun provideRemoteEventSource(
         firestore: FirebaseFirestore,
         @Named("eventCollectionRef") eventCollectionRef: CollectionReference
@@ -99,14 +124,16 @@ class UserSessionModule {
         backupConfig: BackupConfig,
         syncJobQueue: SyncJobQueue,
         syncJobQueueCoordinator: SyncJobQueueCoordinator,
-        localReminderSource: RoomReminderSource
+        localReminderSource: RoomReminderSource,
+        localLabelSource: RoomLabelSource
     ): EventRepository {
         return EventRepository(
             localSource,
             backupConfig,
             syncJobQueue,
             syncJobQueueCoordinator,
-            localReminderSource
+            localReminderSource,
+            localLabelSource
         )
     }
 
@@ -153,6 +180,9 @@ class UserSessionModule {
 
     @Provides
     fun provideReminderDao(appDatabase: AppDatabase) = appDatabase.reminderDao
+
+    @Provides
+    fun provideLabelDao(appDatabase: AppDatabase) = appDatabase.labelDao
 
     @Provides
     fun provideEventDao(appDatabase: AppDatabase) = appDatabase.eventDao

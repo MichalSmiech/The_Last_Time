@@ -1,10 +1,10 @@
 package com.michasoft.thelasttime.repo
 
 import com.michasoft.thelasttime.dataSource.ILocalEventSource
+import com.michasoft.thelasttime.dataSource.RoomLabelSource
 import com.michasoft.thelasttime.dataSource.RoomReminderSource
 import com.michasoft.thelasttime.model.Event
 import com.michasoft.thelasttime.model.EventInstance
-import com.michasoft.thelasttime.model.Label
 import com.michasoft.thelasttime.model.SyncJobQueue
 import com.michasoft.thelasttime.model.SyncJobQueueCoordinator
 import com.michasoft.thelasttime.model.syncJob.EventInstanceSyncJob
@@ -23,7 +23,8 @@ class EventRepository(
     private val backupConfig: BackupConfig,
     private val syncJobQueue: SyncJobQueue,
     private val syncJobQueueCoordinator: SyncJobQueueCoordinator,
-    private val localReminderSource: RoomReminderSource
+    private val localReminderSource: RoomReminderSource,
+    private val localLabelSource: RoomLabelSource
 ) {
     private val _eventsChanged: MutableSharedFlow<Unit> = MutableSharedFlow()
     val eventsChanged: SharedFlow<Unit> = _eventsChanged
@@ -44,7 +45,7 @@ class EventRepository(
     ): Event? {
         return localEventSource.getEvent(eventId)?.also { event ->
             if (withLabels) {
-                event.labels = localEventSource.getEventLabels(event.id)
+                event.labels = localLabelSource.getEventLabels(event.id)
             }
         }
     }
@@ -75,7 +76,7 @@ class EventRepository(
                 event.lastInstanceTimestamp = localEventSource.getLastInstanceTimestamp(event.id)
             }
             if (withLabels) {
-                event.labels = localEventSource.getEventLabels(event.id)
+                event.labels = localLabelSource.getEventLabels(event.id)
             }
             if (withReminders) {
                 event.reminders = localReminderSource.getEventReminders(event.id)
@@ -144,36 +145,5 @@ class EventRepository(
 
     suspend fun getEventInstances(eventId: String): List<EventInstance> {
         return localEventSource.getAllEventInstancesAtOnce(eventId)
-    }
-
-    suspend fun getLabels(): List<Label> {
-        return localEventSource.getLabels()
-    }
-
-    suspend fun getEventLabels(eventId: String): List<Label> {
-        return localEventSource.getEventLabels(eventId)
-    }
-
-    suspend fun insertLabel(label: Label) {
-        localEventSource.insertLabel(label)
-        //TODO sync
-    }
-
-    suspend fun updateLabelName(labelId: String, name: String) {
-        localEventSource.updateLabelName(labelId, name)
-    }
-
-    suspend fun insertEventLabel(eventId: String, labelId: String) {
-        localEventSource.insertEventLabel(eventId, labelId)
-        //TODO sync
-    }
-
-    suspend fun deleteEventLabel(eventId: String, labelId: String) {
-        localEventSource.deleteEventLabel(eventId, labelId)
-        //TODO sync
-    }
-
-    suspend fun deleteLabel(labelId: String) {
-        localEventSource.deleteLabel(labelId)
     }
 }
