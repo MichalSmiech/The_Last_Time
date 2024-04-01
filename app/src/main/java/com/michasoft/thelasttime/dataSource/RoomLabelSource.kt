@@ -48,4 +48,9 @@ class RoomLabelSource @Inject constructor(
     suspend fun getLabel(labelId: String): Label? {
         return labelDao.getLabel(labelId)?.toModel()
     }
+
+    suspend fun clear() {
+        labelDao.deleteAllLabel()
+        labelDao.deleteAllEventLabels()
+    }
 }

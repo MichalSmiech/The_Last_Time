@@ -8,6 +8,7 @@ import com.michasoft.thelasttime.eventInstanceAdd.EventInstanceAddViewModel
 import com.michasoft.thelasttime.permission.EnsurePostNotificationPermissionUseCase
 import com.michasoft.thelasttime.repo.EventRepository
 import com.michasoft.thelasttime.repo.ReminderRepository
+import com.michasoft.thelasttime.useCase.DeleteEventUseCase
 import com.michasoft.thelasttime.useCase.InsertEventInstanceUseCase
 import com.michasoft.thelasttime.userSessionComponent
 import kotlinx.coroutines.FlowPreview
@@ -30,7 +31,8 @@ class EventDetailsViewModel(
     private val eventRepository: EventRepository,
     private val reminderRepository: ReminderRepository,
     private val insertEventInstanceUseCase: InsertEventInstanceUseCase,
-    private val ensurePostNotificationPermissionUseCase: EnsurePostNotificationPermissionUseCase
+    private val ensurePostNotificationPermissionUseCase: EnsurePostNotificationPermissionUseCase,
+    private val deleteEventUseCase: DeleteEventUseCase,
 ) : ViewModel() {
     private val _actions: MutableSharedFlow<EventDetailsAction> = MutableSharedFlow()
     val actions: SharedFlow<EventDetailsAction> = _actions
@@ -129,7 +131,7 @@ class EventDetailsViewModel(
 
     fun deleteEvent() {
         viewModelScope.launch {
-            eventRepository.deleteEvent(eventId)
+            deleteEventUseCase.execute(eventId)
             _actions.emit(EventDetailsAction.Finish)
         }
     }
@@ -186,6 +188,9 @@ class EventDetailsViewModel(
         @Inject
         lateinit var ensurePostNotificationPermissionUseCase: EnsurePostNotificationPermissionUseCase
 
+        @Inject
+        lateinit var deleteEventUseCase: DeleteEventUseCase
+
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(
             modelClass: Class<T>,
@@ -199,7 +204,8 @@ class EventDetailsViewModel(
                 eventRepository,
                 reminderRepository,
                 insertEventInstanceUseCase,
-                ensurePostNotificationPermissionUseCase
+                ensurePostNotificationPermissionUseCase,
+                deleteEventUseCase
             ) as T
         }
     }

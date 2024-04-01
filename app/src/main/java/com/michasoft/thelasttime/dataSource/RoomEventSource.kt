@@ -38,7 +38,6 @@ class RoomEventSource(
     }
 
     override suspend fun deleteEvent(eventId: String) {
-        labelDao.deleteEventAllLabels(eventId)
         val instanceIds = eventDao.getAllEventInstanceIdsWithEventId(eventId)
         instanceIds.forEach { instanceId ->
             deleteEventInstance(eventId, instanceId)
@@ -152,16 +151,10 @@ class RoomEventSource(
         eventDao.deleteAllEventInstanceTextFields()
         eventDao.deleteAllEventInstanceFieldSchemas()
         eventDao.deleteAllEvents()
-        labelDao.deleteAllEventLabels()
-    }
-
-    private suspend fun deleteAllLabels() {
-        labelDao.deleteAllLabel()
     }
 
     override suspend fun clear() {
         deleteAllEvents()
-        deleteAllLabels()
     }
 
     override suspend fun getAllEvents(): Flow<Event> = flow {

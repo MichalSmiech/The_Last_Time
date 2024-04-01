@@ -3,6 +3,7 @@ package com.michasoft.thelasttime.repo
 import com.michasoft.thelasttime.dataSource.FirestoreReminderSource
 import com.michasoft.thelasttime.dataSource.ILocalEventSource
 import com.michasoft.thelasttime.dataSource.IRemoteEventSource
+import com.michasoft.thelasttime.dataSource.RoomLabelSource
 import com.michasoft.thelasttime.dataSource.RoomReminderSource
 import com.michasoft.thelasttime.reminder.CancelReminderUseCase
 import com.michasoft.thelasttime.reminder.ScheduleReminderUseCase
@@ -18,15 +19,18 @@ class BackupRepository @Inject constructor(
     private val remoteReminderSource: FirestoreReminderSource,
     private val scheduleReminderUseCase: ScheduleReminderUseCase,
     private val cancelReminderUseCase: CancelReminderUseCase,
+    private val localLabelSource: RoomLabelSource
 ) {
     suspend fun clearLocalDatabase() {
         localEventSource.clear()
         localReminderSource.clear()
+        localLabelSource.clear()
     }
 
     suspend fun clearBackup() {
         remoteEventSource.clear()
         remoteReminderSource.clear()
+        //TODO labels
     }
 
     suspend fun restoreBackup() {

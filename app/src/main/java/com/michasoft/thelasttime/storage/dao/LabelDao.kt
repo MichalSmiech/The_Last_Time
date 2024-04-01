@@ -32,9 +32,6 @@ interface LabelDao {
     @Query("DELETE FROM ${EventLabelEntity.TABLE_NAME}")
     suspend fun deleteAllEventLabels()
 
-    @Query("DELETE FROM ${EventLabelEntity.TABLE_NAME} WHERE eventId=:eventId")
-    suspend fun deleteEventAllLabels(eventId: String)
-
     @Query("SELECT label.* FROM ${EventLabelEntity.TABLE_NAME} as eventLabel JOIN ${LabelEntity.TABLE_NAME} AS label ON eventLabel.labelId = label.id WHERE eventLabel.eventId = :eventId")
     suspend fun getEventLabels(eventId: String): List<LabelEntity>
 

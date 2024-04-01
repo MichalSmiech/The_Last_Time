@@ -71,4 +71,10 @@ class LabelRepository @Inject constructor(
             syncJobQueueCoordinator.triggerSync()
         }
     }
+
+    suspend fun deleteEventAllLabels(eventId: String) {
+        getEventLabels(eventId).forEach {
+            deleteEventLabel(eventId, it.id)
+        }
+    }
 }
