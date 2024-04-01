@@ -44,4 +44,8 @@ class RoomLabelSource @Inject constructor(
     suspend fun getLabels(): List<Label> {
         return labelDao.getLabels().map { it.toModel() }
     }
+
+    suspend fun getLabel(labelId: String): Label? {
+        return labelDao.getLabel(labelId)?.toModel()
+    }
 }

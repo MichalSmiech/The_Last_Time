@@ -40,4 +40,7 @@ interface LabelDao {
 
     @Query("SELECT * FROM  ${LabelEntity.TABLE_NAME}")
     suspend fun getLabels(): List<LabelEntity>
+
+    @Query("SELECT * FROM  ${LabelEntity.TABLE_NAME} WHERE id = :id")
+    suspend fun getLabel(id: String): LabelEntity?
 }

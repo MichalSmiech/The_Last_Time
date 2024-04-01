@@ -1,15 +1,22 @@
 package com.michasoft.thelasttime.repo
 
-import com.michasoft.thelasttime.dataSource.FirestoreLabelSource
 import com.michasoft.thelasttime.dataSource.RoomLabelSource
 import com.michasoft.thelasttime.di.UserSessionScope
 import com.michasoft.thelasttime.model.Label
+import com.michasoft.thelasttime.model.SyncJobQueue
+import com.michasoft.thelasttime.model.SyncJobQueueCoordinator
+import com.michasoft.thelasttime.model.syncJob.EventLabelSyncJob
+import com.michasoft.thelasttime.model.syncJob.LabelSyncJob
+import com.michasoft.thelasttime.model.syncJob.SyncJob
+import com.michasoft.thelasttime.util.BackupConfig
 import javax.inject.Inject
 
 @UserSessionScope
 class LabelRepository @Inject constructor(
     private val localLabelSource: RoomLabelSource,
-    private val remoteLabelSource: FirestoreLabelSource
+    private val backupConfig: BackupConfig,
+    private val syncJobQueue: SyncJobQueue,
+    private val syncJobQueueCoordinator: SyncJobQueueCoordinator,
 ) {
 
     suspend fun getLabels(): List<Label> {
@@ -22,24 +29,46 @@ class LabelRepository @Inject constructor(
 
     suspend fun insertLabel(label: Label) {
         localLabelSource.insertLabel(label)
-        //TODO sync
+        if (backupConfig.isAutoBackup()) {
+            val syncJob = LabelSyncJob.Factory.create(label.id, SyncJob.Action.Insert)
+            syncJobQueue.add(syncJob)
+            syncJobQueueCoordinator.triggerSync()
+        }
     }
 
     suspend fun updateLabelName(labelId: String, name: String) {
         localLabelSource.updateLabelName(labelId, name)
-    }
-
-    suspend fun insertEventLabel(eventId: String, labelId: String) {
-        localLabelSource.insertEventLabel(eventId, labelId)
-        //TODO sync
-    }
-
-    suspend fun deleteEventLabel(eventId: String, labelId: String) {
-        localLabelSource.deleteEventLabel(eventId, labelId)
-        //TODO sync
+        if (backupConfig.isAutoBackup()) {
+            val syncJob = LabelSyncJob.Factory.create(labelId, SyncJob.Action.Update)
+            syncJobQueue.add(syncJob)
+            syncJobQueueCoordinator.triggerSync()
+        }
     }
 
     suspend fun deleteLabel(labelId: String) {
         localLabelSource.deleteLabel(labelId)
+        if (backupConfig.isAutoBackup()) {
+            val syncJob = LabelSyncJob.Factory.create(labelId, SyncJob.Action.Delete)
+            syncJobQueue.add(syncJob)
+            syncJobQueueCoordinator.triggerSync()
+        }
+    }
+
+    suspend fun insertEventLabel(eventId: String, labelId: String) {
+        localLabelSource.insertEventLabel(eventId, labelId)
+        if (backupConfig.isAutoBackup()) {
+            val syncJob = EventLabelSyncJob.Factory.create(eventId, labelId, SyncJob.Action.Insert)
+            syncJobQueue.add(syncJob)
+            syncJobQueueCoordinator.triggerSync()
+        }
+    }
+
+    suspend fun deleteEventLabel(eventId: String, labelId: String) {
+        localLabelSource.deleteEventLabel(eventId, labelId)
+        if (backupConfig.isAutoBackup()) {
+            val syncJob = EventLabelSyncJob.Factory.create(eventId, labelId, SyncJob.Action.Delete)
+            syncJobQueue.add(syncJob)
+            syncJobQueueCoordinator.triggerSync()
+        }
     }
 }

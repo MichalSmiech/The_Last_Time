@@ -1,7 +1,10 @@
 package com.michasoft.thelasttime.model
 
 import com.michasoft.thelasttime.model.syncJob.EventInstanceSyncJob
+import com.michasoft.thelasttime.model.syncJob.EventLabelSyncJob
 import com.michasoft.thelasttime.model.syncJob.EventSyncJob
+import com.michasoft.thelasttime.model.syncJob.LabelSyncJob
+import com.michasoft.thelasttime.model.syncJob.ReminderSyncJob
 import com.michasoft.thelasttime.model.syncJob.SyncJob
 
 /**
@@ -11,6 +14,9 @@ object SyncJobFactory {
     private val factories = mapOf<String, SyncJob.Factory>(
         EventSyncJob.TYPE to EventSyncJob.Factory,
         EventInstanceSyncJob.TYPE to EventInstanceSyncJob.Factory,
+        ReminderSyncJob.TYPE to ReminderSyncJob.Factory,
+        LabelSyncJob.TYPE to LabelSyncJob.Factory,
+        EventLabelSyncJob.TYPE to EventLabelSyncJob.Factory,
     )
 
     fun create(
