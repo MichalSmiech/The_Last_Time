@@ -188,6 +188,9 @@ class UserSessionModule {
     fun provideEventDao(appDatabase: AppDatabase) = appDatabase.eventDao
 
     @Provides
+    fun provideNotificationDao(appDatabase: AppDatabase) = appDatabase.notificationDao
+
+    @Provides
     @UserSessionScope
     @Named("remindersChanged")
     fun provideRemindersChangedFlow(): MutableSharedFlow<Unit> = MutableSharedFlow()

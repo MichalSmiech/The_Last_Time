@@ -9,6 +9,7 @@ import com.michasoft.thelasttime.model.reminder.RepeatedReminder
 import com.michasoft.thelasttime.model.reminder.SingleReminder
 import com.michasoft.thelasttime.model.syncJob.ReminderSyncJob
 import com.michasoft.thelasttime.model.syncJob.SyncJob
+import com.michasoft.thelasttime.notification.CancelReminderNotificationsUseCase
 import com.michasoft.thelasttime.reminder.CancelReminderUseCase
 import com.michasoft.thelasttime.reminder.ScheduleReminderUseCase
 import com.michasoft.thelasttime.util.BackupConfig
@@ -27,6 +28,7 @@ class ReminderRepository @Inject constructor(
     private val backupConfig: BackupConfig,
     private val syncJobQueue: SyncJobQueue,
     private val syncJobQueueCoordinator: SyncJobQueueCoordinator,
+    private val cancelReminderNotificationsUseCase: CancelReminderNotificationsUseCase,
 ) {
 
     suspend fun getReminder(id: String): Reminder? {
@@ -34,6 +36,11 @@ class ReminderRepository @Inject constructor(
     }
 
     suspend fun getEventReminders(eventId: String) = roomReminderSource.getEventReminders(eventId)
+
+    suspend fun deleteReminder(reminderId: String) {
+        val reminder = getReminder(reminderId) ?: return
+        deleteReminder(reminder)
+    }
 
     suspend fun deleteReminder(reminder: Reminder) {
         deleteReminder(reminder = reminder, notify = true)
@@ -50,11 +57,6 @@ class ReminderRepository @Inject constructor(
             syncJobQueue.add(syncJob)
             syncJobQueueCoordinator.triggerSync()
         }
-    }
-
-    suspend fun deleteReminder(reminderId: String) {
-        val reminder = getReminder(reminderId) ?: return
-        deleteReminder(reminder)
     }
 
     suspend fun insertReminder(reminder: Reminder) {

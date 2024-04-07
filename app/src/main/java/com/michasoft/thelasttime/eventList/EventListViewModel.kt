@@ -8,6 +8,7 @@ import androidx.lifecycle.viewmodel.CreationExtras
 import com.michasoft.thelasttime.eventInstanceAdd.EventInstanceAddViewModel
 import com.michasoft.thelasttime.model.Label
 import com.michasoft.thelasttime.model.SyncJobQueue
+import com.michasoft.thelasttime.notification.CancelAllNotificationsUseCase
 import com.michasoft.thelasttime.repo.EventRepository
 import com.michasoft.thelasttime.repo.LabelRepository
 import com.michasoft.thelasttime.repo.UserSessionRepository
@@ -32,7 +33,8 @@ class EventListViewModel(
     private val userPhotoUrl: Uri?,
     private val userSessionRepository: UserSessionRepository,
     private val insertEventInstanceUseCase: InsertEventInstanceUseCase,
-    private val labelRepository: LabelRepository
+    private val labelRepository: LabelRepository,
+    private val cancelAllNotificationsUseCase: CancelAllNotificationsUseCase
 ) : ViewModel() {
     private val _actions: MutableSharedFlow<EventListAction> = MutableSharedFlow()
     val actions: SharedFlow<EventListAction> = _actions
@@ -161,6 +163,7 @@ class EventListViewModel(
     }
 
     suspend fun singOut() {
+        cancelAllNotificationsUseCase.invoke()
         userSessionRepository.logout()
     }
 
@@ -199,6 +202,9 @@ class EventListViewModel(
         @Inject
         lateinit var labelRepository: LabelRepository
 
+        @Inject
+        lateinit var cancelAllNotificationsUseCase: CancelAllNotificationsUseCase
+
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(
             modelClass: Class<T>,
@@ -214,6 +220,7 @@ class EventListViewModel(
                 userSessionRepository,
                 insertEventInstanceUseCase,
                 labelRepository,
+                cancelAllNotificationsUseCase
             ) as T
         }
     }

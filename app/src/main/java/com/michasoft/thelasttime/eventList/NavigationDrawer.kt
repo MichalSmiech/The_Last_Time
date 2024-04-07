@@ -67,11 +67,6 @@ fun DrawerContent(
             onAddNewLabelClick = onAddNewLabelClick
         )
         MenuItem(
-            type = MenuItemType.SETTINGS,
-            onMenuItemClick = onMenuItemClick,
-            isActive = activeMenuItem == MenuItemType.SETTINGS
-        )
-        MenuItem(
             type = MenuItemType.DEBUG,
             onMenuItemClick = onMenuItemClick,
             isActive = activeMenuItem == MenuItemType.DEBUG

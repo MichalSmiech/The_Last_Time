@@ -49,10 +49,12 @@ import com.michasoft.thelasttime.view.LoginActivity
 import com.michasoft.thelasttime.view.MainActivity
 import com.michasoft.thelasttime.view.UserSessionActivity
 import com.michasoft.thelasttime.view.theme.LastTimeTheme
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 
 class EventListActivity : UserSessionActivity() {
     private val viewModel by viewModels<EventListViewModel>(factoryProducer = {
@@ -113,7 +115,9 @@ class EventListActivity : UserSessionActivity() {
 
                         is EventListAction.SignOut -> {
                             runBlocking {
-                                viewModel.singOut()
+                                withContext(Dispatchers.IO) {
+                                    viewModel.singOut()
+                                }
                             }
                             Intent(this@EventListActivity, LoginActivity::class.java).also {
                                 startActivity(

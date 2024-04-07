@@ -3,7 +3,6 @@ package com.michasoft.thelasttime.notification
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import androidx.core.app.NotificationManagerCompat
 import com.michasoft.thelasttime.LastTimeApplication
 import com.michasoft.thelasttime.repo.EventRepository
 import com.michasoft.thelasttime.useCase.InsertEventInstanceUseCase
@@ -19,24 +18,21 @@ class ReminderNotificationActionReceiver : BroadcastReceiver() {
     @Inject
     lateinit var eventRepository: EventRepository
 
+    @Inject
+    lateinit var cancelNotificationUseCase: CancelNotificationUseCase
+
     override fun onReceive(context: Context?, intent: Intent?) {
         val eventId = intent?.getStringExtra(EVENT_ID) ?: return
-        (context?.applicationContext as LastTimeApplication?)?.userSessionComponent?.inject(this)
+        context ?: return
+        (context.applicationContext as LastTimeApplication?)?.userSessionComponent?.inject(this)
         CoroutineScope(Dispatchers.Main).launch {
             val createEventInstance = eventRepository.createEventInstance(eventId)
             insertEventInstanceUseCase.execute(createEventInstance)
-        }
-        context ?: return
-        val notificationId = intent.getIntExtra(NOTIFICATION_ID, -1)
-        if (notificationId == -1) {
-            return
-        }
-        hideNotification(context, notificationId)
-    }
-
-    private fun hideNotification(context: Context, notificationId: Int) {
-        with(NotificationManagerCompat.from(context)) {
-            cancel(notificationId)
+            val notificationId = intent.getIntExtra(NOTIFICATION_ID, -1)
+            if (notificationId == -1) {
+                return@launch
+            }
+            cancelNotificationUseCase.invoke(notificationId)
         }
     }
 
