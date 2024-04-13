@@ -5,8 +5,10 @@ import android.content.Context
 import com.michasoft.thelasttime.di.ApplicationComponent
 import com.michasoft.thelasttime.di.DaggerApplicationComponent
 import com.michasoft.thelasttime.di.UserSessionComponent
+import com.michasoft.thelasttime.reminder.ScheduleReshowRemindersUseCase
 import kotlinx.coroutines.runBlocking
 import timber.log.Timber
+import javax.inject.Inject
 
 /**
  * Created by mśmiech on 09.05.2021.
@@ -21,8 +23,8 @@ open class LastTimeApplication: Application() {
                 if(currentUser != null) {
                     field = applicationComponent.userSessionComponent().setUser(currentUser).build()
                 }
-            } else if(field1.getUser() != currentUser) {
-                if(currentUser != null) {
+            } else if (field1.getUser() != currentUser) {
+                if (currentUser != null) {
                     field = applicationComponent.userSessionComponent().setUser(currentUser).build()
                 } else {
                     field = null
@@ -30,6 +32,9 @@ open class LastTimeApplication: Application() {
             }
             return field
         }
+
+    @Inject
+    lateinit var scheduleReshowRemindersUseCase: ScheduleReshowRemindersUseCase
 
     override fun onCreate() {
         super.onCreate()
@@ -41,6 +46,12 @@ open class LastTimeApplication: Application() {
         runBlocking {
             applicationComponent.getUserRepository().init()
         }
+        userSessionComponent?.let { onCreateWithUserSession(it) }
+    }
+
+    private fun onCreateWithUserSession(userSessionComponent: UserSessionComponent) {
+        userSessionComponent.inject(this)
+        scheduleReshowRemindersUseCase.invoke()
     }
 }
 

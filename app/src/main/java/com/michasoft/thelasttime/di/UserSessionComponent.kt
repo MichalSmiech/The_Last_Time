@@ -1,6 +1,7 @@
 package com.michasoft.thelasttime.di
 
 import android.net.Uri
+import com.michasoft.thelasttime.LastTimeApplication
 import com.michasoft.thelasttime.eventAdd.EventAddViewModel
 import com.michasoft.thelasttime.eventDetails.EventDetailsViewModel
 import com.michasoft.thelasttime.eventInstanceDetails.EventInstanceDetailsViewModel
@@ -14,6 +15,7 @@ import com.michasoft.thelasttime.model.syncJob.EventSyncJob
 import com.michasoft.thelasttime.model.syncJob.LabelSyncJob
 import com.michasoft.thelasttime.model.syncJob.ReminderSyncJob
 import com.michasoft.thelasttime.notification.ReminderNotificationActionReceiver
+import com.michasoft.thelasttime.reminder.ReshowRemindersWorker
 import com.michasoft.thelasttime.reminder.ShowReminderReceiver
 import com.michasoft.thelasttime.reminderEdit.EditReminderViewModel
 import com.michasoft.thelasttime.repo.UserSessionRepository
@@ -58,5 +60,7 @@ interface UserSessionComponent {
     fun inject(factory: LabelsEditViewModel.Factory)
     fun inject(labelSyncJob: LabelSyncJob)
     fun inject(eventLabelSyncJob: EventLabelSyncJob)
+    fun inject(reshowRemindersWorker: ReshowRemindersWorker)
+    fun inject(lastTimeApplication: LastTimeApplication)
 
 }

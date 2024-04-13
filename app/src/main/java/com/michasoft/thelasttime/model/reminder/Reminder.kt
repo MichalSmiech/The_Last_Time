@@ -25,12 +25,12 @@ abstract class Reminder(
         Repeated
     }
 
-    fun createAlarmPendingIntent(context: Context) =
-        Intent(context, ShowReminderReceiver::class.java).let { intent ->
-            intent.putExtra(ShowReminderReceiver.REMINDER_ID, id)
-            intent.setData(Uri.parse(id))
-            PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
-        }
+    fun createAlarmPendingIntent(context: Context): PendingIntent {
+        val intent = Intent(context, ShowReminderReceiver::class.java)
+            .putExtra(ShowReminderReceiver.REMINDER_ID, id)
+            .setData(Uri.parse(id))
+        return PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
+    }
 
     protected fun createLabel(dateTime: DateTime): String {
         if (dateTime.year != DateTime.now().year) {

@@ -1,9 +1,7 @@
 package com.michasoft.thelasttime.view
 
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
-import android.provider.Settings
 import android.view.View
 import android.widget.Toast
 import androidx.core.app.ActivityOptionsCompat
@@ -16,7 +14,9 @@ import com.michasoft.thelasttime.model.EventInstanceSchema
 import com.michasoft.thelasttime.notification.CreateNotificationChannelUseCase
 import com.michasoft.thelasttime.notification.CreateReminderNotificationUseCase
 import com.michasoft.thelasttime.notification.ShowNotificationUseCase
+import com.michasoft.thelasttime.reminder.ReshowRemindersUseCase
 import com.michasoft.thelasttime.reminder.ScheduleReminderUseCase
+import com.michasoft.thelasttime.reminder.ScheduleReshowRemindersUseCase
 import com.michasoft.thelasttime.repo.BackupRepository
 import com.michasoft.thelasttime.repo.EventRepository
 import com.michasoft.thelasttime.repo.ReminderRepository
@@ -59,6 +59,12 @@ class MainActivity : UserSessionActivity() {
 
     @Inject
     lateinit var reminderRepository: ReminderRepository
+
+    @Inject
+    lateinit var reshowRemindersUseCase: ReshowRemindersUseCase
+
+    @Inject
+    lateinit var scheduleReshowRemindersUseCase: ScheduleReshowRemindersUseCase
 
     override fun onActivityCreate(savedInstanceState: Bundle?) {
         (application as LastTimeApplication).userSessionComponent!!.inject(this)
@@ -152,14 +158,17 @@ class MainActivity : UserSessionActivity() {
     }
 
     fun showNotification(view: View) {
-        val batterySaverIntent = Intent()
+        CoroutineScope(Dispatchers.IO).launch {
+            scheduleReshowRemindersUseCase.invoke()
+        }
+//        val batterySaverIntent = Intent()
 //        startActivity(Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS))
 
-        val intent = Intent()
-        intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-        val uri = Uri.fromParts("package", this.packageName, null)
-        intent.setData(uri)
-        startActivity(intent)
+//        val intent = Intent()
+//        intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+//        val uri = Uri.fromParts("package", this.packageName, null)
+//        intent.setData(uri)
+//        startActivity(intent)
 
 //        batterySaverIntent.component = ComponentName(
 //            "com.android.settings",
