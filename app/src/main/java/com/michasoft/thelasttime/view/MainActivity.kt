@@ -7,10 +7,6 @@ import android.widget.Toast
 import androidx.core.app.ActivityOptionsCompat
 import com.michasoft.thelasttime.LastTimeApplication
 import com.michasoft.thelasttime.R
-import com.michasoft.thelasttime.model.Event
-import com.michasoft.thelasttime.model.EventInstanceField
-import com.michasoft.thelasttime.model.EventInstanceFieldSchema
-import com.michasoft.thelasttime.model.EventInstanceSchema
 import com.michasoft.thelasttime.notification.CreateNotificationChannelUseCase
 import com.michasoft.thelasttime.notification.CreateReminderNotificationUseCase
 import com.michasoft.thelasttime.notification.ShowNotificationUseCase
@@ -22,13 +18,11 @@ import com.michasoft.thelasttime.repo.EventRepository
 import com.michasoft.thelasttime.repo.ReminderRepository
 import com.michasoft.thelasttime.repo.UserSessionRepository
 import com.michasoft.thelasttime.util.BackupConfig
-import com.michasoft.thelasttime.util.IdGenerator
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
-import org.joda.time.DateTime
 import javax.inject.Inject
 
 
@@ -101,36 +95,9 @@ class MainActivity : UserSessionActivity() {
         }
     }
 
-    fun addEvents(view: View) {
-        val fieldSchemas = mutableListOf<EventInstanceFieldSchema>()
-        fieldSchemas.add(
-            EventInstanceFieldSchema(
-                IdGenerator.newId(),
-                0,
-                EventInstanceField.Type.TextField,
-                "pierwsze pole"
-            )
-        )
-        fieldSchemas.add(
-            EventInstanceFieldSchema(
-                IdGenerator.newId(),
-                1,
-                EventInstanceField.Type.IntField,
-                "drugie pole"
-            )
-        )
-        fieldSchemas.add(
-            EventInstanceFieldSchema(
-                IdGenerator.newId(),
-                2,
-                EventInstanceField.Type.DoubleField,
-                "trzecie pole"
-            )
-        )
-        val eventInstanceSchema = EventInstanceSchema(fieldSchemas)
-        val event = Event(IdGenerator.newId(), "Water plants", DateTime.now(), eventInstanceSchema)
+    fun reshowReminders(view: View) {
         CoroutineScope(Dispatchers.IO).launch {
-            eventRepository.insertEvent(event)
+            reshowRemindersUseCase.invoke()
         }
     }
 
