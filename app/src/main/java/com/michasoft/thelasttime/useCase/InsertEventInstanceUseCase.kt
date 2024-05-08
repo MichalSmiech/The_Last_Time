@@ -19,7 +19,7 @@ class InsertEventInstanceUseCase @Inject constructor(
         eventRepository.insertEventInstance(instance)
         val reminders = reminderRepository.getEventReminders(instance.eventId)
         reminders.filterIsInstance<SingleReminder>().forEach { reminder ->
-            if (reminder.isShownOrSkipped) {
+            if (reminder.isTriggerDateTimePassed) {
                 reminderRepository.deleteReminder(reminder)
             }
         }

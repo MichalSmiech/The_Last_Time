@@ -17,7 +17,7 @@ abstract class Reminder(
     abstract val label: String
     abstract val type: Type
 
-    val isShownOrSkipped: Boolean
+    val isTriggerDateTimePassed: Boolean
         get() = triggerDateTime?.isNotAfterNow == true
 
     enum class Type {

@@ -41,6 +41,13 @@ class RoomReminderSource @Inject constructor(
         reminderDao.getSingleReminder(id)?.toModel()
             ?: reminderDao.getRepeatedReminder(id)?.toModel()
 
+    suspend fun getReminders(): List<Reminder> {
+        val list = mutableListOf<Reminder>()
+        list.addAll(reminderDao.getSingleReminders().map { it.toModel() })
+        list.addAll(reminderDao.getRepeatedReminders().map { it.toModel() })
+        return list
+    }
+
     suspend fun updateReminderTriggerDateTime(reminder: Reminder, triggerDateTime: DateTime?) {
         when (reminder) {
             is SingleReminder -> reminderDao.updateSingleReminderTriggerDateTime(reminder.id, triggerDateTime)

@@ -96,7 +96,7 @@ fun LabelItem(label: Label, onClick: () -> Unit) {
 fun ReminderItem(reminder: Reminder, onClick: (String) -> Unit) {
     Surface(
         shape = InputChipDefaults.shape,
-        color = if (reminder.isShownOrSkipped) MaterialTheme.colorScheme.errorContainer else MaterialTheme.colorScheme.surfaceVariant,
+        color = if (reminder.isTriggerDateTimePassed) MaterialTheme.colorScheme.errorContainer else MaterialTheme.colorScheme.surfaceVariant,
         onClick = { onClick(reminder.id) }
     ) {
         Row(

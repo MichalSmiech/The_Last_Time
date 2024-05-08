@@ -18,6 +18,9 @@ interface ReminderDao {
     @Query("SELECT * FROM ${SingleReminderEntity.TABLE_NAME} WHERE id=:id")
     suspend fun getSingleReminder(id: String): SingleReminderEntity?
 
+    @Query("SELECT * FROM ${SingleReminderEntity.TABLE_NAME}")
+    suspend fun getSingleReminders(): List<SingleReminderEntity>
+
     @Query("SELECT * FROM ${SingleReminderEntity.TABLE_NAME} WHERE eventId=:eventId")
     suspend fun getEventSingleReminders(eventId: String): List<SingleReminderEntity>
 
@@ -38,6 +41,9 @@ interface ReminderDao {
 
     @Query("SELECT * FROM ${RepeatedReminderEntity.TABLE_NAME} WHERE id=:id")
     suspend fun getRepeatedReminder(id: String): RepeatedReminderEntity?
+
+    @Query("SELECT * FROM ${RepeatedReminderEntity.TABLE_NAME}")
+    suspend fun getRepeatedReminders(): List<RepeatedReminderEntity>
 
     @Query("SELECT * FROM ${RepeatedReminderEntity.TABLE_NAME} WHERE eventId=:eventId")
     suspend fun getEventRepeatedReminders(eventId: String): List<RepeatedReminderEntity>
