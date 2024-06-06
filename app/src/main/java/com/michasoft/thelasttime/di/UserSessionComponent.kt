@@ -14,9 +14,9 @@ import com.michasoft.thelasttime.model.syncJob.EventLabelSyncJob
 import com.michasoft.thelasttime.model.syncJob.EventSyncJob
 import com.michasoft.thelasttime.model.syncJob.LabelSyncJob
 import com.michasoft.thelasttime.model.syncJob.ReminderSyncJob
-import com.michasoft.thelasttime.notification.ReminderNotificationActionReceiver
+import com.michasoft.thelasttime.notification.ReminderNotificationActionBroadcastReceiver
 import com.michasoft.thelasttime.reminder.ReshowRemindersWorker
-import com.michasoft.thelasttime.reminder.ShowReminderReceiver
+import com.michasoft.thelasttime.reminder.ShowReminderBroadcastReceiver
 import com.michasoft.thelasttime.reminderEdit.EditReminderViewModel
 import com.michasoft.thelasttime.repo.UserSessionRepository
 import com.michasoft.thelasttime.view.MainActivity
@@ -53,9 +53,9 @@ interface UserSessionComponent {
     fun inject(factory: EventListViewModel.Factory)
     fun inject(factory: EventAddViewModel.Factory)
     fun inject(factory: EventLabelsViewModel.Factory)
-    fun inject(showReminderReceiver: ShowReminderReceiver)
+    fun inject(showReminderReceiver: ShowReminderBroadcastReceiver)
     fun inject(reminderSyncJob: ReminderSyncJob)
-    fun inject(reminderNotificationActionReceiver: ReminderNotificationActionReceiver)
+    fun inject(reminderNotificationActionReceiver: ReminderNotificationActionBroadcastReceiver)
     fun inject(userSessionActivity: UserSessionActivity)
     fun inject(factory: LabelsEditViewModel.Factory)
     fun inject(labelSyncJob: LabelSyncJob)

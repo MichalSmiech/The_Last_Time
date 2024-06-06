@@ -27,9 +27,9 @@ class CreateReminderNotificationUseCase @Inject constructor(
             return null
         }
         val addEventInstancePendingIntent =
-            Intent(context, ReminderNotificationActionReceiver::class.java).let { intent ->
-                intent.putExtra(ReminderNotificationActionReceiver.EVENT_ID, reminder.eventId)
-                intent.putExtra(ReminderNotificationActionReceiver.NOTIFICATION_ID, notificationId)
+            Intent(context, ReminderNotificationActionBroadcastReceiver::class.java).let { intent ->
+                intent.putExtra(ReminderNotificationActionBroadcastReceiver.EVENT_ID, reminder.eventId)
+                intent.putExtra(ReminderNotificationActionBroadcastReceiver.NOTIFICATION_ID, notificationId)
                 intent.setData(Uri.parse(Random.nextInt().toString()))
                 PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
             }

@@ -11,7 +11,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class ReminderNotificationActionReceiver : BroadcastReceiver() {
+class ReminderNotificationActionBroadcastReceiver : BroadcastReceiver() {
     @Inject
     lateinit var insertEventInstanceUseCase: InsertEventInstanceUseCase
 

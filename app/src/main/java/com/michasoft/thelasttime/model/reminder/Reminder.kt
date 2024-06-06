@@ -4,7 +4,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import com.michasoft.thelasttime.reminder.ShowReminderReceiver
+import com.michasoft.thelasttime.reminder.ShowReminderBroadcastReceiver
 import com.michasoft.thelasttime.util.isNotAfterNow
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
@@ -26,8 +26,8 @@ abstract class Reminder(
     }
 
     fun createAlarmPendingIntent(context: Context): PendingIntent {
-        val intent = Intent(context, ShowReminderReceiver::class.java)
-            .putExtra(ShowReminderReceiver.REMINDER_ID, id)
+        val intent = Intent(context, ShowReminderBroadcastReceiver::class.java)
+            .putExtra(ShowReminderBroadcastReceiver.REMINDER_ID, id)
             .setData(Uri.parse(id))
         return PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
     }
