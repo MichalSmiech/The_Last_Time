@@ -8,23 +8,32 @@ class RepeatedReminder(
     eventId: String,
     triggerDateTime: DateTime?,
     val periodText: String,
-    val timeRange: TimeRange?
+    val timeRange: TimeRange?,
+    reshowEnabled: Boolean,
 ) : Reminder(
     id = id,
     eventId = eventId,
     triggerDateTime = triggerDateTime,
+    reshowEnabled = reshowEnabled
 ) {
     override val label: String
         get() = triggerDateTime?.let { createLabel(it) } ?: periodText
     override val type: Type
         get() = Type.Repeated
 
-    constructor(id: String, eventId: String, periodText: String, timeRange: TimeRange?) : this(
+    constructor(
+        id: String,
+        eventId: String,
+        periodText: String,
+        timeRange: TimeRange?,
+        reshowEnabled: Boolean
+    ) : this(
         id = id,
         eventId = eventId,
         triggerDateTime = null,
         periodText = periodText,
         timeRange = timeRange,
+        reshowEnabled = reshowEnabled
     )
 
     fun getNextTrigger(lastEventInstanceDateTime: DateTime): DateTime? {

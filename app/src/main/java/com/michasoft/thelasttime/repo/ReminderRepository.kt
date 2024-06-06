@@ -9,7 +9,6 @@ import com.michasoft.thelasttime.model.reminder.RepeatedReminder
 import com.michasoft.thelasttime.model.reminder.SingleReminder
 import com.michasoft.thelasttime.model.syncJob.ReminderSyncJob
 import com.michasoft.thelasttime.model.syncJob.SyncJob
-import com.michasoft.thelasttime.notification.CancelReminderNotificationsUseCase
 import com.michasoft.thelasttime.reminder.CancelReminderUseCase
 import com.michasoft.thelasttime.reminder.ScheduleReminderUseCase
 import com.michasoft.thelasttime.util.BackupConfig
@@ -28,7 +27,6 @@ class ReminderRepository @Inject constructor(
     private val backupConfig: BackupConfig,
     private val syncJobQueue: SyncJobQueue,
     private val syncJobQueueCoordinator: SyncJobQueueCoordinator,
-    private val cancelReminderNotificationsUseCase: CancelReminderNotificationsUseCase,
 ) {
 
     suspend fun getReminder(id: String): Reminder? {
@@ -102,6 +100,7 @@ class ReminderRepository @Inject constructor(
                 IdGenerator.newId(),
                 reminder.eventId,
                 reminder.dateTime,
+                reminder.reshowEnabled
             )
 
             is RepeatedReminder -> RepeatedReminder(
@@ -109,6 +108,7 @@ class ReminderRepository @Inject constructor(
                 reminder.eventId,
                 reminder.periodText,
                 reminder.timeRange,
+                reminder.reshowEnabled
             )
 
             else -> throw Exception()

@@ -97,6 +97,8 @@ fun EditReminderDialog(
             onTimeRangeEnabledChange = viewModel::changeTimeRangeEnabled,
             onTimeRangeStartChange = viewModel::changeTimeRangeStart,
             onTimeRangeEndChange = viewModel::changeTimeRangeEnd,
+            reshowEnabled = viewModel.reshowEnabled.collectAsState().value,
+            onReshowEnabledChange = viewModel::changeReshowEnabled
         )
     }
 }
@@ -123,6 +125,8 @@ private fun EditReminderContent(
     onTimeRangeEnabledChange: (Boolean) -> Unit,
     onTimeRangeStartChange: (LocalTime) -> Unit,
     onTimeRangeEndChange: (LocalTime) -> Unit,
+    reshowEnabled: Boolean,
+    onReshowEnabledChange: (Boolean) -> Unit
 ) {
     val typeIndex = when (type) {
         Reminder.Type.Single -> 0
@@ -179,7 +183,9 @@ private fun EditReminderContent(
                         dateTime = dateTime,
                         dateTimeError = dateTimeError,
                         onDateChange = onDateChange,
-                        onTimeChange = onTimeChange
+                        onTimeChange = onTimeChange,
+                        reshowEnabled = reshowEnabled,
+                        onReshowEnabledChange = onReshowEnabledChange
                     )
                 } else {
                     RepeatedReminderContent(
@@ -193,7 +199,9 @@ private fun EditReminderContent(
                         onTimeRangeEnabledChange = onTimeRangeEnabledChange,
                         onTimeRangeStartChange = onTimeRangeStartChange,
                         onTimeRangeEndChange = onTimeRangeEndChange,
-                        showError = showError
+                        showError = showError,
+                        reshowEnabled = reshowEnabled,
+                        onReshowEnabledChange = onReshowEnabledChange
                     )
                 }
                 Buttons(
@@ -216,6 +224,8 @@ private fun SingleReminderContent(
     dateTimeError: Boolean,
     onDateChange: (LocalDate) -> Unit,
     onTimeChange: (LocalTime) -> Unit,
+    reshowEnabled: Boolean,
+    onReshowEnabledChange: (Boolean) -> Unit
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically
@@ -252,6 +262,12 @@ private fun SingleReminderContent(
             style = MaterialTheme.typography.bodyMedium
         )
     }
+    Spacer(modifier = Modifier.height(8.dp))
+    CheckboxWithText(
+        checked = reshowEnabled,
+        onCheckedChange = onReshowEnabledChange,
+        text = "reshow"
+    )
 }
 
 @Composable
@@ -266,7 +282,9 @@ private fun RepeatedReminderContent(
     onTimeRangeEnabledChange: (Boolean) -> Unit,
     onTimeRangeStartChange: (LocalTime) -> Unit,
     onTimeRangeEndChange: (LocalTime) -> Unit,
-    showError: Boolean
+    showError: Boolean,
+    reshowEnabled: Boolean,
+    onReshowEnabledChange: (Boolean) -> Unit
 ) {
     Text(
         text = "After creating an event instance,\nremind me in:",
@@ -292,23 +310,12 @@ private fun RepeatedReminderContent(
             Text(text = "Enter period")
         }
     )
-//    Text(
-//        text = "y - year, m - month, w - week, d - day, h - hour, min - minute " +
-//                "\nExample: 1d 3h 15min",
-//        style = MaterialTheme.typography.bodySmall
-//    )
     Spacer(modifier = Modifier.height(16.dp))
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable { onTimeRangeEnabledChange(timeRangeEnabled.not()) },
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Checkbox(
-            checked = timeRangeEnabled,
-            onCheckedChange = { onTimeRangeEnabledChange(it) })
-        Text(text = "only between")
-    }
+    CheckboxWithText(
+        checked = timeRangeEnabled,
+        onCheckedChange = onTimeRangeEnabledChange,
+        text = "only between"
+    )
     if (timeRangeEnabled) {
         Column(modifier = Modifier.padding(start = 24.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
@@ -333,6 +340,33 @@ private fun RepeatedReminderContent(
                 }
             }
         }
+    }
+    Spacer(modifier = Modifier.height(8.dp))
+    CheckboxWithText(
+        checked = reshowEnabled,
+        onCheckedChange = onReshowEnabledChange,
+        text = "reshow"
+    )
+}
+
+@Composable
+private fun CheckboxWithText(
+    checked: Boolean,
+    text: String,
+    onCheckedChange: (Boolean) -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { onCheckedChange(checked.not()) },
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Checkbox(
+            checked = checked,
+            onCheckedChange = null
+        )
+        Spacer(modifier = Modifier.width(8.dp))
+        Text(text = text)
     }
 }
 
@@ -386,12 +420,43 @@ private fun EditReminderContentPreview() {
         periodText = "",
         periodTextError = false,
         timeRangeEnabled = true,
-        timeRangeEndError = true,
         timeRangeStart = LocalTime.now(),
         timeRangeEnd = LocalTime.now().plusHours(1),
+        timeRangeEndError = true,
         onPeriodTextChange = {},
         onTimeRangeEnabledChange = {},
         onTimeRangeStartChange = {},
         onTimeRangeEndChange = {},
+        reshowEnabled = true,
+        onReshowEnabledChange = {}
+    )
+}
+
+@Preview
+@Composable
+private fun EditReminderContentPreviewSingle() {
+    EditReminderContent(
+        onDismiss = {},
+        initialState = EditReminderDialogInitialState("", ""),
+        type = Reminder.Type.Single,
+        onTypeChange = {},
+        dateTime = DateTime.now(),
+        dateTimeError = false,
+        onDateChange = {},
+        onTimeChange = {},
+        onReminderSave = {},
+        onReminderDelete = {},
+        periodText = "",
+        periodTextError = false,
+        timeRangeEnabled = true,
+        timeRangeStart = LocalTime.now(),
+        timeRangeEnd = LocalTime.now().plusHours(1),
+        timeRangeEndError = true,
+        onPeriodTextChange = {},
+        onTimeRangeEnabledChange = {},
+        onTimeRangeStartChange = {},
+        onTimeRangeEndChange = {},
+        reshowEnabled = true,
+        onReshowEnabledChange = {}
     )
 }

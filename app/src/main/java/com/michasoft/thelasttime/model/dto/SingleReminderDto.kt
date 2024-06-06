@@ -6,12 +6,19 @@ import java.util.Date
 
 class SingleReminderDto(
     var eventId: String? = null,
-    var dateTime: Date? = null
+    var dateTime: Date? = null,
+    var reshowEnabled: Boolean? = null,
 ) {
     constructor(singleReminder: SingleReminder) : this(
         singleReminder.eventId,
-        singleReminder.dateTime.toDate()
+        singleReminder.dateTime.toDate(),
+        singleReminder.reshowEnabled
     )
 
-    fun toModel(id: String) = SingleReminder(id, eventId!!, DateTime(dateTime!!))
+    fun toModel(id: String) = SingleReminder(
+        id = id,
+        eventId = eventId!!,
+        dateTime = DateTime(dateTime!!),
+        reshowEnabled = reshowEnabled ?: true
+    )
 }

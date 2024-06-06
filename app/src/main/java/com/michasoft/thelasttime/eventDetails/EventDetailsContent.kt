@@ -176,7 +176,8 @@ fun EventDetailsContentPreview() {
             arrayListOf<EventInstanceField>()
         ),
     )
-    val reminder = SingleReminder("", "", DateTime.now().plusHours(-1), DateTime.now().plusHours(1))
+    val reminder =
+        SingleReminder("", "", DateTime.now().plusHours(-1), DateTime.now().plusHours(1), reshowEnabled = true)
     EventDetailsContent(
         event = event,
         eventInstances = eventInstances,

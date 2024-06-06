@@ -2,7 +2,6 @@ package com.michasoft.thelasttime.dataSource
 
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentSnapshot
-import com.google.firebase.firestore.FirebaseFirestore
 import com.michasoft.thelasttime.model.dto.RepeatedReminderDto
 import com.michasoft.thelasttime.model.dto.SingleReminderDto
 import com.michasoft.thelasttime.model.reminder.Reminder
@@ -17,7 +16,6 @@ import javax.inject.Inject
 import javax.inject.Named
 
 class FirestoreReminderSource @Inject constructor(
-    private val firestore: FirebaseFirestore,
     @Named("singleReminderCollectionRef") private val singleReminderCollectionRef: CollectionReference,
     @Named("repeatedReminderCollectionRef") private val repeatedReminderCollectionRef: CollectionReference,
 ) {

@@ -34,12 +34,12 @@ class EditReminderViewModel @Inject constructor(
     val timeRangeStart = MutableStateFlow<LocalTime>(LocalTime(9, 0))
     val timeRangeEnd = MutableStateFlow<LocalTime>(LocalTime(22, 0))
     val timeRangeEndError = combine(timeRangeStart, timeRangeEnd) { start, end -> !validateTimeRange(start, end) }
-
     private val defaultDateTime: DateTime
         get() = DateTime.now().plusHours(1).withSecondOfMinute(0).withMillisOfSecond(0)
     val dateTime = MutableStateFlow(defaultDateTime)
     val dateTimeError = dateTime.map { !validateDateTime(it) }
     private var reminderId: String? = null
+    val reshowEnabled = MutableStateFlow(true)
 
     fun saveReminder() {
         when (type.value) {
@@ -54,7 +54,7 @@ class EditReminderViewModel @Inject constructor(
             dateTime.value = dateTime1 //refresh dateTimeError
             return
         }
-        val reminder = SingleReminder(reminderId ?: IdGenerator.newId(), eventId, dateTime1)
+        val reminder = SingleReminder(reminderId ?: IdGenerator.newId(), eventId, dateTime1, reshowEnabled.value)
         viewModelScope.launch {
             if (reminderId == null) {
                 reminderRepository.insertReminder(reminder)
@@ -118,7 +118,8 @@ class EditReminderViewModel @Inject constructor(
             }
             return@run TimeRange(timeRangeStart, timeRangeEnd)
         }
-        val reminder = RepeatedReminder(reminderId ?: IdGenerator.newId(), eventId, periodText, timeRange)
+        val reminder =
+            RepeatedReminder(reminderId ?: IdGenerator.newId(), eventId, periodText, timeRange, reshowEnabled.value)
         viewModelScope.launch {
             if (reminderId == null) {
                 reminderRepository.insertReminder(reminder)
@@ -171,5 +172,9 @@ class EditReminderViewModel @Inject constructor(
             }
         }
 
+    }
+
+    fun changeReshowEnabled(enabled: Boolean) {
+        reshowEnabled.value = enabled
     }
 }

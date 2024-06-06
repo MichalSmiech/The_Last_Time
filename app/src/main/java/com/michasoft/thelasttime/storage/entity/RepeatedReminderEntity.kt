@@ -13,7 +13,8 @@ class RepeatedReminderEntity(
     val eventId: String,
     val triggerDateTime: DateTime?,
     val periodText: String,
-    val timeRange: TimeRange?
+    val timeRange: TimeRange?,
+    val reshowEnabled: Boolean,
 ) {
     constructor(reminder: RepeatedReminder) : this(
         reminder.id,
@@ -21,6 +22,7 @@ class RepeatedReminderEntity(
         reminder.triggerDateTime,
         reminder.periodText,
         reminder.timeRange,
+        reminder.reshowEnabled,
     )
 
     fun toModel() = RepeatedReminder(
@@ -29,6 +31,7 @@ class RepeatedReminderEntity(
         triggerDateTime = triggerDateTime,
         periodText = periodText,
         timeRange = timeRange,
+        reshowEnabled = reshowEnabled,
     )
 
     companion object {

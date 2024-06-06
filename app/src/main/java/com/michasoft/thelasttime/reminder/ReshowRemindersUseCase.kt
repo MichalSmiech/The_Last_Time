@@ -24,12 +24,15 @@ class ReshowRemindersUseCase @Inject constructor(
             if (notificationInstance.notificationId !in activeNotificationIds) {
                 localNotificationSource.deleteNotificationInstance(notificationInstance.notificationId)
                 val reminderId = notificationInstance.reminderId
-                showReminderUseCase.invoke(reminderId)
+                val reminder = reminderRepository.getReminder(reminderId)
+                if (reminder?.reshowEnabled == true) {
+                    showReminderUseCase.invoke(reminderId)
+                }
             }
         }
 
         reminderRepository.getReminders()
-            .filter { it.id !in reminderIds && it.isTriggerDateTimePassed }
+            .filter { it.id !in reminderIds && it.isTriggerDateTimePassed && it.reshowEnabled }
             .forEach { reminder ->
                 showReminderUseCase.invoke(reminder.id)
             }
