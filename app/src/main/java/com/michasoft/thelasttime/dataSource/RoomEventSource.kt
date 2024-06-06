@@ -11,7 +11,6 @@ import com.michasoft.thelasttime.model.eventInstanceField.IntField
 import com.michasoft.thelasttime.model.eventInstanceField.TextField
 import com.michasoft.thelasttime.storage.AppDatabase
 import com.michasoft.thelasttime.storage.dao.EventDao
-import com.michasoft.thelasttime.storage.dao.LabelDao
 import com.michasoft.thelasttime.storage.entity.EventEntity
 import com.michasoft.thelasttime.storage.entity.EventInstanceEntity
 import com.michasoft.thelasttime.storage.entity.EventInstanceFieldSchemaEntity
@@ -28,7 +27,6 @@ import org.joda.time.DateTime
 class RoomEventSource(
     private val appDatabase: AppDatabase,
     private val eventDao: EventDao,
-    private val labelDao: LabelDao
 ) :
     ILocalEventSource {
     override suspend fun getEvent(eventId: String): Event? {
