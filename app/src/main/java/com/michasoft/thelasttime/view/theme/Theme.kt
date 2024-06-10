@@ -1,19 +1,46 @@
 package com.michasoft.thelasttime.view.theme
 
-import android.os.Build
 import android.view.Window
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
-import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
+import com.google.android.material.color.DynamicColors
 
-private val lightThemeColors = lightColorScheme(
-)
-private val darkThemeColors = lightColorScheme(
+private val darkThemeColors = darkColorScheme(
+    primary = DarkThemeColors.primary,
+    onPrimary = DarkThemeColors.onPrimary,
+    primaryContainer = DarkThemeColors.primaryContainer,
+    onPrimaryContainer = DarkThemeColors.onPrimaryContainer,
+    inversePrimary = DarkThemeColors.inversePrimary,
+    secondary = DarkThemeColors.secondary,
+    onSecondary = DarkThemeColors.onSecondary,
+    secondaryContainer = DarkThemeColors.secondaryContainer,
+    onSecondaryContainer = DarkThemeColors.onSecondaryContainer,
+    tertiary = DarkThemeColors.tertiary,
+    onTertiary = DarkThemeColors.onTertiary,
+    tertiaryContainer = DarkThemeColors.tertiaryContainer,
+    onTertiaryContainer = DarkThemeColors.onTertiaryContainer,
+    background = DarkThemeColors.background,
+    onBackground = DarkThemeColors.onBackground,
+    surface = DarkThemeColors.surface,
+    onSurface = DarkThemeColors.onSurface,
+    surfaceVariant = DarkThemeColors.surfaceVariant,
+    onSurfaceVariant = DarkThemeColors.onSurfaceVariant,
+    surfaceTint = DarkThemeColors.surfaceTint,
+    inverseSurface = DarkThemeColors.inverseSurface,
+    inverseOnSurface = DarkThemeColors.inverseOnSurface,
+    error = DarkThemeColors.error,
+    onError = DarkThemeColors.onError,
+    errorContainer = DarkThemeColors.errorContainer,
+    onErrorContainer = DarkThemeColors.onErrorContainer,
+    outline = DarkThemeColors.outline,
+    outlineVariant = DarkThemeColors.outlineVariant,
+    scrim = DarkThemeColors.scrim,
 )
 
 @Composable
@@ -23,7 +50,7 @@ fun LastTimeTheme(
     window: Window? = null,
     content: @Composable () -> Unit
 ) {
-    val dynamicColor = isDynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
+    val dynamicColor = isDynamicColor && DynamicColors.isDynamicColorAvailable()
     val colorScheme = when {
         dynamicColor && isDarkTheme -> {
             dynamicDarkColorScheme(LocalContext.current)
@@ -34,7 +61,7 @@ fun LastTimeTheme(
         }
 
         isDarkTheme -> darkThemeColors
-        else -> lightThemeColors
+        else -> darkThemeColors
     }
 
     window?.statusBarColor = colorScheme.surface.toArgb()
