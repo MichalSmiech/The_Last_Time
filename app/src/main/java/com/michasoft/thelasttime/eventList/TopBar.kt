@@ -2,6 +2,7 @@ package com.michasoft.thelasttime.eventList
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.net.Uri
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -101,7 +102,8 @@ private fun DefaultTopBar(
             if (isErrorSync) {
                 ErrorSyncButton({})
             }
-            ProfileButton({}, userPhotoUrl)
+            ProfileButton(userPhotoUrl)
+            Spacer(modifier = Modifier.width(2.dp))
         }
     }
 }
@@ -134,7 +136,7 @@ private fun LabelFilterTopBar(
         if (isErrorSync) {
             ErrorSyncButton({})
         }
-        ProfileButton({}, userPhotoUrl)
+        ProfileButton(userPhotoUrl)
     }
 }
 
@@ -171,12 +173,11 @@ fun ErrorSyncButton(
 
 @Composable
 fun ProfileButton(
-    onClick: () -> Unit,
     userPhotoUrl: Uri?,
 ) {
-    IconButton(
-        onClick = onClick,
-        modifier = Modifier.padding(end = 2.dp)
+    Box(
+        modifier = Modifier.size(48.dp),
+        contentAlignment = Alignment.Center
     ) {
         if (userPhotoUrl != null) {
             AsyncImage(
