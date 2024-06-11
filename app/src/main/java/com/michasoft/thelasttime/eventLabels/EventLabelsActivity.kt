@@ -16,7 +16,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.michasoft.thelasttime.view.LoadingView
 import com.michasoft.thelasttime.view.UserSessionActivity
-import com.michasoft.thelasttime.view.theme.LastTimeTheme
+import com.michasoft.thelasttime.view.theme.AppTheme
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
@@ -31,7 +31,7 @@ class EventLabelsActivity : UserSessionActivity() {
     override fun onActivityCreate(savedInstanceState: Bundle?) {
         eventId = intent.getStringExtra(ARG_EVENT_ID) ?: throw IllegalStateException("No event id")
         setContent {
-            LastTimeTheme(window = window) {
+            AppTheme(window = window) {
                 EventLabelsScreen(viewModel)
             }
             LaunchedEffect(Unit) {

@@ -20,7 +20,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.michasoft.thelasttime.view.LoadingView
 import com.michasoft.thelasttime.view.UserSessionActivity
-import com.michasoft.thelasttime.view.theme.LastTimeTheme
+import com.michasoft.thelasttime.view.theme.AppTheme
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
@@ -30,7 +30,7 @@ class LabelsEditActivity : UserSessionActivity() {
     override fun onActivityCreate(savedInstanceState: Bundle?) {
         val withNewLabelTextFieldFocus = intent.getBooleanExtra(ARG_WITH_NEW_LABEL_TEXT_FIELD_FOCUS, false)
         setContent {
-            LastTimeTheme(window = window) {
+            AppTheme(window = window) {
                 LabelsEditScreen(viewModel, withNewLabelTextFieldFocus)
             }
             LaunchedEffect(Unit) {

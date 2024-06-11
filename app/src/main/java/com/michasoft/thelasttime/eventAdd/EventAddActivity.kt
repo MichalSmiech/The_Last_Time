@@ -14,7 +14,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.michasoft.thelasttime.eventDetails.EventDetailsActivity
 import com.michasoft.thelasttime.view.UserSessionActivity
-import com.michasoft.thelasttime.view.theme.LastTimeTheme
+import com.michasoft.thelasttime.view.theme.AppTheme
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
@@ -25,7 +25,7 @@ class EventAddActivity : UserSessionActivity() {
 
     override fun onActivityCreate(savedInstanceState: Bundle?) {
         setContent {
-            LastTimeTheme(window = window) {
+            AppTheme(window = window) {
                 EventAddScreen(viewModel)
             }
         }

@@ -4,6 +4,7 @@ import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SelectableDates
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
@@ -14,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.text.intl.Locale
 import org.joda.time.DateTime
+import org.joda.time.DateTimeZone
 import org.joda.time.LocalDate
 import org.joda.time.LocalTime
 import org.joda.time.format.DateTimeFormat
@@ -29,12 +31,21 @@ fun EditableDate(
     onDateChange: (LocalDate) -> Unit,
     minDate: LocalDate? = null
 ) {
-    val datePickerState = rememberDatePickerState()
+    val datePickerState = rememberDatePickerState(selectableDates = object : SelectableDates {
+        override fun isSelectableDate(utcTimeMillis: Long): Boolean {
+            return minDate?.let { minDate ->
+                !DateTime(
+                    date,
+                    DateTimeZone.UTC
+                ).isBefore(minDate.toDateTime(LocalTime.MIDNIGHT))
+            } ?: true
+        }
+    })
     val showDatePicker = rememberSaveable { mutableStateOf(false) }
     TextButton(
         modifier = modifier,
         onClick = {
-            datePickerState.setSelection(date.toDateTime(LocalTime.now()).millis)
+            datePickerState.selectedDateMillis = date.toDateTime(LocalTime.now()).millis
             showDatePicker.value = true
         }) {
         Text(
@@ -62,11 +73,7 @@ fun EditableDate(
                 }
             }
         ) {
-            DatePicker(
-                state = datePickerState,
-                dateValidator = { date ->
-                    minDate?.let { minDate -> !DateTime(date).isBefore(minDate.toDateTime(LocalTime.MIDNIGHT)) } ?: true
-                })
+            DatePicker(state = datePickerState)
         }
     }
 }

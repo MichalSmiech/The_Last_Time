@@ -38,7 +38,7 @@ import com.michasoft.thelasttime.reminderEdit.EditReminderDialogInitialState
 import com.michasoft.thelasttime.view.DeleteConfirmationDialog
 import com.michasoft.thelasttime.view.LoadingView
 import com.michasoft.thelasttime.view.UserSessionActivity
-import com.michasoft.thelasttime.view.theme.LastTimeTheme
+import com.michasoft.thelasttime.view.theme.AppTheme
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -97,7 +97,7 @@ class EventDetailsActivity : UserSessionActivity() {
                     }
                 }.launchIn(lifecycleScope)
             }
-            LastTimeTheme(window = window) {
+            AppTheme(window = window) {
                 EventDetailsScreen(viewModel, bottomSheetState)
                 if (editReminderDialogShown) {
                     editReminderDialogInitialState?.let {

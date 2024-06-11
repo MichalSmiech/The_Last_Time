@@ -16,7 +16,7 @@ import androidx.lifecycle.lifecycleScope
 import com.michasoft.thelasttime.view.DeleteConfirmationDialog
 import com.michasoft.thelasttime.view.LoadingView
 import com.michasoft.thelasttime.view.UserSessionActivity
-import com.michasoft.thelasttime.view.theme.LastTimeTheme
+import com.michasoft.thelasttime.view.theme.AppTheme
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
@@ -35,7 +35,7 @@ class EventInstanceDetailsActivity : UserSessionActivity() {
         instanceId = intent.getStringExtra(ARG_EVENT_INSTANCE_ID)
             ?: throw IllegalStateException("No event instance id")
         setContent {
-            LastTimeTheme(window = window) {
+            AppTheme(window = window) {
                 EventInstanceDetailsScreen(viewModel)
             }
         }
