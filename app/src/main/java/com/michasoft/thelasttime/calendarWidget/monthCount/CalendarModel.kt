@@ -7,45 +7,82 @@ import kotlin.random.Random
 data class CalendarModel(
     val dateRange: DateRange,
 ) {
-    val totalWeeksInRange: Int = calculateTotalWeeksInRange(dateRange)
+    val totalMonthsInRange: Int = calculateTotalMonthsInRange(dateRange)
 
-    private fun calculateTotalWeeksInRange(dateRange: DateRange): Int {
-        if (dateRange.fromData.weekyear == dateRange.toDate.weekyear) {
-            return dateRange.toDate.weekOfWeekyear - dateRange.fromData.weekOfWeekyear + 1
+    private fun calculateTotalMonthsInRange(dateRange: DateRange): Int {
+        val fromData = dateRange.fromData.withDayOfWeek(1)
+        val toDate = dateRange.toDate.withDayOfWeek(1)
+        if (fromData.year == toDate.year) {
+            return toDate.monthOfYear - fromData.monthOfYear + 1
         }
-        var weeks = 0
-        weeks += WeeksInYear - dateRange.fromData.weekOfWeekyear + 1
-        weeks += WeeksInYear * (dateRange.toDate.weekyear - dateRange.fromData.weekyear)
-        weeks += WeeksInYear - dateRange.toDate.weekOfWeekyear + 1
-        return weeks
+        var months = 0
+        months += MonthsInYear - fromData.monthOfYear + 1
+        months += MonthsInYear * (toDate.monthOfYear - fromData.monthOfYear)
+        months += MonthsInYear - toDate.monthOfYear + 1
+        return months
     }
 
-    fun getLastWeek(): CalendarWeek {
+    fun getLastMonth(): CalendarMonth {
+        val lastWeek = getLastWeek()
+        val firstDayOfMonth = lastWeek.firstDay.withDayOfMonth(1)
+        return getMonth(firstDayOfMonth)
+    }
+
+    private fun getMonth(firstDayOfMonth: LocalDate): CalendarMonth {
+        val firstDayOfFirstWeek = if (firstDayOfMonth.dayOfWeek != 1) {
+            firstDayOfMonth.plusWeeks(1).withDayOfWeek(1)
+        } else {
+            firstDayOfMonth
+        }
+
+        val weeks = mutableListOf(CalendarWeek(firstDayOfFirstWeek))
+
+        var week = CalendarWeek(weeks.first().firstDay.plusWeeks(1))
+        val lastWeek = getLastWeek()
+        while (week.firstDay.monthOfYear == firstDayOfMonth.monthOfYear && !week.firstDay.isAfter(lastWeek.firstDay)) {
+            weeks.add(week)
+            week = CalendarWeek(week.firstDay.plusWeeks(1))
+        }
+        return CalendarMonth(weeks)
+    }
+
+    private fun getLastWeek(): CalendarWeek {
         val firstDay = dateRange.toDate.withDayOfWeek(1)
         return CalendarWeek(
             firstDay = firstDay,
-            daysCount = dateRange.toDate.dayOfWeek
         )
     }
 
-    fun minusWeeks(from: CalendarWeek, subtractedWeeksCount: Int): CalendarWeek {
-        if (subtractedWeeksCount == 0) {
+    fun minusMonth(from: CalendarMonth, subtractedMonthsCount: Int): CalendarMonth {
+        if (subtractedMonthsCount == 0) {
             return from
         }
-        return CalendarWeek(firstDay = from.firstDay.minusWeeks(subtractedWeeksCount))
+        return getMonth(from.weeks.first().firstDay.minusMonths(subtractedMonthsCount))
     }
+
+    inner class CalendarMonth(
+        val weeks: List<CalendarWeek>
+    )
 
     inner class CalendarWeek(
         val firstDay: LocalDate,
-        val daysCount: Int = 7
     ) {
+        val daysCount: Int =
+            if (firstDay.weekyear == dateRange.toDate.weekyear
+                && firstDay.weekOfWeekyear == dateRange.toDate.weekOfWeekyear
+            ) dateRange.toDate.dayOfWeek
+            else 7
+
         fun getDay(index: Int): CalendarDay {
-            return CalendarDay(this, firstDay.plusDays(index))
+            return CalendarDay(firstDay.plusDays(index))
+        }
+
+        override fun toString(): String {
+            return "firstDay=$firstDay"
         }
     }
 
     inner class CalendarDay(
-        val week: CalendarWeek,
         val date: LocalDate
     ) {
         /**
@@ -63,4 +100,4 @@ data class DateRange(
 )
 
 const val DaysInWeek: Int = 7
-const val WeeksInYear: Int = 52
+const val MonthsInYear: Int = 12

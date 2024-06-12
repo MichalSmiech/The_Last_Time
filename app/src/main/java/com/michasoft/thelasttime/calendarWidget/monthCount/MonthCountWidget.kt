@@ -3,7 +3,7 @@ package com.michasoft.thelasttime.calendarWidget.monthCount
 import android.content.res.Configuration
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.snapping.rememberSnapFlingBehavior
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -31,8 +31,10 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.times
 import com.michasoft.thelasttime.util.convertFloatRange
+import com.michasoft.thelasttime.util.rememberEndSnapFlingBehavior
 import com.michasoft.thelasttime.view.theme.AppTheme
 import org.joda.time.LocalDate
+import java.util.Locale
 
 @Composable
 fun MonthCountWidget(
@@ -73,13 +75,13 @@ private fun Legend() {
         horizontalArrangement = Arrangement.spacedBy(4.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(text = "Less")
+        Text(text = "Less", color = MaterialTheme.colorScheme.outline)
         Day(normalizeValue = 0f)
         Day(normalizeValue = 0.25f)
         Day(normalizeValue = 0.5f)
         Day(normalizeValue = 0.75f)
         Day(normalizeValue = 1f)
-        Text(text = "More")
+        Text(text = "More", color = MaterialTheme.colorScheme.outline)
     }
 }
 
@@ -87,8 +89,8 @@ private fun Legend() {
 @Composable
 private fun Content(calendarModel: CalendarModel) {
     val listState = rememberLazyListState()
-    val lastWeek = remember(calendarModel) {
-        calendarModel.getLastWeek()
+    val lastMonth = remember(calendarModel) {
+        calendarModel.getLastMonth()
     }
     val padding = 4.dp
     LazyRow(
@@ -96,16 +98,37 @@ private fun Content(calendarModel: CalendarModel) {
             horizontalScrollAxisRange = ScrollAxisRange(value = { 0f }, maxValue = { 0f })
         },
         state = listState,
-        flingBehavior = rememberSnapFlingBehavior(listState),
+        flingBehavior = rememberEndSnapFlingBehavior(listState),
         reverseLayout = true,
         horizontalArrangement = Arrangement.spacedBy(padding)
     ) {
-        items(calendarModel.totalWeeksInRange) {
-            val week = calendarModel.minusWeeks(
-                from = lastWeek,
-                subtractedWeeksCount = it
+        items(calendarModel.totalMonthsInRange) {
+            val month = calendarModel.minusMonth(
+                from = lastMonth,
+                subtractedMonthsCount = it
             )
-            Week(padding = padding, week = week)
+            Month(padding = padding, month = month)
+        }
+    }
+}
+
+@Composable
+private fun Month(
+    modifier: Modifier = Modifier,
+    padding: Dp,
+    month: CalendarModel.CalendarMonth
+) {
+    Column(modifier = modifier) {
+        Text(
+            text = if (month.weeks.size >= 2) month.weeks.first().firstDay.toString("MMM", Locale.ENGLISH) else "",
+            color = MaterialTheme.colorScheme.outline
+        )
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(padding)
+        ) {
+            month.weeks.forEach {
+                Week(padding = padding, week = it)
+            }
         }
     }
 }
@@ -131,6 +154,7 @@ private fun Day(day: CalendarModel.CalendarDay) {
     Day(normalizeValue = day.getNormalizeValue())
 }
 
+
 @Composable
 private fun Day(normalizeValue: Float) {
     val value = convertFloatRange(normalizeValue, 0f, 1f, 0.25f, 1f)
@@ -139,17 +163,34 @@ private fun Day(normalizeValue: Float) {
     } else {
         MaterialTheme.colorScheme.primary.copy(alpha = value)
     }
+    val shape = RoundedCornerShape(3.dp)
     Box(
         modifier = Modifier
             .size(DaySize)
             .background(
                 color = color,
-                shape = RoundedCornerShape(4.dp)
+                shape = shape
             )
+            .border(1.dp, MaterialTheme.colorScheme.onSurface.copy(alpha = 0.10f), shape = shape)
     )
 }
 
 @Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+private fun MonthCountWidgetPreviewNight() {
+    AppTheme {
+        MonthCountWidget(
+            calendarModel = CalendarModel(
+                DateRange(
+                    LocalDate.now().minusYears(1),
+                    LocalDate.now().minusDays(2)
+                )
+            )
+        )
+    }
+}
+
+@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_NO)
 @Composable
 private fun MonthCountWidgetPreview() {
     AppTheme {

@@ -79,7 +79,7 @@ class EventListActivity : UserSessionActivity() {
                             LocalDate.now().minusYears(1),
                             LocalDate.now()
                         )
-                    )
+                    ),
                 )
 //                EventListScreen(viewModel, bottomSheetState, drawerState)
             }
