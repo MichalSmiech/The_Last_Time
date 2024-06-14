@@ -38,32 +38,44 @@ import java.util.Locale
 
 @Composable
 fun MonthCountWidget(
+    modifier: Modifier = Modifier,
+    title: String,
     calendarModel: CalendarModel
 ) {
-    Container(title = "Activity") {
+    Container(modifier = modifier, title = title) {
         Content(calendarModel = calendarModel)
     }
 }
 
 @Composable
 private fun Container(
+    modifier: Modifier,
     title: String,
     content: @Composable () -> Unit
 ) {
-    Surface {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp),
+    Column(
+        modifier = modifier.fillMaxWidth()
+    ) {
+        Text(text = title, style = MaterialTheme.typography.titleMedium)
+        Spacer(modifier = Modifier.height(2.dp))
+        Box(
+            modifier = Modifier.border(
+                1.dp,
+                color = MaterialTheme.colorScheme.outline,
+                shape = RoundedCornerShape(8.dp)
+            )
         ) {
-            Text(text = title)
-            content()
-            Spacer(modifier = Modifier.height(8.dp))
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.End
+            Column(
+                modifier = Modifier.padding(16.dp)
             ) {
-                Legend()
+                content()
+                Spacer(modifier = Modifier.height(8.dp))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.End
+                ) {
+                    Legend()
+                }
             }
         }
     }
@@ -179,14 +191,19 @@ private fun Day(normalizeValue: Float) {
 @Composable
 private fun MonthCountWidgetPreviewNight() {
     AppTheme {
-        MonthCountWidget(
-            calendarModel = CalendarModel(
-                DateRange(
-                    LocalDate.now().minusYears(1),
-                    LocalDate.now().minusDays(2)
+        Surface {
+            MonthCountWidget(
+                modifier = Modifier.padding(horizontal = 16.dp),
+                title = "Activity",
+                calendarModel = CalendarModel(
+                    DateRange(
+                        LocalDate.now().minusYears(1),
+                        LocalDate.now().minusDays(2)
+                    ),
+                    dayValueProvider = RandomDayValueProvider()
                 )
             )
-        )
+        }
     }
 }
 
@@ -194,14 +211,19 @@ private fun MonthCountWidgetPreviewNight() {
 @Composable
 private fun MonthCountWidgetPreview() {
     AppTheme {
-        MonthCountWidget(
-            calendarModel = CalendarModel(
-                DateRange(
-                    LocalDate.now().minusYears(1),
-                    LocalDate.now().minusDays(2)
+        Surface {
+            MonthCountWidget(
+                modifier = Modifier.padding(horizontal = 16.dp),
+                title = "Activity",
+                calendarModel = CalendarModel(
+                    DateRange(
+                        LocalDate.now().minusYears(1),
+                        LocalDate.now().minusDays(2)
+                    ),
+                    dayValueProvider = RandomDayValueProvider()
                 )
             )
-        )
+        }
     }
 }
 

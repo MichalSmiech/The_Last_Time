@@ -40,9 +40,6 @@ import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityOptionsCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
-import com.michasoft.thelasttime.calendarWidget.monthCount.CalendarModel
-import com.michasoft.thelasttime.calendarWidget.monthCount.DateRange
-import com.michasoft.thelasttime.calendarWidget.monthCount.MonthCountWidget
 import com.michasoft.thelasttime.eventAdd.EventAddActivity
 import com.michasoft.thelasttime.eventDetails.EventDetailsActivity
 import com.michasoft.thelasttime.eventInstanceAdd.EventInstanceAddBottomSheet
@@ -58,7 +55,6 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
-import org.joda.time.LocalDate
 
 class EventListActivity : UserSessionActivity() {
     private val viewModel by viewModels<EventListViewModel>(factoryProducer = {
@@ -73,15 +69,7 @@ class EventListActivity : UserSessionActivity() {
             )
             val drawerState = rememberDrawerState(DrawerValue.Closed)
             AppTheme(window = window) {
-                MonthCountWidget(
-                    calendarModel = CalendarModel(
-                        DateRange(
-                            LocalDate.now().minusYears(1),
-                            LocalDate.now()
-                        )
-                    ),
-                )
-//                EventListScreen(viewModel, bottomSheetState, drawerState)
+                EventListScreen(viewModel, bottomSheetState, drawerState)
             }
             val coroutineScope = rememberCoroutineScope()
             LaunchedEffect(Unit) {

@@ -1,24 +1,29 @@
 package com.michasoft.thelasttime.calendarWidget.monthCount
 
 import org.joda.time.LocalDate
-import kotlin.math.absoluteValue
-import kotlin.random.Random
 
 data class CalendarModel(
     val dateRange: DateRange,
+    val dayValueProvider: DayValueProvider
 ) {
     val totalMonthsInRange: Int = calculateTotalMonthsInRange(dateRange)
+    val monthsMap = mutableMapOf<Int, CalendarMonth>()
+    val dayValues = mutableMapOf<LocalDate, Float>()
+
+    init {
+//        val startDate = dateRange.fromData.
+    }
 
     private fun calculateTotalMonthsInRange(dateRange: DateRange): Int {
         val fromData = dateRange.fromData.withDayOfWeek(1)
-        val toDate = dateRange.toDate.withDayOfWeek(1)
+        val toDate = dateRange.toDate
         if (fromData.year == toDate.year) {
             return toDate.monthOfYear - fromData.monthOfYear + 1
         }
         var months = 0
         months += MonthsInYear - fromData.monthOfYear + 1
-        months += MonthsInYear * (toDate.monthOfYear - fromData.monthOfYear)
-        months += MonthsInYear - toDate.monthOfYear + 1
+        months += MonthsInYear * (toDate.year - fromData.year)
+        months += toDate.monthOfYear
         return months
     }
 
@@ -57,7 +62,7 @@ data class CalendarModel(
         if (subtractedMonthsCount == 0) {
             return from
         }
-        return getMonth(from.weeks.first().firstDay.minusMonths(subtractedMonthsCount))
+        return getMonth(from.weeks.first().firstDay.minusMonths(subtractedMonthsCount).withDayOfMonth(1))
     }
 
     inner class CalendarMonth(
@@ -89,7 +94,7 @@ data class CalendarModel(
          * @return value between <0, 1>
          */
         fun getNormalizeValue(): Float {
-            return ((Random.nextInt().absoluteValue % 5).toFloat() / 4)
+            return 0f// dayValueProvider.getNormalizeValue(date)
         }
     }
 }

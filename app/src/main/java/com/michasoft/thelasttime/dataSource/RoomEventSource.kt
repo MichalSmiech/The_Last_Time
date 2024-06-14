@@ -20,6 +20,8 @@ import com.michasoft.thelasttime.storage.entity.eventInstanceField.EventInstance
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import org.joda.time.DateTime
+import org.joda.time.LocalDate
+import org.joda.time.LocalTime
 
 /**
  * Created by mśmiech on 05.09.2021.
@@ -223,6 +225,12 @@ class RoomEventSource(
             }
             hasNext = instanceIds.size.toLong() == limit
         }
+    }
+
+    override suspend fun getEventInstancesCount(eventId: String, date: LocalDate): Int {
+        val startTimestamp = date.toDateTime(LocalTime(0, 0, 0, 0))
+        val endTimestamp = date.plusDays(1).toDateTime(LocalTime(0, 0, 0, 0))
+        return eventDao.getEventInstancesCount(eventId, startTimestamp, endTimestamp)
     }
 
     override suspend fun insertEventInstance(instance: EventInstance) {

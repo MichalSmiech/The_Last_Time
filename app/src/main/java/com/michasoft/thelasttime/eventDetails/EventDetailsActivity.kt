@@ -55,9 +55,7 @@ class EventDetailsActivity : UserSessionActivity() {
     override fun onActivityCreate(savedInstanceState: Bundle?) {
         eventId = intent.getStringExtra(ARG_EVENT_ID) ?: throw IllegalStateException("No event id")
         setContent {
-            val bottomSheetState = rememberModalBottomSheetState(
-                skipPartiallyExpanded = true
-            )
+            val bottomSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
             var editReminderDialogShown by remember {
                 mutableStateOf(false)
             }

@@ -14,6 +14,7 @@ import com.michasoft.thelasttime.util.BackupConfig
 import com.michasoft.thelasttime.util.EventInstanceFactory
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
+import org.joda.time.LocalDate
 
 /**
  * Created by mśmiech on 01.11.2021.
@@ -138,5 +139,9 @@ class EventRepository(
 
     suspend fun getEventInstances(eventId: String): List<EventInstance> {
         return localEventSource.getAllEventInstancesAtOnce(eventId)
+    }
+
+    suspend fun getEventInstancesCount(eventId: String, date: LocalDate): Int {
+        return localEventSource.getEventInstancesCount(eventId, date)
     }
 }
