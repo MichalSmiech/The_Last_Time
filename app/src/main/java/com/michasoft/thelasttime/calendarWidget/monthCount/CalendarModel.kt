@@ -4,25 +4,28 @@ import org.joda.time.LocalDate
 
 data class CalendarModel(
     val dateRange: DateRange,
-    val dayValueProvider: DayValueProvider
+    val dateValueProvider: DateValueProvider
 ) {
     val totalMonthsInRange: Int = calculateTotalMonthsInRange(dateRange)
-    val monthsMap = mutableMapOf<Int, CalendarMonth>()
-    val dayValues = mutableMapOf<LocalDate, Float>()
+    private val dateValues = mutableMapOf<LocalDate, Float>()
 
-    init {
-//        val startDate = dateRange.fromData.
+    suspend fun initDateValues() {
+        var date = dateRange.fromData.withDayOfWeek(1)
+        while (date <= dateRange.toDate) {
+            dateValues[date] = dateValueProvider.getNormalizeValue(date)
+            date = date.plusDays(1)
+        }
     }
 
     private fun calculateTotalMonthsInRange(dateRange: DateRange): Int {
         val fromData = dateRange.fromData.withDayOfWeek(1)
-        val toDate = dateRange.toDate
+        val toDate = dateRange.toDate.withDayOfWeek(1)
         if (fromData.year == toDate.year) {
             return toDate.monthOfYear - fromData.monthOfYear + 1
         }
         var months = 0
         months += MonthsInYear - fromData.monthOfYear + 1
-        months += MonthsInYear * (toDate.year - fromData.year)
+        months += MonthsInYear * (toDate.year - fromData.year - 1)
         months += toDate.monthOfYear
         return months
     }
@@ -39,13 +42,14 @@ data class CalendarModel(
         } else {
             firstDayOfMonth
         }
-
-        val weeks = mutableListOf(CalendarWeek(firstDayOfFirstWeek))
-
-        var week = CalendarWeek(weeks.first().firstDay.plusWeeks(1))
+        val weeks = mutableListOf<CalendarWeek>()
+        var week = CalendarWeek(firstDayOfFirstWeek)
+        val firstWeek = getFirstWeek()
         val lastWeek = getLastWeek()
         while (week.firstDay.monthOfYear == firstDayOfMonth.monthOfYear && !week.firstDay.isAfter(lastWeek.firstDay)) {
-            weeks.add(week)
+            if (week.firstDay >= firstWeek.firstDay) {
+                weeks.add(week)
+            }
             week = CalendarWeek(week.firstDay.plusWeeks(1))
         }
         return CalendarMonth(weeks)
@@ -53,9 +57,12 @@ data class CalendarModel(
 
     private fun getLastWeek(): CalendarWeek {
         val firstDay = dateRange.toDate.withDayOfWeek(1)
-        return CalendarWeek(
-            firstDay = firstDay,
-        )
+        return CalendarWeek(firstDay = firstDay)
+    }
+
+    private fun getFirstWeek(): CalendarWeek {
+        val firstDay = dateRange.fromData.withDayOfWeek(1)
+        return CalendarWeek(firstDay = firstDay)
     }
 
     fun minusMonth(from: CalendarMonth, subtractedMonthsCount: Int): CalendarMonth {
@@ -94,7 +101,7 @@ data class CalendarModel(
          * @return value between <0, 1>
          */
         fun getNormalizeValue(): Float {
-            return 0f// dayValueProvider.getNormalizeValue(date)
+            return dateValues[date] ?: throw IllegalStateException("date not exists in dateValues (date=$date)")
         }
     }
 }
@@ -102,7 +109,13 @@ data class CalendarModel(
 data class DateRange(
     val fromData: LocalDate,
     val toDate: LocalDate
-)
+) {
+    init {
+        if (fromData >= toDate) {
+            throw IllegalArgumentException("fromData >= toDate! (fromData=${fromData}, toDate=$toDate)")
+        }
+    }
+}
 
 const val DaysInWeek: Int = 7
 const val MonthsInYear: Int = 12

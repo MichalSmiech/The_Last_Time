@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.times
 import com.michasoft.thelasttime.util.convertFloatRange
 import com.michasoft.thelasttime.util.rememberEndSnapFlingBehavior
 import com.michasoft.thelasttime.view.theme.AppTheme
+import kotlinx.coroutines.runBlocking
 import org.joda.time.LocalDate
 import java.util.Locale
 
@@ -200,8 +201,8 @@ private fun MonthCountWidgetPreviewNight() {
                         LocalDate.now().minusYears(1),
                         LocalDate.now().minusDays(2)
                     ),
-                    dayValueProvider = RandomDayValueProvider()
-                )
+                    dateValueProvider = RandomDateValueProvider()
+                ).apply { runBlocking { initDateValues() } }
             )
         }
     }
@@ -220,8 +221,8 @@ private fun MonthCountWidgetPreview() {
                         LocalDate.now().minusYears(1),
                         LocalDate.now().minusDays(2)
                     ),
-                    dayValueProvider = RandomDayValueProvider()
-                )
+                    dateValueProvider = RandomDateValueProvider()
+                ).apply { runBlocking { initDateValues() } }
             )
         }
     }

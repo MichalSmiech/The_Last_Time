@@ -4,11 +4,11 @@ import org.joda.time.LocalDate
 import kotlin.math.absoluteValue
 import kotlin.random.Random
 
-fun interface DayValueProvider {
+fun interface DateValueProvider {
     suspend fun getNormalizeValue(date: LocalDate): Float
 }
 
-class RandomDayValueProvider : DayValueProvider {
+class RandomDateValueProvider : DateValueProvider {
     override suspend fun getNormalizeValue(date: LocalDate): Float {
         return ((Random.nextInt().absoluteValue % 5).toFloat() / 4)
     }

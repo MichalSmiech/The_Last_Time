@@ -2,7 +2,6 @@ package com.michasoft.thelasttime.calendarWidget.monthCount
 
 import org.joda.time.LocalDate
 import org.junit.Assert.assertEquals
-import org.junit.Ignore
 import org.junit.Test
 
 class CalendarModelTest {
@@ -14,7 +13,7 @@ class CalendarModelTest {
         toDate: LocalDate
     ) {
         dateRange = DateRange(fromData, toDate)
-        calendarModel = CalendarModel(dateRange, dayValueProvider = { 1f })
+        calendarModel = CalendarModel(dateRange, dateValueProvider = { 1f })
     }
 
     @Test
@@ -84,6 +83,28 @@ class CalendarModelTest {
     }
 
     @Test
+    fun totalMonthsInRange_6() {
+        setupCalendarModel(
+            fromData = LocalDate(2023, 12, 25),
+            toDate = LocalDate(2024, 1, 1),
+        )
+        val totalMonthsInRange = calendarModel.totalMonthsInRange
+
+        assertEquals(2, totalMonthsInRange)
+    }
+
+    @Test
+    fun totalMonthsInRange_7() {
+        setupCalendarModel(
+            fromData = LocalDate(2023, 1, 1),
+            toDate = LocalDate(2024, 1, 1),
+        )
+        val totalMonthsInRange = calendarModel.totalMonthsInRange
+
+        assertEquals(14, totalMonthsInRange)
+    }
+
+    @Test
     fun minusMonth_1() {
         setupCalendarModel(
             fromData = LocalDate(2023, 6, 27),
@@ -118,8 +139,8 @@ class CalendarModelTest {
         val firstMonth = calendarModel.minusMonth(lastMonth, totalMonthsInRange - 1)
 
         assertEquals(
-            dateRange.fromData.monthOfYear,
-            firstMonth.weeks.first().firstDay.plusDays(DaysInWeek - 1).monthOfYear
+            dateRange.fromData.withDayOfWeek(1).monthOfYear,
+            firstMonth.weeks.first().firstDay.monthOfYear
         )
     }
 
@@ -145,10 +166,10 @@ class CalendarModelTest {
         val lastMonth = calendarModel.getLastMonth()
 
         val weeks = mutableListOf<CalendarModel.CalendarWeek>()
-        weeks.addAll(lastMonth.weeks)
-        for (i in 1 until calendarModel.totalMonthsInRange) {
+        for (i in calendarModel.totalMonthsInRange - 1 downTo 1) {
             weeks.addAll(calendarModel.minusMonth(lastMonth, i).weeks)
         }
+        weeks.addAll(lastMonth.weeks)
 
         val days = mutableSetOf<LocalDate>()
         weeks.forEach { week ->
@@ -160,15 +181,19 @@ class CalendarModelTest {
             }
         }
 
-        var day = dateRange.fromData
-        while (day < dateRange.toDate) {
+        var day = dateRange.fromData.withDayOfWeek(1)
+        while (day <= dateRange.toDate) {
             assert(day in days) { "day not exists $day" }
             day = day.plusDays(1)
+        }
+
+        val fromData = dateRange.fromData.withDayOfWeek(1)
+        days.forEach { day ->
+            assert(fromData <= day && day <= dateRange.toDate) { "day is out of range (day=$day)" }
         }
     }
 
     @Test
-    @Ignore
     fun firstDay() {
         setupCalendarModel(
             fromData = LocalDate(2023, 6, 27),
@@ -179,7 +204,7 @@ class CalendarModelTest {
         val firstMonth = calendarModel.minusMonth(lastMonth, totalMonthsInRange - 1)
 
         assertEquals(
-            dateRange.fromData,
+            dateRange.fromData.withDayOfWeek(1),
             firstMonth.weeks.first().firstDay
         )
     }
