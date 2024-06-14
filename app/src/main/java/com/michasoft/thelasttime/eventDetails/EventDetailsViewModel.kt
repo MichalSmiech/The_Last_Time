@@ -4,9 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
-import com.michasoft.thelasttime.calendarWidget.githubWidget.CalendarModel
-import com.michasoft.thelasttime.calendarWidget.githubWidget.ZeroDateValueProvider
 import com.michasoft.thelasttime.eventInstanceAdd.EventInstanceAddViewModel
+import com.michasoft.thelasttime.githubWidget.CalendarModel
+import com.michasoft.thelasttime.githubWidget.ZeroDateValueProvider
 import com.michasoft.thelasttime.model.DateRange
 import com.michasoft.thelasttime.permission.EnsurePostNotificationPermissionUseCase
 import com.michasoft.thelasttime.repo.EventRepository

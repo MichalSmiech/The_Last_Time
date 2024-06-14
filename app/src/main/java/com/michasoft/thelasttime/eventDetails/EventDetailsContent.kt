@@ -26,9 +26,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.michasoft.thelasttime.calendarWidget.githubWidget.CalendarModel
-import com.michasoft.thelasttime.calendarWidget.githubWidget.GithubWidget
-import com.michasoft.thelasttime.calendarWidget.githubWidget.RandomDateValueProvider
+import com.michasoft.thelasttime.githubWidget.CalendarModel
+import com.michasoft.thelasttime.githubWidget.GithubWidget
+import com.michasoft.thelasttime.githubWidget.RandomDateValueProvider
 import com.michasoft.thelasttime.model.DateRange
 import com.michasoft.thelasttime.model.Event
 import com.michasoft.thelasttime.model.EventInstance

@@ -1,4 +1,4 @@
-package com.michasoft.thelasttime.calendarWidget.githubWidget
+package com.michasoft.thelasttime.githubWidget
 
 import android.content.res.Configuration
 import androidx.compose.foundation.background

@@ -1,6 +1,6 @@
 package com.michasoft.thelasttime.eventDetails
 
-import com.michasoft.thelasttime.calendarWidget.githubWidget.DateValueProvider
+import com.michasoft.thelasttime.githubWidget.DateValueProvider
 import com.michasoft.thelasttime.model.DateRange
 import com.michasoft.thelasttime.repo.EventRepository
 import org.joda.time.LocalDate

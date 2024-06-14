@@ -1,4 +1,4 @@
-package com.michasoft.thelasttime.calendarWidget.githubWidget
+package com.michasoft.thelasttime.githubWidget
 
 import org.joda.time.LocalDate
 import kotlin.math.absoluteValue

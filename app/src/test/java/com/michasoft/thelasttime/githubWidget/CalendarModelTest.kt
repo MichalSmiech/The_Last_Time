@@ -1,4 +1,4 @@
-package com.michasoft.thelasttime.calendarWidget.githubWidget
+package com.michasoft.thelasttime.githubWidget
 
 import com.michasoft.thelasttime.model.DateRange
 import org.joda.time.LocalDate

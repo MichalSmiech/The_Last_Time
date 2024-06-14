@@ -1,6 +1,6 @@
 package com.michasoft.thelasttime.eventDetails
 
-import com.michasoft.thelasttime.calendarWidget.githubWidget.CalendarModel
+import com.michasoft.thelasttime.githubWidget.CalendarModel
 import com.michasoft.thelasttime.model.Event
 import com.michasoft.thelasttime.model.EventInstance
 import com.michasoft.thelasttime.model.Label
