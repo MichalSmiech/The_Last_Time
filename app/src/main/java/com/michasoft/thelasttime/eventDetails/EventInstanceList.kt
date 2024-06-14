@@ -22,11 +22,12 @@ import com.michasoft.thelasttime.util.periodText
  */
 @Composable
 fun EventInstanceList(
+    modifier: Modifier = Modifier,
     instances: List<EventInstance>,
     onEventInstanceClick: (String) -> Unit
 ) {
     LazyColumn(
-        modifier = Modifier.padding(vertical = 8.dp),
+        modifier = modifier,
     ) {
         items(instances) {
             EventInstanceItem(it, onEventInstanceClick)

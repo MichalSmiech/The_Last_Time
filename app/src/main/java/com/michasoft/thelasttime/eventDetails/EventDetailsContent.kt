@@ -10,12 +10,12 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material.icons.outlined.Repeat
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.InputChipDefaults
 import androidx.compose.material3.MaterialTheme
@@ -26,6 +26,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.michasoft.thelasttime.calendarWidget.githubWidget.CalendarModel
+import com.michasoft.thelasttime.calendarWidget.githubWidget.GithubWidget
+import com.michasoft.thelasttime.calendarWidget.githubWidget.RandomDateValueProvider
+import com.michasoft.thelasttime.model.DateRange
 import com.michasoft.thelasttime.model.Event
 import com.michasoft.thelasttime.model.EventInstance
 import com.michasoft.thelasttime.model.EventInstanceField
@@ -33,7 +37,10 @@ import com.michasoft.thelasttime.model.EventInstanceSchema
 import com.michasoft.thelasttime.model.Label
 import com.michasoft.thelasttime.model.reminder.Reminder
 import com.michasoft.thelasttime.model.reminder.SingleReminder
+import com.michasoft.thelasttime.view.theme.AppTheme
+import kotlinx.coroutines.runBlocking
 import org.joda.time.DateTime
+import org.joda.time.LocalDate
 
 /**
  * Created by mśmiech on 21.09.2023.
@@ -45,6 +52,7 @@ fun EventDetailsContent(
     eventInstances: List<EventInstance>,
     reminders: List<Reminder>,
     labels: List<Label>,
+    activityCalendarModel: CalendarModel,
     onEventInstanceClick: (String) -> Unit,
     onLabelClick: () -> Unit,
     onReminderClick: (String) -> Unit,
@@ -65,11 +73,20 @@ fun EventDetailsContent(
                 }
             }
         }
-        EventInstanceList(eventInstances, onEventInstanceClick)
+        Spacer(modifier = Modifier.height(8.dp))
+        GithubWidget(
+            modifier = Modifier.padding(horizontal = 16.dp),
+            title = "Activity",
+            calendarModel = activityCalendarModel
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        EventInstanceList(
+            instances = eventInstances,
+            onEventInstanceClick = onEventInstanceClick
+        )
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LabelItem(label: Label, onClick: () -> Unit) {
     Surface(
@@ -91,7 +108,6 @@ fun LabelItem(label: Label, onClick: () -> Unit) {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ReminderItem(reminder: Reminder, onClick: (String) -> Unit) {
     Surface(
@@ -178,20 +194,29 @@ fun EventDetailsContentPreview() {
     )
     val reminder =
         SingleReminder("", "", DateTime.now().plusHours(-1), DateTime.now().plusHours(1), reshowEnabled = true)
-    EventDetailsContent(
-        event = event,
-        eventInstances = eventInstances,
-        reminders = listOf(reminder),
-        labels = listOf(
-            Label("", "work"),
-            Label("", "home"),
-            Label("", "gym"),
-            Label("", "gym"),
-            Label("", "gym"),
-            Label("", "gym"),
-        ),
-        onReminderClick = {},
-        onLabelClick = {},
-        onEventInstanceClick = {}
-    )
+    AppTheme {
+        EventDetailsContent(
+            event = event,
+            eventInstances = eventInstances,
+            reminders = listOf(reminder),
+            labels = listOf(
+                Label("", "work"),
+                Label("", "home"),
+                Label("", "gym"),
+                Label("", "gym"),
+                Label("", "gym"),
+                Label("", "gym"),
+            ),
+            onReminderClick = {},
+            onLabelClick = {},
+            activityCalendarModel = CalendarModel(
+                DateRange(
+                    LocalDate.now().minusYears(1),
+                    LocalDate.now()
+                ),
+                dateValueProvider = RandomDateValueProvider()
+            ).apply { runBlocking { initDateValues() } },
+            onEventInstanceClick = {}
+        )
+    }
 }

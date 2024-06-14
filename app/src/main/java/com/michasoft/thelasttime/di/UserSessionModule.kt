@@ -6,6 +6,7 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
+import com.michasoft.thelasttime.cache.EventInstancesCountCache
 import com.michasoft.thelasttime.dataSource.FirestoreEventSource
 import com.michasoft.thelasttime.dataSource.ILocalEventSource
 import com.michasoft.thelasttime.dataSource.IRemoteEventSource
@@ -125,7 +126,8 @@ class UserSessionModule {
         syncJobQueue: SyncJobQueue,
         syncJobQueueCoordinator: SyncJobQueueCoordinator,
         localReminderSource: RoomReminderSource,
-        localLabelSource: RoomLabelSource
+        localLabelSource: RoomLabelSource,
+        eventInstancesCountCache: EventInstancesCountCache
     ): EventRepository {
         return EventRepository(
             localSource,
@@ -133,7 +135,8 @@ class UserSessionModule {
             syncJobQueue,
             syncJobQueueCoordinator,
             localReminderSource,
-            localLabelSource
+            localLabelSource,
+            eventInstancesCountCache
         )
     }
 

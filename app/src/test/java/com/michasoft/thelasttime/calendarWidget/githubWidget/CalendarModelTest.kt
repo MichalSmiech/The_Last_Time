@@ -1,5 +1,6 @@
-package com.michasoft.thelasttime.calendarWidget.monthCount
+package com.michasoft.thelasttime.calendarWidget.githubWidget
 
+import com.michasoft.thelasttime.model.DateRange
 import org.joda.time.LocalDate
 import org.junit.Assert.assertEquals
 import org.junit.Test
@@ -209,5 +210,3 @@ class CalendarModelTest {
         )
     }
 }
-
-const val DaysInWeek: Int = 7

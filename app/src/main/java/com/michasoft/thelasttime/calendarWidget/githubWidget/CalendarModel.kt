@@ -1,5 +1,6 @@
-package com.michasoft.thelasttime.calendarWidget.monthCount
+package com.michasoft.thelasttime.calendarWidget.githubWidget
 
+import com.michasoft.thelasttime.model.DateRange
 import org.joda.time.LocalDate
 
 data class CalendarModel(
@@ -102,17 +103,6 @@ data class CalendarModel(
          */
         fun getNormalizeValue(): Float {
             return dateValues[date] ?: throw IllegalStateException("date not exists in dateValues (date=$date)")
-        }
-    }
-}
-
-data class DateRange(
-    val fromData: LocalDate,
-    val toDate: LocalDate
-) {
-    init {
-        if (fromData >= toDate) {
-            throw IllegalArgumentException("fromData >= toDate! (fromData=${fromData}, toDate=$toDate)")
         }
     }
 }

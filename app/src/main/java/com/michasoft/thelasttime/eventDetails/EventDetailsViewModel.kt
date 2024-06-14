@@ -4,7 +4,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
+import com.michasoft.thelasttime.calendarWidget.githubWidget.CalendarModel
+import com.michasoft.thelasttime.calendarWidget.githubWidget.ZeroDateValueProvider
 import com.michasoft.thelasttime.eventInstanceAdd.EventInstanceAddViewModel
+import com.michasoft.thelasttime.model.DateRange
 import com.michasoft.thelasttime.permission.EnsurePostNotificationPermissionUseCase
 import com.michasoft.thelasttime.repo.EventRepository
 import com.michasoft.thelasttime.repo.LabelRepository
@@ -21,6 +24,8 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import org.joda.time.LocalDate
 import javax.inject.Inject
 
 /**
@@ -34,10 +39,12 @@ class EventDetailsViewModel(
     private val insertEventInstanceUseCase: InsertEventInstanceUseCase,
     private val ensurePostNotificationPermissionUseCase: EnsurePostNotificationPermissionUseCase,
     private val deleteEventUseCase: DeleteEventUseCase,
-    private val labelRepository: LabelRepository
+    private val labelRepository: LabelRepository,
+    private val eventInstanceCountDateValueProviderFactory: EventInstanceCountDateValueProvider.Factory
 ) : ViewModel() {
     private val _actions: MutableSharedFlow<EventDetailsAction> = MutableSharedFlow()
     val actions: SharedFlow<EventDetailsAction> = _actions
+    private val activityCalendarModelDateRange = DateRange(LocalDate.now().minusYears(1), LocalDate.now())
     val state = MutableStateFlow(
         EventDetailsState(
             isLoading = true,
@@ -46,7 +53,11 @@ class EventDetailsViewModel(
             isDeleteConfirmationDialogShowing = false,
             isBottomSheetShowing = false,
             reminders = emptyList(),
-            labels = emptyList()
+            labels = emptyList(),
+            activityCalendarModel = CalendarModel(
+                dateRange = activityCalendarModelDateRange,
+                dateValueProvider = ZeroDateValueProvider()
+            ).apply { runBlocking { initDateValues() } }
         )
     )
     private val eventNameChanges = MutableSharedFlow<String>()
@@ -66,7 +77,14 @@ class EventDetailsViewModel(
         }.launchIn(viewModelScope)
 
         eventRepository.eventsChanged.onEach {
-            setupEvent()
+            if (eventId == it) {
+                viewModelScope.launch {
+                    setupEvent()
+                }
+                viewModelScope.launch {
+                    setupActivityCalendarModel()
+                }
+            }
         }.launchIn(viewModelScope)
 
         reminderRepository.remindersChanged.onEach {
@@ -106,6 +124,19 @@ class EventDetailsViewModel(
         }
     }
 
+    private suspend fun setupActivityCalendarModel() {
+        val activityCalendarModel = CalendarModel(
+            dateRange = activityCalendarModelDateRange,
+            dateValueProvider = eventInstanceCountDateValueProviderFactory.create(
+                eventId,
+                activityCalendarModelDateRange
+            )
+        ).apply { initDateValues() }
+        state.update {
+            it.copy(activityCalendarModel = activityCalendarModel)
+        }
+    }
+
     fun changeName(name: String) {
         state.update {
             it.copy(event = it.event!!.copy(name = name))
@@ -132,6 +163,9 @@ class EventDetailsViewModel(
             setupEvent()
             setupReminders()
             setupLabels()
+        }
+        viewModelScope.launch {
+            setupActivityCalendarModel()
         }
     }
 
@@ -208,6 +242,9 @@ class EventDetailsViewModel(
         @Inject
         lateinit var labelRepository: LabelRepository
 
+        @Inject
+        lateinit var eventInstanceCountDateValueProviderFactory: EventInstanceCountDateValueProvider.Factory
+
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(
             modelClass: Class<T>,
@@ -223,7 +260,8 @@ class EventDetailsViewModel(
                 insertEventInstanceUseCase,
                 ensurePostNotificationPermissionUseCase,
                 deleteEventUseCase,
-                labelRepository
+                labelRepository,
+                eventInstanceCountDateValueProviderFactory
             ) as T
         }
     }

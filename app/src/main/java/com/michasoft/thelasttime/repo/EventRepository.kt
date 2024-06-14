@@ -1,8 +1,10 @@
 package com.michasoft.thelasttime.repo
 
+import com.michasoft.thelasttime.cache.EventInstancesCountCache
 import com.michasoft.thelasttime.dataSource.ILocalEventSource
 import com.michasoft.thelasttime.dataSource.RoomLabelSource
 import com.michasoft.thelasttime.dataSource.RoomReminderSource
+import com.michasoft.thelasttime.model.DateRange
 import com.michasoft.thelasttime.model.Event
 import com.michasoft.thelasttime.model.EventInstance
 import com.michasoft.thelasttime.model.SyncJobQueue
@@ -12,9 +14,13 @@ import com.michasoft.thelasttime.model.syncJob.EventSyncJob
 import com.michasoft.thelasttime.model.syncJob.SyncJob
 import com.michasoft.thelasttime.util.BackupConfig
 import com.michasoft.thelasttime.util.EventInstanceFactory
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.launch
 import org.joda.time.LocalDate
+import kotlin.math.max
 
 /**
  * Created by mśmiech on 01.11.2021.
@@ -25,10 +31,26 @@ class EventRepository(
     private val syncJobQueue: SyncJobQueue,
     private val syncJobQueueCoordinator: SyncJobQueueCoordinator,
     private val localReminderSource: RoomReminderSource,
-    private val localLabelSource: RoomLabelSource
+    private val localLabelSource: RoomLabelSource,
+    private val eventInstancesCountCache: EventInstancesCountCache
 ) {
-    private val _eventsChanged: MutableSharedFlow<Unit> = MutableSharedFlow()
-    val eventsChanged: SharedFlow<Unit> = _eventsChanged
+    /**
+     * eventId
+     */
+    private val _eventsChanged: MutableSharedFlow<String> = MutableSharedFlow()
+
+    /**
+     * eventId
+     */
+    val eventsChanged: SharedFlow<String> = _eventsChanged
+
+    init {
+        CoroutineScope(Dispatchers.IO).launch {
+            eventsChanged.collect { eventId ->
+                eventInstancesCountCache.invalid(eventId)
+            }
+        }
+    }
 
     suspend fun insertEvent(event: Event) {
         localEventSource.insertEvent(event)
@@ -37,7 +59,7 @@ class EventRepository(
             syncJobQueue.add(syncJob)
             syncJobQueueCoordinator.triggerSync()
         }
-        _eventsChanged.emit(Unit)
+        _eventsChanged.emit(event.id)
     }
 
     suspend fun getEvent(eventId: String): Event? {
@@ -56,7 +78,7 @@ class EventRepository(
             syncJobQueue.add(syncJob)
             syncJobQueueCoordinator.triggerSync()
         }
-        _eventsChanged.emit(Unit)
+        _eventsChanged.emit(eventId)
     }
 
     suspend fun getEvents(
@@ -87,7 +109,7 @@ class EventRepository(
             syncJobQueue.add(syncJob)
             syncJobQueueCoordinator.triggerSync()
         }
-        _eventsChanged.emit(Unit)
+        _eventsChanged.emit(event.id)
     }
 
     suspend fun updateEventInstance(instance: EventInstance) {
@@ -101,7 +123,7 @@ class EventRepository(
             syncJobQueue.add(syncJob)
             syncJobQueueCoordinator.triggerSync()
         }
-        _eventsChanged.emit(Unit)
+        _eventsChanged.emit(instance.eventId)
     }
 
     suspend fun deleteEvent(eventId: String) {
@@ -111,7 +133,7 @@ class EventRepository(
             syncJobQueue.add(syncJob)
             syncJobQueueCoordinator.triggerSync()
         }
-        _eventsChanged.emit(Unit)
+        _eventsChanged.emit(eventId)
     }
 
     suspend fun insertEventInstance(instance: EventInstance) {
@@ -125,7 +147,7 @@ class EventRepository(
             syncJobQueue.add(syncJob)
             syncJobQueueCoordinator.triggerSync()
         }
-        _eventsChanged.emit(Unit)
+        _eventsChanged.emit(instance.eventId)
     }
 
     suspend fun getEventInstance(eventId: String, instanceId: String): EventInstance? {
@@ -142,6 +164,15 @@ class EventRepository(
     }
 
     suspend fun getEventInstancesCount(eventId: String, date: LocalDate): Int {
-        return localEventSource.getEventInstancesCount(eventId, date)
+        return eventInstancesCountCache.getEventInstancesCount(eventId, date)
+    }
+
+    suspend fun getMaxEventInstancesCountInDateRange(eventId: String, dateRange: DateRange): Int {
+        var maxValue = 0
+        dateRange.getDates().forEach { date ->
+            val value = eventInstancesCountCache.getEventInstancesCount(eventId, date)
+            maxValue = max(maxValue, value)
+        }
+        return maxValue
     }
 }

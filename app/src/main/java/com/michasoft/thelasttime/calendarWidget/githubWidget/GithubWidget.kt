@@ -1,7 +1,6 @@
-package com.michasoft.thelasttime.calendarWidget.monthCount
+package com.michasoft.thelasttime.calendarWidget.githubWidget
 
 import android.content.res.Configuration
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -30,15 +29,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.times
+import com.michasoft.thelasttime.model.DateRange
 import com.michasoft.thelasttime.util.convertFloatRange
-import com.michasoft.thelasttime.util.rememberEndSnapFlingBehavior
 import com.michasoft.thelasttime.view.theme.AppTheme
 import kotlinx.coroutines.runBlocking
 import org.joda.time.LocalDate
 import java.util.Locale
 
 @Composable
-fun MonthCountWidget(
+fun GithubWidget(
     modifier: Modifier = Modifier,
     title: String,
     calendarModel: CalendarModel
@@ -98,7 +97,6 @@ private fun Legend() {
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun Content(calendarModel: CalendarModel) {
     val listState = rememberLazyListState()
@@ -111,7 +109,6 @@ private fun Content(calendarModel: CalendarModel) {
             horizontalScrollAxisRange = ScrollAxisRange(value = { 0f }, maxValue = { 0f })
         },
         state = listState,
-        flingBehavior = rememberEndSnapFlingBehavior(listState),
         reverseLayout = true,
         horizontalArrangement = Arrangement.spacedBy(padding)
     ) {
@@ -193,7 +190,7 @@ private fun Day(normalizeValue: Float) {
 private fun MonthCountWidgetPreviewNight() {
     AppTheme {
         Surface {
-            MonthCountWidget(
+            GithubWidget(
                 modifier = Modifier.padding(horizontal = 16.dp),
                 title = "Activity",
                 calendarModel = CalendarModel(
@@ -213,7 +210,7 @@ private fun MonthCountWidgetPreviewNight() {
 private fun MonthCountWidgetPreview() {
     AppTheme {
         Surface {
-            MonthCountWidget(
+            GithubWidget(
                 modifier = Modifier.padding(horizontal = 16.dp),
                 title = "Activity",
                 calendarModel = CalendarModel(
