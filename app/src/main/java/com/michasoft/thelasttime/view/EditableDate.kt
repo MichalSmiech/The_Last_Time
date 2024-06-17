@@ -34,10 +34,7 @@ fun EditableDate(
     val datePickerState = rememberDatePickerState(selectableDates = object : SelectableDates {
         override fun isSelectableDate(utcTimeMillis: Long): Boolean {
             return minDate?.let { minDate ->
-                !DateTime(
-                    date,
-                    DateTimeZone.UTC
-                ).isBefore(minDate.toDateTime(LocalTime.MIDNIGHT))
+                !DateTime(utcTimeMillis, DateTimeZone.UTC).isBefore(minDate.toDateTime(LocalTime.MIDNIGHT))
             } ?: true
         }
     })
