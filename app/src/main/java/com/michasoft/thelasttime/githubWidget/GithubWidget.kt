@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -42,7 +43,7 @@ fun GithubWidget(
     title: String,
     calendarModel: CalendarModel
 ) {
-    Container(modifier = modifier, title = title) {
+    Container(modifier = modifier, title = title, isLoading = calendarModel.isLoading) {
         Content(calendarModel = calendarModel)
     }
 }
@@ -51,6 +52,7 @@ fun GithubWidget(
 private fun Container(
     modifier: Modifier,
     title: String,
+    isLoading: Boolean,
     content: @Composable () -> Unit
 ) {
     Column(
@@ -75,6 +77,18 @@ private fun Container(
                     horizontalArrangement = Arrangement.End
                 ) {
                     Legend()
+                }
+            }
+            if (isLoading) {
+                Box(
+                    modifier = Modifier
+                        .matchParentSize()
+                        .background(
+                            MaterialTheme.colorScheme.scrim.copy(alpha = 0.3f),
+                            shape = RoundedCornerShape(8.dp)
+                        )
+                ) {
+                    CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
                 }
             }
         }

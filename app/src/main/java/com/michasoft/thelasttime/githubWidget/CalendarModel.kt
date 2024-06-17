@@ -5,7 +5,8 @@ import org.joda.time.LocalDate
 
 data class CalendarModel(
     val dateRange: DateRange,
-    val dateValueProvider: DateValueProvider
+    val dateValueProvider: DateValueProvider = ZeroDateValueProvider(),
+    val isLoading: Boolean = false
 ) {
     val totalMonthsInRange: Int = calculateTotalMonthsInRange(dateRange)
     private val dateValues = mutableMapOf<LocalDate, Float>()
