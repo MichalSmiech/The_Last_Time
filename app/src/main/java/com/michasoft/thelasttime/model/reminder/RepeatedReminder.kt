@@ -45,9 +45,6 @@ class RepeatedReminder(
                 nextTrigger = nextTrigger.plusDays(1).withTime(timeRange.start)
             }
         }
-        if (nextTrigger.isBeforeNow) {
-            return null
-        }
         return nextTrigger
     }
 
