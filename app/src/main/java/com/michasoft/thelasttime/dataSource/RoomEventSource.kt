@@ -20,12 +20,16 @@ import com.michasoft.thelasttime.storage.entity.eventInstanceField.EventInstance
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import org.joda.time.DateTime
+import org.joda.time.Hours
 import org.joda.time.LocalDate
 import org.joda.time.LocalTime
 
 /**
  * Created by mśmiech on 05.09.2021.
  */
+
+val START_OF_DAY = Hours.hours(4)
+
 class RoomEventSource(
     private val appDatabase: AppDatabase,
     private val eventDao: EventDao,
@@ -228,8 +232,10 @@ class RoomEventSource(
     }
 
     override suspend fun getEventInstancesCount(eventId: String, date: LocalDate): Int {
-        val startTimestamp = date.toDateTime(LocalTime(0, 0, 0, 0))
-        val endTimestamp = date.plusDays(1).toDateTime(LocalTime(0, 0, 0, 0))
+        val offset = START_OF_DAY
+        val time = LocalTime(0, 0, 0, 0).plus(offset)
+        val startTimestamp = date.toDateTime(time)
+        val endTimestamp = date.plusDays(1).toDateTime(time)
         return eventDao.getEventInstancesCount(eventId, startTimestamp, endTimestamp)
     }
 
