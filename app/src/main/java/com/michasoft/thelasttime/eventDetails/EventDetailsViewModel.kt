@@ -11,7 +11,6 @@ import com.michasoft.thelasttime.permission.EnsurePostNotificationPermissionUseC
 import com.michasoft.thelasttime.repo.EventRepository
 import com.michasoft.thelasttime.repo.LabelRepository
 import com.michasoft.thelasttime.repo.ReminderRepository
-import com.michasoft.thelasttime.useCase.DeleteEventUseCase
 import com.michasoft.thelasttime.useCase.InsertEventInstanceUseCase
 import com.michasoft.thelasttime.userSessionComponent
 import kotlinx.coroutines.FlowPreview

@@ -1,4 +1,4 @@
-package com.michasoft.thelasttime.useCase
+package com.michasoft.thelasttime.eventDetails
 
 import com.michasoft.thelasttime.repo.EventRepository
 import com.michasoft.thelasttime.repo.LabelRepository
