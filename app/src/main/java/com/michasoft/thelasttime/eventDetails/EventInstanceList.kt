@@ -4,7 +4,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -20,18 +20,12 @@ import com.michasoft.thelasttime.util.periodText
 /**
  * Created by mśmiech on 21.09.2023.
  */
-@Composable
-fun EventInstanceList(
-    modifier: Modifier = Modifier,
+fun LazyListScope.eventInstanceList(
     instances: List<EventInstance>,
     onEventInstanceClick: (String) -> Unit
 ) {
-    LazyColumn(
-        modifier = modifier,
-    ) {
-        items(instances) {
-            EventInstanceItem(it, onEventInstanceClick)
-        }
+    items(instances) {
+        EventInstanceItem(it, onEventInstanceClick)
     }
 }
 

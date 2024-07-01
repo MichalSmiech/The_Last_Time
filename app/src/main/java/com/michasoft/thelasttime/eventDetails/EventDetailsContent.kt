@@ -2,7 +2,6 @@ package com.michasoft.thelasttime.eventDetails
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
@@ -13,6 +12,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material.icons.outlined.Repeat
@@ -30,10 +31,8 @@ import com.michasoft.thelasttime.githubWidget.CalendarModel
 import com.michasoft.thelasttime.githubWidget.GithubWidget
 import com.michasoft.thelasttime.githubWidget.RandomDateValueProvider
 import com.michasoft.thelasttime.model.DateRange
-import com.michasoft.thelasttime.model.Event
 import com.michasoft.thelasttime.model.EventInstance
 import com.michasoft.thelasttime.model.EventInstanceField
-import com.michasoft.thelasttime.model.EventInstanceSchema
 import com.michasoft.thelasttime.model.Label
 import com.michasoft.thelasttime.model.reminder.Reminder
 import com.michasoft.thelasttime.model.reminder.SingleReminder
@@ -48,7 +47,6 @@ import org.joda.time.LocalDate
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun EventDetailsContent(
-    event: Event,
     eventInstances: List<EventInstance>,
     reminders: List<Reminder>,
     labels: List<Label>,
@@ -57,8 +55,42 @@ fun EventDetailsContent(
     onLabelClick: () -> Unit,
     onReminderClick: (String) -> Unit,
 ) {
-    Column(modifier = Modifier.fillMaxSize()) {
-        if (reminders.isNotEmpty() || labels.isNotEmpty()) {
+    LazyColumn(modifier = Modifier.fillMaxSize()) {
+        remindersAndLabels(
+            reminders = reminders,
+            labels = labels,
+            onLabelClick = onLabelClick,
+            onReminderClick = onReminderClick
+        )
+        item {
+            Spacer(modifier = Modifier.height(8.dp))
+        }
+        item {
+            GithubWidget(
+                modifier = Modifier.padding(horizontal = 16.dp),
+                title = "Activity",
+                calendarModel = activityCalendarModel
+            )
+        }
+        item {
+            Spacer(modifier = Modifier.height(8.dp))
+        }
+        eventInstanceList(
+            instances = eventInstances,
+            onEventInstanceClick = onEventInstanceClick
+        )
+    }
+}
+
+@OptIn(ExperimentalLayoutApi::class)
+private fun LazyListScope.remindersAndLabels(
+    reminders: List<Reminder>,
+    labels: List<Label>,
+    onLabelClick: () -> Unit,
+    onReminderClick: (String) -> Unit,
+) {
+    if (reminders.isNotEmpty() || labels.isNotEmpty()) {
+        item {
             FlowRow(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -73,17 +105,6 @@ fun EventDetailsContent(
                 }
             }
         }
-        Spacer(modifier = Modifier.height(8.dp))
-        GithubWidget(
-            modifier = Modifier.padding(horizontal = 16.dp),
-            title = "Activity",
-            calendarModel = activityCalendarModel
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-        EventInstanceList(
-            instances = eventInstances,
-            onEventInstanceClick = onEventInstanceClick
-        )
     }
 }
 
@@ -142,12 +163,6 @@ fun ReminderItem(reminder: Reminder, onClick: (String) -> Unit) {
 @Preview(showBackground = true)
 @Composable
 fun EventDetailsContentPreview() {
-    val event = Event(
-        "",
-        "Podlewanie",
-        DateTime.now(),
-        EventInstanceSchema()
-    )
     val eventInstances = listOf<EventInstance>(
         EventInstance(
             "",
@@ -196,7 +211,6 @@ fun EventDetailsContentPreview() {
         SingleReminder("", "", DateTime.now().plusHours(-1), DateTime.now().plusHours(1), reshowEnabled = true)
     AppTheme {
         EventDetailsContent(
-            event = event,
             eventInstances = eventInstances,
             reminders = listOf(reminder),
             labels = listOf(

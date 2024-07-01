@@ -183,7 +183,6 @@ fun EventDetailsScreen(
                 LoadingView()
             } else {
                 EventDetailsContent(
-                    event = state.event!!,
                     eventInstances = state.eventInstances,
                     reminders = state.reminders,
                     labels = state.labels,
